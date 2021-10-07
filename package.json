@@ -1,0 +1,59 @@
+{
+  "name": "@i-xi-dev/base64",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "node": "./node/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./stream": {
+      "node": "./node/stream/index.mjs",
+      "default": "./dist/stream/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "lint": "eslint --ext ts --fix ./src/",
+    "test": "mocha test/node/ --recursive --timeout 4000",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-xi-dev/base64.es.git"
+  },
+  "keywords": [
+    "base64",
+    "transformstream",
+    "browser",
+    "deno",
+    "nodejs"
+  ],
+  "author": "i-xi-dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/i-xi-dev/base64.es/issues"
+  },
+  "homepage": "https://github.com/i-xi-dev/base64.es#readme",
+  "files": [
+    "dist",
+    "node"
+  ],
+  "engines": {
+    "node": ">=16.5.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "mocha": "^9.1.2",
+    "typescript": "^4.4.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
