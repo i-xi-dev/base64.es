@@ -267,6 +267,8 @@ type Base64Options = {
   forgiving?: boolean,
 };
 
+const RFC4648_PADDING = "=";
+
 /**
  * 未設定がないオプション
  */
@@ -290,7 +292,7 @@ type ResolvedOptions = {
 const DefaultOptions: ResolvedOptions = {
   table: RFC4648_TABLE,
   padEnd: true,
-  padding: "=",
+  padding: RFC4648_PADDING,
   forgiving: true,
 };
 
@@ -432,25 +434,79 @@ function isEncoded(work: string, resolvedOptions: ResolvedOptions): boolean {
   return regex.test(work);
 }
 
-function encode() {
-  // TODO
+/** 0～255の整数を表すものとする */
+type uint8 = number;
+
+/**
+ * バイト列を文字列にBase64符号化し、結果の文字列を返却
+ * 
+ * {@link https://infra.spec.whatwg.org/#forgiving-base64-decode Infra Standard}および、
+ * {@link https://datatracker.ietf.org/doc/html/rfc4648 RFC 4648}の仕様に従った。
+ * 改行には非対応（必要であればencode結果を改行すべし）。
+ * 
+ * @param toEncode バイト列
+ * @param options Base64符号化方式オプション
+ * @returns Base64符号化された文字列
+ */
+function encode(toEncode: Uint8Array, options?: Base64Options | ResolvedOptions): string {
+  const resolvedOptions: ResolvedOptions = resolveDecodeOptions(options);
+
+  let _6bit1e: string;
+  let _6bit2e: string;
+  let _6bit3e: string;
+  let _6bit4e: string;
+  let encodedChars = "";
+  for (let i = 0; i < toEncode.byteLength; i = i + 3) { 
+    const [ _n8bit1, _n8bit2, _n8bit3 ] = toEncode.subarray(i, i + 3);
+    const _8bit1: uint8 = _n8bit1 as uint8;
+    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as uint8) : 0;
+
+    // 6-bit (1)
+    _6bit1e = resolvedOptions.table[_8bit1 >> 2] as string;
+
+    // 6-bit (2)
+    _6bit2e = resolvedOptions.table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
+
+    if (_n8bit2 !== undefined) {
+      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as uint8) : 0;
+
+      // 6-bit (3)
+      _6bit3e = resolvedOptions.table[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;
+
+      if (_n8bit3 !== undefined) {
+        // 6-bit (4)
+        _6bit4e = resolvedOptions.table[_8bit3 & 0b00111111] as string;
+      }
+      else {
+        _6bit4e = (resolvedOptions.padEnd === true) ? resolvedOptions.padding : "";
+      }
+    }
+    else {
+      _6bit3e = (resolvedOptions.padEnd === true) ? resolvedOptions.padding : "";
+      _6bit4e = (resolvedOptions.padEnd === true) ? resolvedOptions.padding : "";
+    }
+    encodedChars = encodedChars.concat(_6bit1e + _6bit2e + _6bit3e + _6bit4e);
+  }
+  return encodedChars;
 }
 
 export type {
   Base64Options,
 };
 
+/**
+ * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
+ */
+const Rfc4648Base64UrlOptions: Base64Options = {
+  table: RFC4648URL_TABLE,
+  padEnd: false,
+  padding: RFC4648_PADDING,
+  forgiving: true,
+};
+
 export {
+  DefaultOptions as Rfc4648Base64Options,
+  Rfc4648Base64UrlOptions,
   decode,
   encode,
 };
-
-// /**
-//  * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
-//  */
-//  const Rfc4648Base64UrlOptions: Base64Options = {
-//   table: RFC4648URL_TABLE,
-//   padEnd: false,
-//   padding: "=",
-//   forgiving: true,
-// };
