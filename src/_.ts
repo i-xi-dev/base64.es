@@ -1,3 +1,4 @@
+//
 
 const CHARS = [
   "!",
@@ -5,7 +6,7 @@ const CHARS = [
   "-",
   ".",
   "/",
-  "0", //
+  "0",
   "1",
   "2",
   "3",
@@ -17,7 +18,7 @@ const CHARS = [
   "9",
   ":",
   "=",
-  "A", //
+  "A",
   "B",
   "C",
   "D",
@@ -44,7 +45,7 @@ const CHARS = [
   "Y",
   "Z",
   "_",
-  "a", //
+  "a",
   "b",
   "c",
   "d",
@@ -103,157 +104,17 @@ function isTable(value: unknown): value is Table {
 }
 
 /**
- * RFC 4648 Base64 の0～61番目の文字までの変換テーブル
- */
-const RFC4648_TABLE: Readonly<Table> = [
-  "A",  // 0
-  "B",  // 1
-  "C",  // 2
-  "D",  // 3
-  "E",  // 4
-  "F",  // 5
-  "G",  // 6
-  "H",  // 7
-  "I",  // 8
-  "J",  // 9
-  "K",  // 10
-  "L",  // 11
-  "M",  // 12
-  "N",  // 13
-  "O",  // 14
-  "P",  // 15
-  "Q",  // 16
-  "R",  // 17
-  "S",  // 18
-  "T",  // 19
-  "U",  // 20
-  "V",  // 21
-  "W",  // 22
-  "X",  // 23
-  "Y",  // 24
-  "Z",  // 25
-  "a",  // 26
-  "b",  // 27
-  "c",  // 28
-  "d",  // 29
-  "e",  // 30
-  "f",  // 31
-  "g",  // 32
-  "h",  // 33
-  "i",  // 34
-  "j",  // 35
-  "k",  // 36
-  "l",  // 37
-  "m",  // 38
-  "n",  // 39
-  "o",  // 40
-  "p",  // 41
-  "q",  // 42
-  "r",  // 43
-  "s",  // 44
-  "t",  // 45
-  "u",  // 46
-  "v",  // 47
-  "w",  // 48
-  "x",  // 49
-  "y",  // 50
-  "z",  // 51
-  "0",  // 52
-  "1",  // 53
-  "2",  // 54
-  "3",  // 55
-  "4",  // 56
-  "5",  // 57
-  "6",  // 58
-  "7",  // 59
-  "8",  // 60
-  "9",  // 61
-  "+",  // 62
-  "/",  // 63
-] as const;
-
-/**
- * RFC 4648 Base64url の0～61番目の文字までの変換テーブル
- */
-const RFC4648URL_TABLE: Readonly<Table> = [
-  "A",  // 0
-  "B",  // 1
-  "C",  // 2
-  "D",  // 3
-  "E",  // 4
-  "F",  // 5
-  "G",  // 6
-  "H",  // 7
-  "I",  // 8
-  "J",  // 9
-  "K",  // 10
-  "L",  // 11
-  "M",  // 12
-  "N",  // 13
-  "O",  // 14
-  "P",  // 15
-  "Q",  // 16
-  "R",  // 17
-  "S",  // 18
-  "T",  // 19
-  "U",  // 20
-  "V",  // 21
-  "W",  // 22
-  "X",  // 23
-  "Y",  // 24
-  "Z",  // 25
-  "a",  // 26
-  "b",  // 27
-  "c",  // 28
-  "d",  // 29
-  "e",  // 30
-  "f",  // 31
-  "g",  // 32
-  "h",  // 33
-  "i",  // 34
-  "j",  // 35
-  "k",  // 36
-  "l",  // 37
-  "m",  // 38
-  "n",  // 39
-  "o",  // 40
-  "p",  // 41
-  "q",  // 42
-  "r",  // 43
-  "s",  // 44
-  "t",  // 45
-  "u",  // 46
-  "v",  // 47
-  "w",  // 48
-  "x",  // 49
-  "y",  // 50
-  "z",  // 51
-  "0",  // 52
-  "1",  // 53
-  "2",  // 54
-  "3",  // 55
-  "4",  // 56
-  "5",  // 57
-  "6",  // 58
-  "7",  // 59
-  "8",  // 60
-  "9",  // 61
-  "-",  // 62
-  "_",  // 63
-] as const;
-
-/**
  * オプション
  */
-type Base64Options = {
+type Options = {
   /** 変換テーブル */
   table: Readonly<Table>,
 
   /** パディングを付加するか否か */
-  padEnd?: boolean,
+  padEnd: boolean,
 
   /** パディング文字 */
-  padding?: char,
+  padding: char,
 
   /**
    * 復号時:
@@ -264,55 +125,8 @@ type Base64Options = {
    * 符号化時
    *    無視する
    */
-  forgiving?: boolean,
-};
-
-const RFC4648_PADDING = "=";
-
-/**
- * 未設定がないオプション
- */
-type ResolvedOptions = {
-  /** @see {@link Base64Options.table} */
-  table: Readonly<Table>,
-
-  /** @see {@link Base64Options.padEnd} */
-  padEnd: boolean,
-
-  /** @see {@link Base64Options.padding} */
-  padding: char,
-
-  /** @see {@link Base64Options.forgiving} */
   forgiving: boolean,
 };
-
-/**
- * RFC 4648 Base64 の仕様で復号/符号化するためのオプション
- */
-const DefaultOptions: ResolvedOptions = {
-  table: RFC4648_TABLE,
-  padEnd: true,
-  padding: RFC4648_PADDING,
-  forgiving: true,
-};
-
-/**
- * オプションの未設定項目を埋めた複製を返す
- * @param options オプション
- * @returns 未設定項目を埋めたオプションの複製
- */
-function resolveDecodeOptions(options: Base64Options | ResolvedOptions = DefaultOptions): ResolvedOptions {
-  const table: Readonly<Table> = isTable(options.table) ? options.table : DefaultOptions.table.slice(0) as Table;
-  const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : DefaultOptions.padEnd;
-  const padding: char = isChar(options.padding) ? options.padding : DefaultOptions.padding;
-  const forgiving: boolean = (typeof options.forgiving === "boolean") ? options.forgiving : DefaultOptions.forgiving;
-  return {
-    table,
-    padEnd,
-    padding,
-    forgiving,
-  };
-}
 
 /**
  * 文字列をバイト列にBase64復号し、結果のバイト列を返却
@@ -325,22 +139,20 @@ function resolveDecodeOptions(options: Base64Options | ResolvedOptions = Default
  * @param options オプション
  * @returns バイト列
  */
-function decode(encoded: string, options?: Base64Options | ResolvedOptions): Uint8Array {
-  const resolvedOptions: ResolvedOptions = resolveDecodeOptions(options);
-
+function decode(encoded: string, options: Options): Uint8Array {
   let work: string = encoded;
-  if (resolvedOptions.forgiving === true) {
+  if (options.forgiving === true) {
     // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
     work = work.replace(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
   }
 
-  if (resolvedOptions.forgiving === true) {
+  if (options.forgiving === true) {
     // work.lengthの箇所は、仕様では符号位置数だがlengthを使用する
     // length !== 符号位置数の場合の処理結果が正しくなくなるが、そうなったとしてもisEncodedでエラーとなる為問題は無いはず
 
     if ((work.length % 4) === 0) {
       for (let i = 0; i < 2; i++) {
-        if (work.endsWith(resolvedOptions.padding)) {
+        if (work.endsWith(options.padding)) {
           work = work.substring(0, (work.length - 1));
         }
         else {
@@ -350,20 +162,20 @@ function decode(encoded: string, options?: Base64Options | ResolvedOptions): Uin
     }
 
     if ((work.length % 4) === 1) {
-      throw new TypeError("EncodingError: forgiving decode error");
+      throw new TypeError("forgiving decode error");
     }
   }
 
-  if (isEncoded(work, resolvedOptions) !== true) {
-    throw new TypeError("EncodingError: decode error (1)");
+  if (isEncoded(work, options) !== true) {
+    throw new TypeError("decode error (1)");
   }
 
-  const paddingStart = work.indexOf(resolvedOptions.padding);
+  const paddingStart = work.indexOf(options.padding);
   let paddingCount: number;
   let encodedBody: string;
-  if ((resolvedOptions.padEnd === true) && (resolvedOptions.forgiving !== true)) {
+  if ((options.padEnd === true) && (options.forgiving !== true)) {
     if ((work.length % 4) !== 0) {
-      throw new TypeError("EncodingError: decode error (2)");
+      throw new TypeError("decode error (2)");
     }
 
     if (paddingStart >= 0) {
@@ -377,7 +189,7 @@ function decode(encoded: string, options?: Base64Options | ResolvedOptions): Uin
   }
   else {
     // if (paddingStart >= 0) {
-    //  throw new TypeError("EncodingError: decode error (3)"); (1)で例外になる
+    //  throw new TypeError("decode error (3)"); (1)で例外になる
     // }
     paddingCount = (work.length % 4 === 0) ? 0 : 4 - (work.length % 4);
     encodedBody = work;
@@ -395,8 +207,8 @@ function decode(encoded: string, options?: Base64Options | ResolvedOptions): Uin
   if (encodedBody.length >= 4) {
     for (i = 0; i < encodedBody.length; i = i + 4) {
       // 8-bit (1)
-      _6bit1 = resolvedOptions.table.indexOf(encodedBody[i] as char);
-      _6bit2 = resolvedOptions.table.indexOf(encodedBody[i + 1] as char);
+      _6bit1 = options.table.indexOf(encodedBody[i] as char);
+      _6bit2 = options.table.indexOf(encodedBody[i + 1] as char);
       decodedBytes[_8bitI++] = (_6bit1 << 2) | (_6bit2 >> 4);
 
       // 8-bit (2)
@@ -404,7 +216,7 @@ function decode(encoded: string, options?: Base64Options | ResolvedOptions): Uin
         decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4);
         break;
       }
-      _6bit3 = resolvedOptions.table.indexOf(encodedBody[i + 2] as char);
+      _6bit3 = options.table.indexOf(encodedBody[i + 2] as char);
       decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4) | (_6bit3 >> 2);
 
       // 8-bit (3)
@@ -412,19 +224,19 @@ function decode(encoded: string, options?: Base64Options | ResolvedOptions): Uin
         decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6);
         break;
       }
-      _6bit4 = resolvedOptions.table.indexOf(encodedBody[i + 3] as char);
+      _6bit4 = options.table.indexOf(encodedBody[i + 3] as char);
       decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6) | _6bit4;
     }
   }
   return decodedBytes;
 }
 
-function isEncoded(work: string, resolvedOptions: ResolvedOptions): boolean {
-  const tablePattern = "[" + resolvedOptions.table.map((chr) => `\\u${ chr.charCodeAt(0).toString(16) }`).join("") + "]";
+function isEncoded(work: string, options: Options): boolean {
+  const tablePattern = "[" + options.table.map((chr) => `\\u${ chr.charCodeAt(0).toString(16) }`).join("") + "]";
 
   let regex: RegExp;
-  if ((resolvedOptions.padEnd === true) && (resolvedOptions.forgiving !== true)) {
-    const paddingPattern = `\\u{${ resolvedOptions.padding.charCodeAt(0).toString(16) }}`;
+  if ((options.padEnd === true) && (options.forgiving !== true)) {
+    const paddingPattern = `\\u{${ options.padding.charCodeAt(0).toString(16) }}`;
     regex = new RegExp(`^(${ tablePattern }+${ paddingPattern }*|${ tablePattern }*)$`, "u");
   }
   else {
@@ -448,9 +260,7 @@ type uint8 = number;
  * @param options Base64符号化方式オプション
  * @returns Base64符号化された文字列
  */
-function encode(toEncode: Uint8Array, options?: Base64Options | ResolvedOptions): string {
-  const resolvedOptions: ResolvedOptions = resolveDecodeOptions(options);
-
+function encode(toEncode: Uint8Array, options: Options): string {
   let _6bit1e: string;
   let _6bit2e: string;
   let _6bit3e: string;
@@ -462,28 +272,28 @@ function encode(toEncode: Uint8Array, options?: Base64Options | ResolvedOptions)
     const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as uint8) : 0;
 
     // 6-bit (1)
-    _6bit1e = resolvedOptions.table[_8bit1 >> 2] as string;
+    _6bit1e = options.table[_8bit1 >> 2] as string;
 
     // 6-bit (2)
-    _6bit2e = resolvedOptions.table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
+    _6bit2e = options.table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
 
     if (_n8bit2 !== undefined) {
       const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as uint8) : 0;
 
       // 6-bit (3)
-      _6bit3e = resolvedOptions.table[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;
+      _6bit3e = options.table[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;
 
       if (_n8bit3 !== undefined) {
         // 6-bit (4)
-        _6bit4e = resolvedOptions.table[_8bit3 & 0b00111111] as string;
+        _6bit4e = options.table[_8bit3 & 0b00111111] as string;
       }
       else {
-        _6bit4e = (resolvedOptions.padEnd === true) ? resolvedOptions.padding : "";
+        _6bit4e = (options.padEnd === true) ? options.padding : "";
       }
     }
     else {
-      _6bit3e = (resolvedOptions.padEnd === true) ? resolvedOptions.padding : "";
-      _6bit4e = (resolvedOptions.padEnd === true) ? resolvedOptions.padding : "";
+      _6bit3e = (options.padEnd === true) ? options.padding : "";
+      _6bit4e = (options.padEnd === true) ? options.padding : "";
     }
     encodedChars = encodedChars.concat(_6bit1e + _6bit2e + _6bit3e + _6bit4e);
   }
@@ -491,22 +301,14 @@ function encode(toEncode: Uint8Array, options?: Base64Options | ResolvedOptions)
 }
 
 export type {
-  Base64Options,
-};
-
-/**
- * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
- */
-const Rfc4648Base64UrlOptions: Base64Options = {
-  table: RFC4648URL_TABLE,
-  padEnd: false,
-  padding: RFC4648_PADDING,
-  forgiving: true,
+  char as base64char,
+  Table as Base64Table,
+  Options as Base64ResolvedOptions,
 };
 
 export {
-  DefaultOptions as Rfc4648Base64Options,
-  Rfc4648Base64UrlOptions,
-  decode,
-  encode,
+  isChar as isBase64Char,
+  isTable as isBase64Table,
+  decode as base64Decode,
+  encode as base64Encode,
 };
