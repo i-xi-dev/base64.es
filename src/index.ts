@@ -1,7 +1,7 @@
 //
 
 import type { base64char, Base64ResolvedOptions, Base64Table } from "./_.js";
-import { base64Decode, isBase64Char, isBase64Table } from "./_.js";
+import { base64Decode, base64Encode, isBase64Char, isBase64Table } from "./_.js";
 
 /**
  * 62文字目（インデックス0～61）までの変換テーブル
@@ -86,7 +86,7 @@ const RFC4648_PADDING = "=";
 /**
  * RFC 4648 Base64 の仕様で復号/符号化するためのオプション
  */
-const Rfc4648Options: Base64ResolvedOptions = Object.freeze({
+const Rfc4648Base64Options: Base64ResolvedOptions = Object.freeze({
   table: RFC4648_TABLE,
   padEnd: true,
   padding: RFC4648_PADDING,
@@ -127,8 +127,8 @@ type Base64Options = {
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  */
-function resolveOptions(options: Base64Options | Base64ResolvedOptions = Rfc4648Options): Base64ResolvedOptions {
-  const defaults = Rfc4648Options;
+function resolveOptions(options: Base64Options | Base64ResolvedOptions = Rfc4648Base64Options): Base64ResolvedOptions {
+  const defaults = Rfc4648Base64Options;
   const table: Readonly<Base64Table> = isBase64Table(options.table) ? options.table : defaults.table;
   const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : defaults.padEnd;
   const padding: base64char = isBase64Char(options.padding) ? options.padding : defaults.padding;
@@ -147,32 +147,71 @@ function resolveOptions(options: Base64Options | Base64ResolvedOptions = Rfc4648
   };
 }
 
-
-
-
-
-
+/**
+ * 復号器
+ */
 class Base64Decoder {
+  /**
+   * 未設定項目を埋めたオプション
+   */
   #options: Base64ResolvedOptions;
 
+  /**
+   * @param options オプション
+   */
   constructor(options?: Base64Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
   }
 
+  /**
+   * 文字列をバイト列にBase64復号し、結果のバイト列を返却
+   * 
+   * @param encoded Base64符号化された文字列
+   * @returns バイト列
+   */
   decode(encoded: string): Uint8Array {
     return base64Decode(encoded, this.#options);
   }
 }
 Object.freeze(Base64Decoder);
 
+/**
+ * 符号化器
+ */
 class Base64Encoder {
+  /**
+   * 未設定項目を埋めたオプション
+   */
   #options: Base64ResolvedOptions;
 
+  /**
+   * @param options オプション
+   */
   constructor(options?: Base64Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
   }
 
+  /**
+   * バイト列を文字列にBase64符号化し、結果の文字列を返却
+   * 
+   * @param toEncode バイト列
+   * @returns Base64符号化された文字列
+   */
+  encode(toEncode: Uint8Array): string {
+    return base64Encode(toEncode, this.#options);
+  }
 }
 Object.freeze(Base64Encoder);
+
+export type {
+  Base64Options,
+};
+
+export {
+  Base64Decoder,
+  Base64Encoder,
+  Rfc4648Base64Options,
+  Rfc4648Base64UrlOptions,
+};
