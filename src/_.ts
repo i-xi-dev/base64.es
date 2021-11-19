@@ -232,7 +232,7 @@ function decode(encoded: string, options: Options): Uint8Array {
 }
 
 function isEncoded(work: string, options: Options): boolean {
-  const tablePattern = "[" + options.table.map((chr) => `\\u${ chr.charCodeAt(0).toString(16) }`).join("") + "]";
+  const tablePattern = "[" + options.table.map((chr) => `\\u{${ chr.charCodeAt(0).toString(16) }}`).join("") + "]";
 
   let regex: RegExp;
   if ((options.padEnd === true) && (options.forgiving !== true)) {
@@ -269,7 +269,7 @@ function encode(toEncode: Uint8Array, options: Options): string {
   for (let i = 0; i < toEncode.byteLength; i = i + 3) { 
     const [ _n8bit1, _n8bit2, _n8bit3 ] = toEncode.subarray(i, i + 3);
     const _8bit1: uint8 = _n8bit1 as uint8;
-    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as uint8) : 0;
+    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2) : 0;
 
     // 6-bit (1)
     _6bit1e = options.table[_8bit1 >> 2] as string;
@@ -278,7 +278,7 @@ function encode(toEncode: Uint8Array, options: Options): string {
     _6bit2e = options.table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
 
     if (_n8bit2 !== undefined) {
-      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as uint8) : 0;
+      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3) : 0;
 
       // 6-bit (3)
       _6bit3e = options.table[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;

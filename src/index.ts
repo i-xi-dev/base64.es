@@ -1,7 +1,14 @@
 //
 
-import type { base64char, Base64ResolvedOptions, Base64Table } from "./_.js";
-import { base64Decode, base64Encode, isBase64Char, isBase64Table } from "./_.js";
+import {
+  base64char,
+  base64Decode,
+  base64Encode,
+  Base64ResolvedOptions,
+  Base64Table,
+  isBase64Char,
+  isBase64Table,
+} from "./_.js";
 
 /**
  * 62文字目（インデックス0～61）までの変換テーブル
