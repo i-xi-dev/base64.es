@@ -1,11 +1,11 @@
 //
 
 import {
-  base64char,
+  type base64char,
+  type Base64ResolvedOptions,
+  type Base64Table,
   base64Decode,
   base64Encode,
-  Base64ResolvedOptions,
-  Base64Table,
   isBase64Char,
   isBase64Table,
 } from "./_.js";
