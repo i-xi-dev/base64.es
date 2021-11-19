@@ -1,7 +1,7 @@
 {
   "name": "@i-xi-dev/base64",
   "version": "0.0.1",
-  "description": "",
+  "description": "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,6 @@
   },
   "keywords": [
     "base64",
-    "transformstream",
     "browser",
     "deno",
     "nodejs"
@@ -51,7 +50,7 @@
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",
     "mocha": "^9.1.2",
-    "typescript": "^4.4.3"
+    "typescript": "^4.5.2"
   },
   "publishConfig": {
     "access": "public"
