@@ -106,7 +106,7 @@ function isTable(value: unknown): value is Table {
 /**
  * オプション
  */
-type Options = {
+type ResolvedOptions = {
   /** 変換テーブル */
   table: Readonly<Table>,
 
@@ -139,7 +139,7 @@ type Options = {
  * @param options オプション
  * @returns バイト列
  */
-function decode(encoded: string, options: Options): Uint8Array {
+function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   let work: string = encoded;
   if (options.forgiving === true) {
     // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
@@ -231,7 +231,7 @@ function decode(encoded: string, options: Options): Uint8Array {
   return decodedBytes;
 }
 
-function isEncoded(work: string, options: Options): boolean {
+function isEncoded(work: string, options: ResolvedOptions): boolean {
   const tablePattern = "[" + options.table.map((chr) => `\\u{${ chr.charCodeAt(0).toString(16) }}`).join("") + "]";
 
   let regex: RegExp;
@@ -260,7 +260,7 @@ type uint8 = number;
  * @param options Base64符号化方式オプション
  * @returns Base64符号化された文字列
  */
-function encode(toEncode: Uint8Array, options: Options): string {
+function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
   let _6bit1e: string;
   let _6bit2e: string;
   let _6bit3e: string;
@@ -300,15 +300,161 @@ function encode(toEncode: Uint8Array, options: Options): string {
   return encodedChars;
 }
 
+/**
+ * オプション
+ * table以外は未設定を許可
+ */
+type Options = {
+  /** @see {@link Base64ResolvedOptions.table} */
+  table: Readonly<Array<string>>,
+
+  /** @see {@link Base64ResolvedOptions.padEnd} */
+  padEnd?: boolean,
+
+  /** @see {@link Base64ResolvedOptions.padding} */
+  padding?: string,
+
+  /** @see {@link Base64ResolvedOptions.forgiving} */
+  forgiving?: boolean,
+};
+
+/**
+ * 62文字目（インデックス0～61）までの変換テーブル
+ */
+const TABLE_62: Readonly<Array<char>> = Object.freeze([
+  "A",  // 0
+  "B",  // 1
+  "C",  // 2
+  "D",  // 3
+  "E",  // 4
+  "F",  // 5
+  "G",  // 6
+  "H",  // 7
+  "I",  // 8
+  "J",  // 9
+  "K",  // 10
+  "L",  // 11
+  "M",  // 12
+  "N",  // 13
+  "O",  // 14
+  "P",  // 15
+  "Q",  // 16
+  "R",  // 17
+  "S",  // 18
+  "T",  // 19
+  "U",  // 20
+  "V",  // 21
+  "W",  // 22
+  "X",  // 23
+  "Y",  // 24
+  "Z",  // 25
+  "a",  // 26
+  "b",  // 27
+  "c",  // 28
+  "d",  // 29
+  "e",  // 30
+  "f",  // 31
+  "g",  // 32
+  "h",  // 33
+  "i",  // 34
+  "j",  // 35
+  "k",  // 36
+  "l",  // 37
+  "m",  // 38
+  "n",  // 39
+  "o",  // 40
+  "p",  // 41
+  "q",  // 42
+  "r",  // 43
+  "s",  // 44
+  "t",  // 45
+  "u",  // 46
+  "v",  // 47
+  "w",  // 48
+  "x",  // 49
+  "y",  // 50
+  "z",  // 51
+  "0",  // 52
+  "1",  // 53
+  "2",  // 54
+  "3",  // 55
+  "4",  // 56
+  "5",  // 57
+  "6",  // 58
+  "7",  // 59
+  "8",  // 60
+  "9",  // 61
+]);
+
+/**
+ * RFC 4648 Base64 の変換テーブル
+ */
+const RFC4648_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "+", "/" ]) as Table;
+
+/**
+ * RFC 4648 Base64url の変換テーブル
+ */
+const RFC4648URL_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "-", "_" ]) as Table;
+
+const RFC4648_PADDING = "=";
+
+/**
+ * RFC 4648 Base64 の仕様で復号/符号化するためのオプション
+ */
+const Rfc4648Options: ResolvedOptions = Object.freeze({
+  table: RFC4648_TABLE,
+  padEnd: true,
+  padding: RFC4648_PADDING,
+  forgiving: true,
+});
+
+/**
+ * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
+ */
+const Rfc4648UrlOptions: ResolvedOptions = Object.freeze({
+  table: RFC4648URL_TABLE,
+  padEnd: false,
+  padding: RFC4648_PADDING,
+  forgiving: true,
+});
+
+/**
+ * オプションをBase64ResolvedOptions型に変換する
+ * 未設定項目はデフォルト値で埋める
+ * 
+ * @param options オプション
+ * @returns 未設定項目を埋めたオプションの複製
+ */
+function resolveOptions(options: Options | ResolvedOptions = Rfc4648Options): ResolvedOptions {
+  const defaults = Rfc4648Options;
+  const table: Readonly<Table> = isTable(options.table) ? options.table : defaults.table;
+  const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : defaults.padEnd;
+  const padding: char = isChar(options.padding) ? options.padding : defaults.padding;
+  const forgiving: boolean = (typeof options.forgiving === "boolean") ? options.forgiving : defaults.forgiving;
+
+  // tableとpaddingの重複チェック
+  if((new Set([ ...table, padding ])).size !== 65) {
+    throw new RangeError("options error: character duplicated");
+  }
+
+  return {
+    table,
+    padEnd,
+    padding,
+    forgiving,
+  };
+}
+
 export type {
-  char as base64char,
   Table as Base64Table,
-  Options as Base64ResolvedOptions,
+  Options as Base64Options,
+  ResolvedOptions as Base64ResolvedOptions,
 };
 
 export {
-  isChar as isBase64Char,
-  isTable as isBase64Table,
   decode as base64Decode,
   encode as base64Encode,
+  Rfc4648Options as Rfc4648Base64Options,
+  Rfc4648UrlOptions as Rfc4648Base64UrlOptions,
+  resolveOptions as resolveBase64Options,
 };
