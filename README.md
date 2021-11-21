@@ -52,9 +52,6 @@ encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
 // → "AwIBAP/+/fw="
 ```
 
-#### Options
-TODO
-
 
 ## `Base64DecoderStream` and `Base64EncoderStream` class
 
@@ -114,11 +111,8 @@ const encoderStream = new Base64EncoderStream();
 readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 ```
 
-#### Options
-TODO
 
-
-## Options
+## Encoding options
 
 | Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -126,6 +120,8 @@ TODO
 | `padEnd` | boolean | `true` | Whether to output the padding |
 | `padding` | string | `"="` | The padding character, the default is the padding defined in RFC 4648 |
 
+- The `length` of the `table` must be 64.
+- The `length` of all elements contained in the `table` must be 1.
 - The `table` must not contain duplicate characters.
 - The `length` of the `padding` must be 1.
 - The `padding` must not be a character contained in the `table`.
