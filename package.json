@@ -28,6 +28,7 @@
   },
   "keywords": [
     "base64",
+    "transformstream",
     "browser",
     "deno",
     "nodejs"
