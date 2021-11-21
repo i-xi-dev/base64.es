@@ -314,8 +314,8 @@ type Options = {
   /** @see {@link Base64ResolvedOptions.padding} */
   padding?: string,
 
-  /** @see {@link Base64ResolvedOptions.forgiving} */
-  forgiving?: boolean,
+  // /** @see {@link Base64ResolvedOptions.forgiving} */
+  // forgiving?: boolean,
 };
 
 /**
@@ -391,29 +391,19 @@ const TABLE_62: Readonly<Array<char>> = Object.freeze([
  */
 const RFC4648_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "+", "/" ]) as Table;
 
-/**
- * RFC 4648 Base64url の変換テーブル
- */
-const RFC4648URL_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "-", "_" ]) as Table;
+// /**
+// * RFC 4648 Base64url の変換テーブル
+// */
+// const RFC4648URL_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "-", "_" ]) as Table;
 
 const RFC4648_PADDING = "=";
 
 /**
- * RFC 4648 Base64 の仕様で復号/符号化するためのオプション
+ * Infra Standard の仕様で復号/符号化するためのオプション
  */
-const Rfc4648Options: ResolvedOptions = Object.freeze({
+const DefaultOptions: ResolvedOptions = Object.freeze({
   table: RFC4648_TABLE,
   padEnd: true,
-  padding: RFC4648_PADDING,
-  forgiving: true,
-});
-
-/**
- * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
- */
-const Rfc4648UrlOptions: ResolvedOptions = Object.freeze({
-  table: RFC4648URL_TABLE,
-  padEnd: false,
   padding: RFC4648_PADDING,
   forgiving: true,
 });
@@ -425,12 +415,12 @@ const Rfc4648UrlOptions: ResolvedOptions = Object.freeze({
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  */
-function resolveOptions(options: Options | ResolvedOptions = Rfc4648Options): ResolvedOptions {
-  const defaults = Rfc4648Options;
+function resolveOptions(options: Options | ResolvedOptions = DefaultOptions): ResolvedOptions {
+  const defaults = DefaultOptions;
   const table: Readonly<Table> = isTable(options.table) ? options.table : defaults.table;
   const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : defaults.padEnd;
   const padding: char = isChar(options.padding) ? options.padding : defaults.padding;
-  const forgiving: boolean = (typeof options.forgiving === "boolean") ? options.forgiving : defaults.forgiving;
+  // const forgiving: boolean = (typeof options.forgiving === "boolean") ? options.forgiving : defaults.forgiving;
 
   // tableとpaddingの重複チェック
   if((new Set([ ...table, padding ])).size !== 65) {
@@ -441,7 +431,7 @@ function resolveOptions(options: Options | ResolvedOptions = Rfc4648Options): Re
     table,
     padEnd,
     padding,
-    forgiving,
+    forgiving: true,
   };
 }
 
@@ -454,7 +444,5 @@ export type {
 export {
   decode as base64Decode,
   encode as base64Encode,
-  Rfc4648Options as Rfc4648Base64Options,
-  Rfc4648UrlOptions as Rfc4648Base64UrlOptions,
   resolveOptions as resolveBase64Options,
 };

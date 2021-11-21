@@ -10,8 +10,6 @@ import {
   base64Decode,
   base64Encode,
   resolveBase64Options,
-  Rfc4648Base64Options,
-  Rfc4648Base64UrlOptions,
 } from "./_.js";
 
 /**
@@ -80,6 +78,4 @@ export type {
 export {
   Base64Decoder,
   Base64Encoder,
-  Rfc4648Base64Options,
-  Rfc4648Base64UrlOptions,
 };
