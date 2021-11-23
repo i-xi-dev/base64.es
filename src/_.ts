@@ -122,7 +122,7 @@ type ResolvedOptions = {
    *    （https://infra.spec.whatwg.org/#forgiving-base64-decode の仕様で復号するか否か）
    *    ※trueの場合、padEndは無視する
    * 
-   * 符号化時
+   * 符号化時:
    *    無視する
    */
   forgiving: boolean,
@@ -246,8 +246,8 @@ function isEncoded(work: string, options: ResolvedOptions): boolean {
   return regex.test(work);
 }
 
-/** 0～255の整数を表すものとする */
-type uint8 = number;
+/** （256個列挙するしかないので、定義していないが）0～255の整数を表すものとする */
+type uint8 = number; // type uint8 = 0 | 0x1 | … | 0xFE | 0xFF;
 
 /**
  * バイト列を文字列にBase64符号化し、結果の文字列を返却
@@ -305,16 +305,16 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
  * table以外は未設定を許可
  */
 type Options = {
-  /** @see {@link Base64ResolvedOptions.table} */
+  /** @see {@link ResolvedOptions.table} */
   table: Readonly<Array<string>>,
 
-  /** @see {@link Base64ResolvedOptions.padEnd} */
+  /** @see {@link ResolvedOptions.padEnd} */
   padEnd?: boolean,
 
-  /** @see {@link Base64ResolvedOptions.padding} */
+  /** @see {@link ResolvedOptions.padding} */
   padding?: string,
 
-  // /** @see {@link Base64ResolvedOptions.forgiving} */
+  // /** @see {@link ResolvedOptions.forgiving} */
   // forgiving?: boolean,
 };
 
@@ -409,7 +409,7 @@ const DefaultOptions: ResolvedOptions = Object.freeze({
 });
 
 /**
- * オプションをBase64ResolvedOptions型に変換する
+ * オプションをResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
  * 
  * @param options オプション
@@ -436,13 +436,17 @@ function resolveOptions(options: Options | ResolvedOptions = DefaultOptions): Re
 }
 
 export type {
-  Table as Base64Table,
-  Options as Base64Options,
-  ResolvedOptions as Base64ResolvedOptions,
+  Table,
+  Options,
+  ResolvedOptions,
 };
 
 export {
-  decode as base64Decode,
-  encode as base64Encode,
-  resolveOptions as resolveBase64Options,
+  decode,
+  encode,
+  resolveOptions,
 };
+
+//TODO 下記を外に出す（別パッケージにする）
+// type uint8
+// interface ByteDecoder, ByteEncoder, ...

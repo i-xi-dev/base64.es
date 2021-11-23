@@ -1,37 +1,37 @@
 //
 
 import {
-  // type Base64Options,
-  Base64Options,
-  // type Base64ResolvedOptions,
-  Base64ResolvedOptions,
-  base64Decode,
-  base64Encode,
-  resolveBase64Options,
+  // type Options,
+  Options,
+  // type ResolvedOptions,
+  ResolvedOptions,
+  decode,
+  encode,
+  resolveOptions,
 } from "../_.js";
 
-type Base64DecoderStreamPending = {
+type DecoderStreamPending = {
   chars: string,
 };
 
 /**
  * 復号ストリーム
  */
-class Base64DecoderStream implements TransformStream {
+class DecoderStream implements TransformStream {
   /**
    * 未設定項目を埋めたオプション
    */
-  readonly #options: Base64ResolvedOptions;
+  readonly #options: ResolvedOptions;
 
-  readonly #pending: Base64DecoderStreamPending;
+  readonly #pending: DecoderStreamPending;
 
   readonly #stream: TransformStream<string, Uint8Array>;
 
   /**
    * @param options オプション
    */
-  constructor(options?: Base64Options) {
-    const self = (): Base64DecoderStream => this;
+  constructor(options?: Options) {
+    const self = (): DecoderStream => this;
     const transformer: Transformer<string, Uint8Array> = {
       transform(chunk: string, controller: TransformStreamDefaultController<Uint8Array>): void {
         const decoded = self().#decodeChunk(chunk);
@@ -39,13 +39,13 @@ class Base64DecoderStream implements TransformStream {
       },
       flush(controller: TransformStreamDefaultController<Uint8Array>): void {
         if (self().#pending.chars.length > 0) {
-          const decoded = base64Decode(self().#pending.chars, self().#options);
+          const decoded = decode(self().#pending.chars, self().#options);
           controller.enqueue(decoded);
         }
       },
     };
 
-    this.#options = resolveBase64Options(options);
+    this.#options = resolveOptions(options);
     this.#pending = Object.seal({
       chars: "",
     });
@@ -81,33 +81,33 @@ class Base64DecoderStream implements TransformStream {
       toDecode = temp.substring(0, pendingLength);
     }
 
-    return base64Decode(toDecode, this.#options);
+    return decode(toDecode, this.#options);
   }
 }
-Object.freeze(Base64DecoderStream);
+Object.freeze(DecoderStream);
 
-type Base64EncoderStreamPending = {
+type EncoderStreamPending = {
   bytes: Uint8Array,
 };
 
 /**
  * 符号化ストリーム
  */
-class Base64EncoderStream implements TransformStream {
+class EncoderStream implements TransformStream {
   /**
    * 未設定項目を埋めたオプション
    */
-  readonly #options: Base64ResolvedOptions;
+  readonly #options: ResolvedOptions;
 
-  readonly #pending: Base64EncoderStreamPending;
+  readonly #pending: EncoderStreamPending;
 
   readonly #stream: TransformStream<Uint8Array, string>;
 
   /**
    * @param options オプション
    */
-  constructor(options?: Base64Options) {
-    const self = (): Base64EncoderStream => this;
+  constructor(options?: Options) {
+    const self = (): EncoderStream => this;
     const transformer: Transformer<Uint8Array, string> = {
       transform(chunk: Uint8Array, controller: TransformStreamDefaultController<string>): void {
         const encoded = self().#encodeChunk(chunk);
@@ -115,13 +115,13 @@ class Base64EncoderStream implements TransformStream {
       },
       flush(controller: TransformStreamDefaultController<string>): void {
         if (self().#pending.bytes.length > 0) {
-          const encoded = base64Encode(Uint8Array.from(self().#pending.bytes), self().#options);
+          const encoded = encode(Uint8Array.from(self().#pending.bytes), self().#options);
           controller.enqueue(encoded);
         }
       },
     };
 
-    this.#options = resolveBase64Options(options);
+    this.#options = resolveOptions(options);
     this.#pending = Object.seal({
       bytes: new Uint8Array(0),
     });
@@ -159,12 +159,12 @@ class Base64EncoderStream implements TransformStream {
       toEncode = temp.subarray(0, pendingLength);
     }
 
-    return base64Encode(toEncode, this.#options);
+    return encode(toEncode, this.#options);
   }
 }
-Object.freeze(Base64EncoderStream);
+Object.freeze(EncoderStream);
 
 export {
-  Base64DecoderStream,
-  Base64EncoderStream,
+  DecoderStream as Base64DecoderStream,
+  EncoderStream as Base64EncoderStream,
 };

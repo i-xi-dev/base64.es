@@ -1,15 +1,15 @@
 //
 
 import {
-  // type Base64Options,
-  Base64Options,
-  // type Base64ResolvedOptions,
-  Base64ResolvedOptions,
-  // type Base64Table,
-  Base64Table,
-  base64Decode,
-  base64Encode,
-  resolveBase64Options,
+  // type Options,
+  Options,
+  // type ResolvedOptions,
+  ResolvedOptions,
+  // type Table,
+  Table,
+  decode,
+  encode,
+  resolveOptions,
 } from "./_.js";
 
 /**
@@ -19,13 +19,13 @@ class Base64Decoder {
   /**
    * 未設定項目を埋めたオプション
    */
-  #options: Base64ResolvedOptions;
+  #options: ResolvedOptions;
 
   /**
    * @param options オプション
    */
-  constructor(options?: Base64Options) {
-    this.#options = resolveBase64Options(options);
+  constructor(options?: Options) {
+    this.#options = resolveOptions(options);
     Object.freeze(this);
   }
 
@@ -36,7 +36,7 @@ class Base64Decoder {
    * @returns バイト列
    */
   decode(encoded: string): Uint8Array {
-    return base64Decode(encoded, this.#options);
+    return decode(encoded, this.#options);
   }
 }
 Object.freeze(Base64Decoder);
@@ -48,13 +48,13 @@ class Base64Encoder {
   /**
    * 未設定項目を埋めたオプション
    */
-  #options: Base64ResolvedOptions;
+  #options: ResolvedOptions;
 
   /**
    * @param options オプション
    */
-  constructor(options?: Base64Options) {
-    this.#options = resolveBase64Options(options);
+  constructor(options?: Options) {
+    this.#options = resolveOptions(options);
     Object.freeze(this);
   }
 
@@ -65,14 +65,14 @@ class Base64Encoder {
    * @returns Base64符号化された文字列
    */
   encode(toEncode: Uint8Array): string {
-    return base64Encode(toEncode, this.#options);
+    return encode(toEncode, this.#options);
   }
 }
 Object.freeze(Base64Encoder);
 
 export type {
-  Base64Options,
-  Base64Table,
+  Options as Base64Options,
+  Table as Base64Table,
 };
 
 export {
