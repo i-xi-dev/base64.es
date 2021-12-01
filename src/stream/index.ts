@@ -26,7 +26,7 @@ import {
 class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
   #pending: string;
 
-  constructor () {
+  constructor() {
     this.#pending = "";
   }
 
@@ -75,7 +75,7 @@ Object.freeze(DecoderStream);
 class Base64EncoderStreamRegulator implements ByteEncoderStreamRegulator {
   #pending: Uint8Array;
 
-  constructor () {
+  constructor() {
     this.#pending = new Uint8Array(0);
   }
 
