@@ -1,165 +1,124 @@
 //
 
+// import {
+//   ByteDecoderStreamRegulator,
+//   ByteEncoderStreamRegulator,
+//   ByteDecoderStream,
+//   ByteEncoderStream,
+// } from "@i-xi-dev/fundamental"; TODO TransformStreamをどうするか
+import { 
+  ByteDecoderStreamRegulator,
+  ByteEncoderStreamRegulator,
+  ByteDecoderStream,
+  ByteEncoderStream,
+} from "../lib/@i-xi-dev/fundamental/index";
+
 import {
   // type Options,
   Options,
-  // type ResolvedOptions,
-  ResolvedOptions,
-  decode,
-  encode,
-  resolveOptions,
-} from "../_.js";
+} from "../_";
 
-type DecoderStreamPending = {
-  chars: string,
-};
+import {
+  Base64Decoder,
+  Base64Encoder,
+} from "../index";
+
+class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
+  #pending: string;
+
+  constructor () {
+    this.#pending = "";
+  }
+
+  regulate(chunk: string): string {
+    const temp = this.#pending + chunk;
+    const surplus = temp.length % 24;
+
+    if (temp.length < 24) {
+      this.#pending = temp;
+      return "";
+    }
+    else if (surplus === 0) {
+      this.#pending = "";
+      return temp;
+    }
+    else {
+      const pendingLength = temp.length - surplus;
+      this.#pending = temp.substring(pendingLength);
+      return temp.substring(0, pendingLength);
+    }
+  }
+
+  flush(): string {
+    const remains = this.#pending;
+    this.#pending = "";
+    return remains;
+  }
+}
 
 /**
  * 復号ストリーム
  */
-class DecoderStream implements TransformStream {
-  /**
-   * 未設定項目を埋めたオプション
-   */
-  readonly #options: ResolvedOptions;
-
-  readonly #pending: DecoderStreamPending;
-
-  readonly #stream: TransformStream<string, Uint8Array>;
-
+class DecoderStream extends ByteDecoderStream {
   /**
    * @param options オプション
    */
   constructor(options?: Options) {
-    const self = (): DecoderStream => this;
-    const transformer: Transformer<string, Uint8Array> = {
-      transform(chunk: string, controller: TransformStreamDefaultController<Uint8Array>): void {
-        const decoded = self().#decodeChunk(chunk);
-        controller.enqueue(decoded);
-      },
-      flush(controller: TransformStreamDefaultController<Uint8Array>): void {
-        if (self().#pending.chars.length > 0) {
-          const decoded = decode(self().#pending.chars, self().#options);
-          controller.enqueue(decoded);
-        }
-      },
-    };
-
-    this.#options = resolveOptions(options);
-    this.#pending = Object.seal({
-      chars: "",
-    });
-    this.#stream = new TransformStream<string, Uint8Array>(transformer);
-
+    const decoder = new Base64Decoder(options);
+    const regulator = new Base64DecoderStreamRegulator();
+    super(decoder, regulator);
     Object.freeze(this);
-  }
-
-  get writable(): WritableStream<string> {
-    return this.#stream.writable;
-  }
-
-  get readable(): ReadableStream<Uint8Array> {
-    return this.#stream.readable;
-  }
-
-  #decodeChunk(chunk: string): Uint8Array {
-    const temp = this.#pending.chars + chunk;
-    const surplus = temp.length % 24;
-
-    let toDecode: string;
-    if (temp.length < 24) {
-      this.#pending.chars = temp;
-      toDecode = "";
-    }
-    else if (surplus === 0) {
-      this.#pending.chars = "";
-      toDecode = temp;
-    }
-    else {
-      const pendingLength = temp.length - surplus;
-      this.#pending.chars = temp.substring(pendingLength);
-      toDecode = temp.substring(0, pendingLength);
-    }
-
-    return decode(toDecode, this.#options);
   }
 }
 Object.freeze(DecoderStream);
 
-type EncoderStreamPending = {
-  bytes: Uint8Array,
-};
+class Base64EncoderStreamRegulator implements ByteEncoderStreamRegulator {
+  #pending: Uint8Array;
+
+  constructor () {
+    this.#pending = new Uint8Array(0);
+  }
+
+  regulate(chunk: Uint8Array): Uint8Array {
+    const temp = new Uint8Array(this.#pending.length + chunk.length);
+    temp.set(this.#pending);
+    temp.set(chunk, this.#pending.length);
+    const surplus = temp.length % 24;
+
+    if (temp.length < 24) {
+      this.#pending = temp;
+      return new Uint8Array(0);
+    }
+    else if (surplus === 0) {
+      this.#pending = new Uint8Array(0);
+      return temp;
+    }
+    else {
+      const pendingLength = temp.length - surplus;
+      this.#pending = temp.subarray(pendingLength);
+      return temp.subarray(0, pendingLength);
+    }
+  }
+
+  flush(): Uint8Array {
+    const remains = this.#pending;
+    this.#pending = new Uint8Array(0);
+    return remains;
+  }
+}
 
 /**
  * 符号化ストリーム
  */
-class EncoderStream implements TransformStream {
-  /**
-   * 未設定項目を埋めたオプション
-   */
-  readonly #options: ResolvedOptions;
-
-  readonly #pending: EncoderStreamPending;
-
-  readonly #stream: TransformStream<Uint8Array, string>;
-
+class EncoderStream extends ByteEncoderStream {
   /**
    * @param options オプション
    */
   constructor(options?: Options) {
-    const self = (): EncoderStream => this;
-    const transformer: Transformer<Uint8Array, string> = {
-      transform(chunk: Uint8Array, controller: TransformStreamDefaultController<string>): void {
-        const encoded = self().#encodeChunk(chunk);
-        controller.enqueue(encoded);
-      },
-      flush(controller: TransformStreamDefaultController<string>): void {
-        if (self().#pending.bytes.length > 0) {
-          const encoded = encode(Uint8Array.from(self().#pending.bytes), self().#options);
-          controller.enqueue(encoded);
-        }
-      },
-    };
-
-    this.#options = resolveOptions(options);
-    this.#pending = Object.seal({
-      bytes: new Uint8Array(0),
-    });
-    this.#stream = new TransformStream<Uint8Array, string>(transformer);
-
+    const encoder = new Base64Encoder(options);
+    const regulator = new Base64EncoderStreamRegulator();
+    super(encoder, regulator);
     Object.freeze(this);
-  }
-
-  get writable(): WritableStream<Uint8Array> {
-    return this.#stream.writable;
-  }
-
-  get readable(): ReadableStream<string> {
-    return this.#stream.readable;
-  }
-
-  #encodeChunk(chunk: Uint8Array): string {
-    const temp = new Uint8Array(this.#pending.bytes.length + chunk.length);
-    temp.set(this.#pending.bytes);
-    temp.set(chunk, this.#pending.bytes.length);
-    const surplus = temp.length % 24;
-
-    let toEncode: Uint8Array;
-    if (temp.length < 24) {
-      this.#pending.bytes = temp;
-      toEncode = new Uint8Array(0);
-    }
-    else if (surplus === 0) {
-      this.#pending.bytes = new Uint8Array(0);
-      toEncode = temp;
-    }
-    else {
-      const pendingLength = temp.length - surplus;
-      this.#pending.bytes = temp.subarray(pendingLength);
-      toEncode = temp.subarray(0, pendingLength);
-    }
-
-    return encode(toEncode, this.#options);
   }
 }
 Object.freeze(EncoderStream);

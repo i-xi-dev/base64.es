@@ -1,5 +1,7 @@
 //
 
+import { uint8 } from "@i-xi-dev/fundamental";
+
 const CHARS = [
   "!",
   "+",
@@ -246,9 +248,6 @@ function isEncoded(work: string, options: ResolvedOptions): boolean {
   return regex.test(work);
 }
 
-/** （256個列挙するしかないので、定義していないが）0～255の整数を表すものとする */
-type uint8 = number; // type uint8 = 0 | 0x1 | … | 0xFE | 0xFF;
-
 /**
  * バイト列を文字列にBase64符号化し、結果の文字列を返却
  * 
@@ -269,7 +268,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
   for (let i = 0; i < toEncode.byteLength; i = i + 3) { 
     const [ _n8bit1, _n8bit2, _n8bit3 ] = toEncode.subarray(i, i + 3);
     const _8bit1: uint8 = _n8bit1 as uint8;
-    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2) : 0;
+    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as uint8) : 0;
 
     // 6-bit (1)
     _6bit1e = options.table[_8bit1 >> 2] as string;
@@ -278,7 +277,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
     _6bit2e = options.table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
 
     if (_n8bit2 !== undefined) {
-      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3) : 0;
+      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as uint8) : 0;
 
       // 6-bit (3)
       _6bit3e = options.table[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;
@@ -446,7 +445,3 @@ export {
   encode,
   resolveOptions,
 };
-
-//TODO 下記を外に出す（別パッケージにする）
-// type uint8
-// interface ByteDecoder, ByteEncoder, ...

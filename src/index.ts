@@ -1,6 +1,11 @@
 //
 
 import {
+  ByteDecoder,
+  ByteEncoder,
+} from "@i-xi-dev/fundamental";
+
+import {
   // type Options,
   Options,
   // type ResolvedOptions,
@@ -10,12 +15,12 @@ import {
   decode,
   encode,
   resolveOptions,
-} from "./_.js";
+} from "./_";
 
 /**
  * 復号器
  */
-class Base64Decoder {
+class Base64Decoder implements ByteDecoder {
   /**
    * 未設定項目を埋めたオプション
    */
@@ -44,7 +49,7 @@ Object.freeze(Base64Decoder);
 /**
  * 符号化器
  */
-class Base64Encoder {
+class Base64Encoder implements ByteEncoder {
   /**
    * 未設定項目を埋めたオプション
    */
