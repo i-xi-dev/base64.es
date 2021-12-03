@@ -301,7 +301,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
 
 /**
  * オプション
- * table以外は未設定を許可
+ * 未設定を許可
  */
 type Options = {
   /** @see {@link ResolvedOptions.table} */
