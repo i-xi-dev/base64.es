@@ -29,6 +29,7 @@
   "keywords": [
     "base64",
     "forgiving-base64",
+    "stream",
     "transformstream",
     "browser",
     "deno",

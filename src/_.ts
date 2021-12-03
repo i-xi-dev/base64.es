@@ -305,7 +305,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
  */
 type Options = {
   /** @see {@link ResolvedOptions.table} */
-  table: Readonly<Array<string>>,
+  table?: Readonly<Array<string>>,
 
   /** @see {@link ResolvedOptions.padEnd} */
   padEnd?: boolean,
