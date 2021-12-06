@@ -1,17 +1,11 @@
 //
 
-// import {
-//   ByteDecoderStreamRegulator,
-//   ByteEncoderStreamRegulator,
-//   ByteDecoderStream,
-//   ByteEncoderStream,
-// } from "@i-xi-dev/fundamental"; TODO TransformStreamをどうするか
-import { 
+import {
   ByteDecoderStreamRegulator,
   ByteEncoderStreamRegulator,
   ByteDecoderStream,
   ByteEncoderStream,
-} from "../lib/@i-xi-dev/fundamental/index";
+} from "@i-xi-dev/fundamental";
 
 import {
   // type Options,

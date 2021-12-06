@@ -398,27 +398,16 @@ const RFC4648_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "+", "/" ]) 
 const RFC4648_PADDING = "=";
 
 /**
- * Infra Standard の仕様で復号/符号化するためのオプション
- */
-const DefaultOptions: ResolvedOptions = Object.freeze({
-  table: RFC4648_TABLE,
-  padEnd: true,
-  padding: RFC4648_PADDING,
-  forgiving: true,
-});
-
-/**
  * オプションをResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
  * 
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  */
-function resolveOptions(options: Options | ResolvedOptions = DefaultOptions): ResolvedOptions {
-  const defaults = DefaultOptions;
-  const table: Readonly<Table> = isTable(options.table) ? options.table : defaults.table;
-  const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : defaults.padEnd;
-  const padding: char = isChar(options.padding) ? options.padding : defaults.padding;
+function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
+  const table: Readonly<Table> = isTable(options.table) ? options.table : RFC4648_TABLE;
+  const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : true;
+  const padding: char = isChar(options.padding) ? options.padding : RFC4648_PADDING;
   // const forgiving: boolean = (typeof options.forgiving === "boolean") ? options.forgiving : defaults.forgiving;
 
   // tableとpaddingの重複チェック
