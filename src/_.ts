@@ -133,8 +133,8 @@ type ResolvedOptions = {
 /**
  * 文字列をバイト列にBase64復号し、結果のバイト列を返却
  * 
- * {@link https://infra.spec.whatwg.org/#forgiving-base64-decode Infra Standard}および、
- * {@link https://datatracker.ietf.org/doc/html/rfc4648 RFC 4648}の仕様に従った。
+ * {@link [Infra Standard](https://infra.spec.whatwg.org/#forgiving-base64-decode)}および、
+ * {@link [RFC 4648](https://datatracker.ietf.org/doc/html/rfc4648)}の仕様に従った。
  * 改行には非対応（必要であれば改行を除去してからdecodeすべし）。
  * 
  * @param encoded Base64符号化された文字列
@@ -251,8 +251,8 @@ function isEncoded(work: string, options: ResolvedOptions): boolean {
 /**
  * バイト列を文字列にBase64符号化し、結果の文字列を返却
  * 
- * {@link https://infra.spec.whatwg.org/#forgiving-base64-decode Infra Standard}および、
- * {@link https://datatracker.ietf.org/doc/html/rfc4648 RFC 4648}の仕様に従った。
+ * {@link [Infra Standard](https://infra.spec.whatwg.org/#forgiving-base64-encode)}および、
+ * {@link [RFC 4648](https://datatracker.ietf.org/doc/html/rfc4648)}の仕様に従った。
  * 改行には非対応（必要であればencode結果を改行すべし）。
  * 
  * @param toEncode バイト列
