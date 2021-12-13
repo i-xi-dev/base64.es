@@ -1,6 +1,8 @@
 //
 
-import { uint8 } from "@i-xi-dev/fundamental";
+import {
+  type uint8,
+} from "@i-xi-dev/fundamental";
 
 const CHARS = [
   "!",
@@ -423,13 +425,10 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
   };
 }
 
-export type {
-  Table,
-  Options,
-  ResolvedOptions,
-};
-
 export {
+  type Table,
+  type Options,
+  type ResolvedOptions,
   decode,
   encode,
   resolveOptions,

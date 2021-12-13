@@ -1,17 +1,14 @@
 //
 
 import {
-  ByteDecoder,
-  ByteEncoder,
+  type ByteDecoder,
+  type ByteEncoder,
 } from "@i-xi-dev/fundamental";
 
 import {
-  // type Options,
-  Options,
-  // type ResolvedOptions,
-  ResolvedOptions,
-  // type Table,
-  Table,
+  type Options,
+  type ResolvedOptions,
+  type Table,
   decode,
   encode,
   resolveOptions,
@@ -75,12 +72,9 @@ class Base64Encoder implements ByteEncoder {
 }
 Object.freeze(Base64Encoder);
 
-export type {
-  Options as Base64Options,
-  Table as Base64Table,
-};
-
 export {
+  type Options as Base64Options,
+  type Table as Base64Table,
   Base64Decoder,
   Base64Encoder,
 };

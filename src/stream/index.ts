@@ -1,15 +1,14 @@
 //
 
 import {
-  ByteDecoderStreamRegulator,
-  ByteEncoderStreamRegulator,
+  type ByteDecoderStreamRegulator,
+  type ByteEncoderStreamRegulator,
   ByteDecoderStream,
   ByteEncoderStream,
 } from "@i-xi-dev/fundamental";
 
 import {
-  // type Options,
-  Options,
+  type Options,
 } from "../_";
 
 import {
