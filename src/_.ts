@@ -407,22 +407,31 @@ const RFC4648_PADDING = "=";
  * @returns 未設定項目を埋めたオプションの複製
  */
 function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
-  const table: Readonly<Table> = isTable(options.table) ? options.table : RFC4648_TABLE;
-  const padEnd: boolean = (typeof options.padEnd === "boolean") ? options.padEnd : true;
-  const padding: char = isChar(options.padding) ? options.padding : RFC4648_PADDING;
-  // const forgiving: boolean = (typeof options.forgiving === "boolean") ? options.forgiving : defaults.forgiving;
+  const tableIsValid = isTable(options.table);
+  const tableIsFrozen = Object.isFrozen(options.table);
+  const padEndIsValid = (typeof options.padEnd === "boolean");
+  const paddingIsValid = isChar(options.padding);
+  const forgivingIsValid = ((options as ResolvedOptions).forgiving === true);
+  const isFrozen = Object.isFrozen(options);
+
+  const table: Readonly<Table> = tableIsValid ? options.table as Table : RFC4648_TABLE;
+  const padding: char = paddingIsValid ? options.padding as char : RFC4648_PADDING;
 
   // tableとpaddingの重複チェック
   if((new Set([ ...table, padding ])).size !== 65) {
     throw new RangeError("options error: character duplicated");
   }
 
-  return {
-    table,
-    padEnd,
+  if (tableIsValid && tableIsFrozen && padEndIsValid && paddingIsValid && forgivingIsValid && isFrozen) {
+    return options as ResolvedOptions;
+  }
+
+  return Object.freeze({
+    table: Object.freeze(table),
+    padEnd: padEndIsValid ? options.padEnd as boolean : true,
     padding,
     forgiving: true,
-  };
+  });
 }
 
 export {

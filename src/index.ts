@@ -18,6 +18,8 @@ import {
  * 復号器
  */
 class Base64Decoder implements ByteDecoder {
+  static #cache: WeakMap<ResolvedOptions, Base64Decoder> = new WeakMap();
+
   /**
    * 未設定項目を埋めたオプション
    */
@@ -29,6 +31,14 @@ class Base64Decoder implements ByteDecoder {
   constructor(options?: Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
+  }
+
+  static getInstance(options?: Options): Base64Decoder {
+    const resolvedOptions = resolveOptions(options);
+    if (Base64Decoder.#cache.has(resolvedOptions) !== true) {
+      Base64Decoder.#cache.set(resolvedOptions, new Base64Decoder(resolvedOptions));
+    }
+    return Base64Decoder.#cache.get(resolvedOptions) as Base64Decoder;
   }
 
   /**
@@ -47,6 +57,8 @@ Object.freeze(Base64Decoder);
  * 符号化器
  */
 class Base64Encoder implements ByteEncoder {
+  static #cache: WeakMap<ResolvedOptions, Base64Encoder> = new WeakMap();
+
   /**
    * 未設定項目を埋めたオプション
    */
@@ -58,6 +70,14 @@ class Base64Encoder implements ByteEncoder {
   constructor(options?: Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
+  }
+
+  static getInstance(options?: Options): Base64Encoder {
+    const resolvedOptions = resolveOptions(options);
+    if (Base64Encoder.#cache.has(resolvedOptions) !== true) {
+      Base64Encoder.#cache.set(resolvedOptions, new Base64Encoder(resolvedOptions));
+    }
+    return Base64Encoder.#cache.get(resolvedOptions) as Base64Encoder;
   }
 
   /**
