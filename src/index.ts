@@ -18,8 +18,6 @@ import {
  * 復号器
  */
 class Base64Decoder implements ByteDecoder {
-  static #cache: WeakMap<ResolvedOptions, Base64Decoder> = new WeakMap();
-
   /**
    * 未設定項目を埋めたオプション
    */
@@ -31,14 +29,6 @@ class Base64Decoder implements ByteDecoder {
   constructor(options?: Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
-  }
-
-  static getInstance(options?: Options): Base64Decoder {
-    const resolvedOptions = resolveOptions(options);
-    if (Base64Decoder.#cache.has(resolvedOptions) !== true) {
-      Base64Decoder.#cache.set(resolvedOptions, new Base64Decoder(resolvedOptions));
-    }
-    return Base64Decoder.#cache.get(resolvedOptions) as Base64Decoder;
   }
 
   /**
@@ -57,8 +47,6 @@ Object.freeze(Base64Decoder);
  * 符号化器
  */
 class Base64Encoder implements ByteEncoder {
-  static #cache: WeakMap<ResolvedOptions, Base64Encoder> = new WeakMap();
-
   /**
    * 未設定項目を埋めたオプション
    */
@@ -70,14 +58,6 @@ class Base64Encoder implements ByteEncoder {
   constructor(options?: Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
-  }
-
-  static getInstance(options?: Options): Base64Encoder {
-    const resolvedOptions = resolveOptions(options);
-    if (Base64Encoder.#cache.has(resolvedOptions) !== true) {
-      Base64Encoder.#cache.set(resolvedOptions, new Base64Encoder(resolvedOptions));
-    }
-    return Base64Encoder.#cache.get(resolvedOptions) as Base64Encoder;
   }
 
   /**
@@ -92,9 +72,46 @@ class Base64Encoder implements ByteEncoder {
 }
 Object.freeze(Base64Encoder);
 
+const decoderCache: WeakMap<ResolvedOptions, Base64Decoder> = new WeakMap();
+
+const encoderCache: WeakMap<ResolvedOptions, Base64Encoder> = new WeakMap();
+
+const Base64 = Object.freeze({
+  resolveOptions(options?: Options | ResolvedOptions): ResolvedOptions {
+    return resolveOptions(options);
+  },
+  
+  getDecoder(options?: Options | ResolvedOptions): Base64Decoder {
+    const resolvedOptions = resolveOptions(options);
+    if (decoderCache.has(resolvedOptions) !== true) {
+      decoderCache.set(resolvedOptions, new Base64Decoder(resolvedOptions));
+    }
+    return decoderCache.get(resolvedOptions) as Base64Decoder;    
+  },
+
+  getEncoder(options?: Options | ResolvedOptions): Base64Encoder {
+    const resolvedOptions = resolveOptions(options);
+    if (encoderCache.has(resolvedOptions) !== true) {
+      encoderCache.set(resolvedOptions, new Base64Encoder(resolvedOptions));
+    }
+    return encoderCache.get(resolvedOptions) as Base64Encoder;
+  },
+
+  decode(encoded: string, options: Options | ResolvedOptions): Uint8Array {
+    const resolvedOptions = resolveOptions(options);
+    return decode(encoded, resolvedOptions);
+  },
+
+  encode(toEncode: Uint8Array, options: Options | ResolvedOptions): string {
+    const resolvedOptions = resolveOptions(options);
+    return encode(toEncode, resolvedOptions);
+  },
+});
+
 export {
   type Options as Base64Options,
   type Table as Base64Table,
   Base64Decoder,
   Base64Encoder,
+  Base64,
 };
