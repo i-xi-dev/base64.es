@@ -40,7 +40,7 @@ class Base64Encoder implements ByteEncoder {
     return encode(toEncode, this.#options);
   }
 
-  static getEncoder(options?: Options): Base64Encoder {
+  static get(options?: Options): Base64Encoder {
     const resolvedOptions = resolveOptions(options);
     if (Base64Encoder.#encoderCache.has(resolvedOptions) !== true) {
       Base64Encoder.#encoderCache.set(resolvedOptions, new Base64Encoder(resolvedOptions));
