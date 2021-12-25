@@ -434,6 +434,18 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
   });
 }
 
+const Base64 = Object.freeze({
+  decode(encoded: string, options: Options | ResolvedOptions): Uint8Array {
+    const resolvedOptions = resolveOptions(options);
+    return decode(encoded, resolvedOptions);
+  },
+
+  encode(toEncode: Uint8Array, options: Options | ResolvedOptions): string {
+    const resolvedOptions = resolveOptions(options);
+    return encode(toEncode, resolvedOptions);
+  },
+});
+
 export {
   type Table,
   type Options,
@@ -441,4 +453,5 @@ export {
   decode,
   encode,
   resolveOptions,
+  Base64,
 };
