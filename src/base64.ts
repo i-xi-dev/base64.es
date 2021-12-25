@@ -444,6 +444,8 @@ const Base64 = Object.freeze({
     const resolvedOptions = resolveOptions(options);
     return encode(toEncode, resolvedOptions);
   },
+
+  resolveOptions,
 });
 
 export {
