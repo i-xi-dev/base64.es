@@ -6,7 +6,7 @@ A JavaScript Base64 encoder and decoder, implements [Forgiving base64](https://i
 - [`Base64DecoderStream`, `Base64EncoderStream`](#base64decoderstream-and-base64encoderstream-class)
 
 
-## `Base64Decoder` and `Base64Encoder` class
+## `Base64Decoder` and `Base64Encoder` classes, and `Base64` static class
 
 
 ### Installation
@@ -18,21 +18,21 @@ $ npm i @i-xi-dev/base64
 ```
 
 ```javascript
-import { Base64Decoder, Base64Encoder } from "@i-xi-dev/base64";
+import { Base64Decoder, Base64Encoder, Base64 } from "@i-xi-dev/base64";
 ```
 
 #### CDN
 
 ```javascript
-import { Base64Decoder, Base64Encoder } from "https://cdn.skypack.dev/@i-xi-dev/base64";
+import { Base64Decoder, Base64Encoder, Base64 } from "https://cdn.skypack.dev/@i-xi-dev/base64";
 ```
 
 ```javascript
-import { Base64Decoder, Base64Encoder } from "https://unpkg.com/@i-xi-dev/base64/dist/index.js";
+import { Base64Decoder, Base64Encoder, Base64 } from "https://unpkg.com/@i-xi-dev/base64/dist/index.js";
 ```
 
 ```javascript
-import { Base64Decoder, Base64Encoder } from "https://cdn.jsdelivr.net/npm/@i-xi-dev/base64/dist/index.js";
+import { Base64Decoder, Base64Encoder, Base64 } from "https://cdn.jsdelivr.net/npm/@i-xi-dev/base64/dist/index.js";
 ```
 
 
@@ -52,8 +52,18 @@ encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
 // → "AwIBAP/+/fw="
 ```
 
+```javascript
+Base64.decode("AwIBAP/+/fw=");
+// → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
+```
 
-## `Base64DecoderStream` and `Base64EncoderStream` class
+```javascript
+Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
+// → "AwIBAP/+/fw="
+```
+
+
+## `Base64DecoderStream` and `Base64EncoderStream` classes
 
 
 ### Requirement
@@ -139,4 +149,6 @@ const decoder = new Base64Decoder(options);
 const encoder = new Base64Encoder(options);
 const decoderStream = new Base64DecoderStream(options);
 const encoderStream = new Base64EncoderStream(options);
+const decoded = Base64.decode("", options);
+const encoded = Base64.encode(Uint8Arry.of(), options);
 ```
