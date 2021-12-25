@@ -147,27 +147,27 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   let work: string = encoded;
   // if (options.forgiving === true) {
   //   // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
-    work = work.replace(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
+  work = work.replace(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
   // }
 
   // if (options.forgiving === true) {
   //  // work.lengthの箇所は、仕様では符号位置数だがlengthを使用する
   //  // length !== 符号位置数の場合の処理結果が正しくなくなるが、そうなったとしてもisEncodedでエラーとなる為問題は無いはず
 
-    if ((work.length % 4) === 0) {
-      for (let i = 0; i < 2; i++) {
-        if (work.endsWith(options.padding)) {
-          work = work.substring(0, (work.length - 1));
-        }
-        else {
-          break;
-        }
+  if ((work.length % 4) === 0) {
+    for (let i = 0; i < 2; i++) {
+      if (work.endsWith(options.padding)) {
+        work = work.substring(0, (work.length - 1));
+      }
+      else {
+        break;
       }
     }
+  }
 
-    if ((work.length % 4) === 1) {
-      throw new TypeError("forgiving decode error");
-    }
+  if ((work.length % 4) === 1) {
+    throw new TypeError("forgiving decode error");
+  }
   // }
 
   if (isEncoded(work, options) !== true) {

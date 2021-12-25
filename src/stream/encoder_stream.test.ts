@@ -1,6 +1,4 @@
-import assert from "node:assert";
-import { ReadableStream, WritableStream } from "node:stream/web";
-import { Base64EncoderStream } from "../../../node/stream/index.mjs";
+import { Base64EncoderStream } from "./encoder_stream";
 
 describe("Base64EncoderStream.prototype.writable", () => {
   it("writable", async () => {
@@ -8,7 +6,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
       Uint8Array.of(0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC)
     ];
 
-    let ti;
+    let ti: NodeJS.Timer;
     const s = new ReadableStream({
       start(controller) {
         let c = 0;
@@ -26,7 +24,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise((resolve) => {
+      return new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
         }, 20);
@@ -46,7 +44,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).toBe(expected);
   });
 
   it("writable", async () => {
@@ -59,7 +57,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
       )
     ];
 
-    let ti;
+    let ti: NodeJS.Timer;
     const s = new ReadableStream({
       start(controller) {
         let c = 0;
@@ -77,7 +75,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise((resolve) => {
+      return new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
         }, 20);
@@ -97,7 +95,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).toBe(expected);
   });
 
   it("writable", async () => {
@@ -112,7 +110,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
       Uint8Array.of(0xFC),
     ];
 
-    let ti;
+    let ti: NodeJS.Timer;
     const s = new ReadableStream({
       start(controller) {
         let c = 0;
@@ -130,7 +128,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise((resolve) => {
+      return new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
         }, 300);
@@ -150,18 +148,19 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).toBe(expected);
   });
 
   it("writable", async () => {
     const td = [
       Uint8Array.of(
         0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,
-        0x03,0x02,0x01,0x00
+        0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,
+        0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC
       ),
       Uint8Array.of(),
-      Uint8Array.of(0xFF,0xFE,0xFD,0xFC,
-        0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,0x03,0x02),
+      Uint8Array.of(
+        0x03,0x02),
       Uint8Array.of(
         
         0x01,0x00,0xFF,0xFE,0xFD,0xFC,
@@ -174,7 +173,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
       Uint8Array.of(),
     ];
 
-    let ti;
+    let ti: NodeJS.Timer;
     const s = new ReadableStream({
       start(controller) {
         let c = 0;
@@ -192,7 +191,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise((resolve) => {
+      return new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
         }, 300);
@@ -212,7 +211,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/A==";
 
-    assert.strictEqual(result, expected);
+    expect(result).toBe(expected);
   });
 
 });
