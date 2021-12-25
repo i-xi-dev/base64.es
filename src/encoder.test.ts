@@ -1,8 +1,5 @@
-import { webcrypto } from "node:crypto";
 import { Base64Encoder } from "./encoder";
 import { Base64 } from "./base64";
-
-const crypto = webcrypto as unknown as Crypto;
 
 describe("Base64Encoder.prototype.encode", () => {
   it("Base64Encoder()/encode", () => {

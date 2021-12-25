@@ -120,16 +120,16 @@ type ResolvedOptions = {
   /** パディング文字 */
   padding: char,
 
-  /**
-   * 復号時:
-   *    復号を寛容に行うか否か
-   *    （https://infra.spec.whatwg.org/#forgiving-base64-decode の仕様で復号するか否か）
-   *    ※trueの場合、padEndは無視する
-   * 
-   * 符号化時:
-   *    無視する
-   */
-  forgiving: boolean,
+  // /**
+  //  * 復号時:
+  //  *    復号を寛容に行うか否か
+  //  *    （https://infra.spec.whatwg.org/#forgiving-base64-decode の仕様で復号するか否か）
+  //  *    ※trueの場合、padEndは無視する
+  //  * 
+  //  * 符号化時:
+  //  *    無視する
+  //  */
+  // forgiving: boolean,
 };
 
 /**
@@ -145,14 +145,14 @@ type ResolvedOptions = {
  */
 function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   let work: string = encoded;
-  if (options.forgiving === true) {
-    // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
+  // if (options.forgiving === true) {
+  //   // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
     work = work.replace(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
-  }
+  // }
 
-  if (options.forgiving === true) {
-    // work.lengthの箇所は、仕様では符号位置数だがlengthを使用する
-    // length !== 符号位置数の場合の処理結果が正しくなくなるが、そうなったとしてもisEncodedでエラーとなる為問題は無いはず
+  // if (options.forgiving === true) {
+  //  // work.lengthの箇所は、仕様では符号位置数だがlengthを使用する
+  //  // length !== 符号位置数の場合の処理結果が正しくなくなるが、そうなったとしてもisEncodedでエラーとなる為問題は無いはず
 
     if ((work.length % 4) === 0) {
       for (let i = 0; i < 2; i++) {
@@ -168,36 +168,36 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
     if ((work.length % 4) === 1) {
       throw new TypeError("forgiving decode error");
     }
-  }
+  // }
 
   if (isEncoded(work, options) !== true) {
     throw new TypeError("decode error (1)");
   }
 
-  const paddingStart = work.indexOf(options.padding);
-  let paddingCount: number;
-  let encodedBody: string;
-  if ((options.padEnd === true) && (options.forgiving !== true)) {
-    if ((work.length % 4) !== 0) {
-      throw new TypeError("decode error (2)");
-    }
-
-    if (paddingStart >= 0) {
-      paddingCount = work.length - paddingStart;
-      encodedBody = work.substring(0, paddingStart);
-    }
-    else {
-      paddingCount = 0;
-      encodedBody = work;
-    }
-  }
-  else {
-    // if (paddingStart >= 0) {
-    //  throw new TypeError("decode error (3)"); (1)で例外になる
-    // }
-    paddingCount = (work.length % 4 === 0) ? 0 : 4 - (work.length % 4);
-    encodedBody = work;
-  }
+  // const paddingStart = work.indexOf(options.padding);
+  // let paddingCount: number;
+  // let encodedBody: string;
+  // if ((options.padEnd === true) && (options.forgiving !== true)) {
+  //   if ((work.length % 4) !== 0) {
+  //     throw new TypeError("decode error (2)");
+  //   }
+  //
+  //   if (paddingStart >= 0) {
+  //     paddingCount = work.length - paddingStart;
+  //     encodedBody = work.substring(0, paddingStart);
+  //   }
+  //   else {
+  //     paddingCount = 0;
+  //     encodedBody = work;
+  //   }
+  // }
+  // else {
+  //   // if (paddingStart >= 0) {
+  //   //  throw new TypeError("decode error (3)"); (1)で例外になる
+  //   // }
+  const paddingCount = (work.length % 4 === 0) ? 0 : 4 - (work.length % 4);
+  const encodedBody = work;
+  // }
 
   let _6bit1: number;
   let _6bit2: number;
@@ -238,14 +238,14 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
 function isEncoded(work: string, options: ResolvedOptions): boolean {
   const tablePattern = "[" + options.table.map((chr) => `\\u{${ chr.charCodeAt(0).toString(16) }}`).join("") + "]";
 
-  let regex: RegExp;
-  if ((options.padEnd === true) && (options.forgiving !== true)) {
-    const paddingPattern = `\\u{${ options.padding.charCodeAt(0).toString(16) }}`;
-    regex = new RegExp(`^(${ tablePattern }+${ paddingPattern }*|${ tablePattern }*)$`, "u");
-  }
-  else {
-    regex = new RegExp(`^${ tablePattern }*$`, "u");
-  }
+  // let regex: RegExp;
+  // if ((options.padEnd === true) && (options.forgiving !== true)) {
+  //   const paddingPattern = `\\u{${ options.padding.charCodeAt(0).toString(16) }}`;
+  //   regex = new RegExp(`^(${ tablePattern }+${ paddingPattern }*|${ tablePattern }*)$`, "u");
+  // }
+  // else {
+  const regex = new RegExp(`^${ tablePattern }*$`, "u");
+  // }
 
   return regex.test(work);
 }
@@ -411,7 +411,7 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
   const tableIsFrozen = Object.isFrozen(options.table);
   const padEndIsValid = (typeof options.padEnd === "boolean");
   const paddingIsValid = isChar(options.padding);
-  const forgivingIsValid = ((options as ResolvedOptions).forgiving === true);
+  // const forgivingIsValid = ((options as ResolvedOptions).forgiving === true);
   const isFrozen = Object.isFrozen(options);
 
   const table: Readonly<Table> = tableIsValid ? options.table as Table : RFC4648_TABLE;
@@ -422,7 +422,8 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
     throw new RangeError("options error: character duplicated");
   }
 
-  if (tableIsValid && tableIsFrozen && padEndIsValid && paddingIsValid && forgivingIsValid && isFrozen) {
+  // if (tableIsValid && tableIsFrozen && padEndIsValid && paddingIsValid && forgivingIsValid && isFrozen) {
+  if (tableIsValid && tableIsFrozen && padEndIsValid && paddingIsValid && isFrozen) {
     return options as ResolvedOptions;
   }
 
@@ -430,17 +431,17 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
     table: Object.freeze(table),
     padEnd: padEndIsValid ? options.padEnd as boolean : true,
     padding,
-    forgiving: true,
+    // forgiving: true,
   });
 }
 
 const Base64 = Object.freeze({
-  decode(encoded: string, options: Options | ResolvedOptions): Uint8Array {
+  decode(encoded: string, options?: Options): Uint8Array {
     const resolvedOptions = resolveOptions(options);
     return decode(encoded, resolvedOptions);
   },
 
-  encode(toEncode: Uint8Array, options: Options | ResolvedOptions): string {
+  encode(toEncode: Uint8Array, options?: Options): string {
     const resolvedOptions = resolveOptions(options);
     return encode(toEncode, resolvedOptions);
   },
