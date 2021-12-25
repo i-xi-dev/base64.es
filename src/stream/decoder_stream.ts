@@ -6,9 +6,12 @@ import {
 } from "@i-xi-dev/fundamental";
 
 import {
-  type Base64Options,
+  type Options,
+} from "../base64";
+
+import {
   Base64Decoder,
-} from "../index";
+} from "../decoder";
 
 class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
   #pending: string;
@@ -50,7 +53,7 @@ class DecoderStream extends ByteDecoderStream {
   /**
    * @param options オプション
    */
-  constructor(options?: Base64Options) {
+  constructor(options?: Options) {
     const decoder = new Base64Decoder(options);
     const regulator = new Base64DecoderStreamRegulator();
     super(decoder, regulator);

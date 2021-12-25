@@ -6,9 +6,12 @@ import {
 } from "@i-xi-dev/fundamental";
 
 import {
-  type Base64Options,
+  type Options,
+} from "../base64";
+
+import {
   Base64Encoder,
-} from "../index";
+} from "../encoder";
 
 class Base64EncoderStreamRegulator implements ByteEncoderStreamRegulator {
   #pending: Uint8Array;
@@ -52,7 +55,7 @@ class EncoderStream extends ByteEncoderStream {
   /**
    * @param options オプション
    */
-  constructor(options?: Base64Options) {
+  constructor(options?: Options) {
     const encoder = new Base64Encoder(options);
     const regulator = new Base64EncoderStreamRegulator();
     super(encoder, regulator);
