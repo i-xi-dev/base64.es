@@ -3,8 +3,8 @@
 // https://kulshekhar.github.io/ts-jest/docs/next/guides/esm-support/
 
 // 削除時修正箇所:
-// - tsconfigのtransformのjsの行を削除
-// - tsconfigのtransformIgnorePatternsをコメントアウト
+// - jest.configのtransformのjsの行を削除
+// - jest.configのtransformIgnorePatternsをコメントアウト
 // - @babel/plugin-transform-modules-commonjs削除
 // - @babel/preset-env削除
 // - babel-jest削除
