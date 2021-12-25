@@ -149,6 +149,6 @@ const decoder = new Base64Decoder(options);
 const encoder = new Base64Encoder(options);
 const decoderStream = new Base64DecoderStream(options);
 const encoderStream = new Base64EncoderStream(options);
-const decoded = Base64.decode("", options);
-const encoded = Base64.encode(Uint8Arry.of(), options);
+const decoded = Base64.decode(str, options);
+const encoded = Base64.encode(uint8Array, options);
 ```
