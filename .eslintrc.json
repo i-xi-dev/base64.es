@@ -13,6 +13,9 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
+  "ignorePatterns": [
+    "**/*.test.ts"
+  ],
   "rules": {
     "array-bracket-newline": ["error", "consistent"],
     "array-bracket-spacing": ["error", "always"],
@@ -31,6 +34,7 @@
     "implicit-arrow-linebreak": "error",
     "indent": ["error", 2],
     "key-spacing": "error",
+    "linebreak-style": "error",
     "no-duplicate-imports": "error",
     "no-unused-vars": "off",
     "no-var": "error",

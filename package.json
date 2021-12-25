@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/base64",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
   "type": "module",
   "main": "./dist/index.js",
@@ -49,9 +49,9 @@
     "node": ">=16.5.0"
   },
   "devDependencies": {
-    "@i-xi-dev/fundamental": "^0.0.22",
-    "@typescript-eslint/eslint-plugin": "^5.7.0",
-    "@typescript-eslint/parser": "^5.7.0",
+    "@i-xi-dev/fundamental": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
     "eslint": "^8.4.1",
     "mocha": "^9.1.3",
     "ts-loader": "^9.2.6",
