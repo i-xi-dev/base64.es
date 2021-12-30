@@ -1,6 +1,5 @@
 import assert from "node:assert";
-import { Base64Decoder } from "./decoder";
-import { Base64 } from "./base64";
+import { Base64Decoder, Base64 } from "../../node/index.mjs";
 
 describe("Base64Decoder.prototype.decode", () => {
   it("Base64Decoder()/decode", () => {

@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { ReadableStream, WritableStream } from "node:stream/web";
-import { Base64EncoderStream } from "./encoder_stream";
+import { Base64EncoderStream } from "../../../node/stream/index.mjs";
 
 describe("Base64EncoderStream.prototype.writable", () => {
   it("writable", async () => {
@@ -8,9 +8,9 @@ describe("Base64EncoderStream.prototype.writable", () => {
       Uint8Array.of(0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC)
     ];
 
-    let ti: NodeJS.Timer;
-    const s = new ReadableStream<Uint8Array>({
-      start(controller: ReadableStreamDefaultController<Uint8Array>) {
+    let ti;
+    const s = new ReadableStream({
+      start(controller) {
         let c = 0;
         ti = setInterval(() => {
           if (c >= td.length) {
@@ -26,7 +26,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise<void>((resolve) => {
+      return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
         }, 20);
@@ -36,17 +36,12 @@ describe("Base64EncoderStream.prototype.writable", () => {
     const encoder = new Base64EncoderStream();
 
     let result = "";
-    const ws = new WritableStream<string>({
-      write(chunk: string) {
+    const ws = new WritableStream({
+      write(chunk) {
         result = result + chunk;
       }
     });
-    const readable: ReadableStream<string> = encoder.readable as ReadableStream<string>;
-    const writable: WritableStream<Uint8Array> = encoder.writable;
-    await s.pipeThrough({
-      readable,
-      writable,
-    }).pipeTo(ws);
+    await s.pipeThrough(encoder).pipeTo(ws);
 
     const expected = "AwIBAP/+/fw=";
 
@@ -64,9 +59,9 @@ describe("Base64EncoderStream.prototype.writable", () => {
       )
     ];
 
-    let ti: NodeJS.Timer;
-    const s = new ReadableStream<Uint8Array>({
-      start(controller: ReadableStreamDefaultController<Uint8Array>) {
+    let ti;
+    const s = new ReadableStream({
+      start(controller) {
         let c = 0;
         ti = setInterval(() => {
           if (c >= td.length) {
@@ -82,7 +77,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise<void>((resolve) => {
+      return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
         }, 20);
@@ -92,17 +87,12 @@ describe("Base64EncoderStream.prototype.writable", () => {
     const encoder = new Base64EncoderStream();
 
     let result = "";
-    const ws = new WritableStream<string>({
-      write(chunk: string) {
+    const ws = new WritableStream({
+      write(chunk) {
         result = result + chunk;
       }
     });
-    const readable: ReadableStream<string> = encoder.readable as ReadableStream<string>;
-    const writable: WritableStream<Uint8Array> = encoder.writable;
-    await s.pipeThrough({
-      readable,
-      writable,
-    }).pipeTo(ws);
+    await s.pipeThrough(encoder).pipeTo(ws);
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fw=";
 
@@ -122,9 +112,9 @@ describe("Base64EncoderStream.prototype.writable", () => {
       Uint8Array.of(0xFC),
     ];
 
-    let ti: NodeJS.Timer;
-    const s = new ReadableStream<Uint8Array>({
-      start(controller: ReadableStreamDefaultController<Uint8Array>) {
+    let ti;
+    const s = new ReadableStream({
+      start(controller) {
         let c = 0;
         ti = setInterval(() => {
           if (c >= td.length) {
@@ -140,7 +130,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise<void>((resolve) => {
+      return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
         }, 300);
@@ -150,17 +140,12 @@ describe("Base64EncoderStream.prototype.writable", () => {
     const encoder = new Base64EncoderStream();
 
     let result = "";
-    const ws = new WritableStream<string>({
-      write(chunk: string) {
+    const ws = new WritableStream({
+      write(chunk) {
         result = result + chunk;
       }
     });
-    const readable: ReadableStream<string> = encoder.readable as ReadableStream<string>;
-    const writable: WritableStream<Uint8Array> = encoder.writable;
-    await s.pipeThrough({
-      readable,
-      writable,
-    }).pipeTo(ws);
+    await s.pipeThrough(encoder).pipeTo(ws);
 
     const expected = "AwIBAP/+/fw=";
 
@@ -190,9 +175,9 @@ describe("Base64EncoderStream.prototype.writable", () => {
       Uint8Array.of(),
     ];
 
-    let ti: NodeJS.Timer;
-    const s = new ReadableStream<Uint8Array>({
-      start(controller: ReadableStreamDefaultController<Uint8Array>) {
+    let ti;
+    const s = new ReadableStream({
+      start(controller) {
         let c = 0;
         ti = setInterval(() => {
           if (c >= td.length) {
@@ -208,7 +193,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
     });
 
     await (() => {
-      return new Promise<void>((resolve) => {
+      return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
         }, 300);
@@ -218,17 +203,12 @@ describe("Base64EncoderStream.prototype.writable", () => {
     const encoder = new Base64EncoderStream();
 
     let result = "";
-    const ws = new WritableStream<string>({
-      write(chunk: string) {
+    const ws = new WritableStream({
+      write(chunk) {
         result = result + chunk;
       }
     });
-    const readable: ReadableStream<string> = encoder.readable as ReadableStream<string>;
-    const writable: WritableStream<Uint8Array> = encoder.writable;
-    await s.pipeThrough({
-      readable,
-      writable,
-    }).pipeTo(ws);
+    await s.pipeThrough(encoder).pipeTo(ws);
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/A==";
 

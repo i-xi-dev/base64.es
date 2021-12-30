@@ -1,9 +1,6 @@
 import assert from "node:assert";
-import { webcrypto } from "node:crypto";
-import { Base64Encoder } from "./encoder";
-import { Base64 } from "./base64";
-
-const crypto: Crypto = webcrypto as unknown as Crypto;
+import { webcrypto as crypto } from "node:crypto";
+import { Base64Encoder, Base64 } from "../../node/index.mjs";
 
 describe("Base64Encoder.prototype.encode", () => {
   it("Base64Encoder()/encode", () => {

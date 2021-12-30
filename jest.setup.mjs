@@ -1,10 +1,7 @@
-// globalThisがNodeのと違うのでimportしないと使えないもの
+// TODO 何故importが使えないのか
 // TODO 何故importが使えないのか
 
-const { webcrypto } = require("node:crypto");
-globalThis.crypto = webcrypto;
+// globalThisがNodeのと違うのでimportしないと使えないもの
 
-const { ReadableStream, WritableStream, TransformStream } = require("node:stream/web");
-globalThis.ReadableStream = ReadableStream;
-globalThis.WritableStream = WritableStream;
+const { TransformStream } = require("node:stream/web");
 globalThis.TransformStream = TransformStream;

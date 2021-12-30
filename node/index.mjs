@@ -1,5 +1,1 @@
-export {
-  Base64,
-  Base64Decoder,
-  Base64Encoder,
-} from "../dist/index.js";
+export * from "../dist/index.js";

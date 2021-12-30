@@ -1,7 +1,6 @@
-import { TransformStream } from "node:stream/web";
-globalThis.TransformStream = TransformStream;
+if ("process" in globalThis) {
+  const mod = "node:stream/web";
+  globalThis.TransformStream = (await import(mod)).TransformStream;
+}
 
-export {
-  Base64DecoderStream,
-  Base64EncoderStream,
-} from "../../dist/stream/index.js";
+export * from "../../dist/stream/index.js";
