@@ -1,15 +1,8 @@
 //
 
 export {
-  type Options as Base64Options,
-  type Table as Base64Table,
+  type Base64Options,
   Base64,
 } from "./base64";
-
-export {
-  Base64Decoder,
-} from "./decoder";
-
-export {
-  Base64Encoder,
-} from "./encoder";
+export { Base64Decoder } from "./decoder";
+export { Base64Encoder } from "./encoder";

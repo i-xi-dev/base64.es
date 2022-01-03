@@ -2,20 +2,24 @@
 
 import {
   type ByteDecoder,
+  SizedMap,
 } from "@i-xi-dev/fundamental";
-
 import {
-  type Options,
+  type Base64Options,
   type ResolvedOptions,
   decode,
   resolveOptions,
 } from "./base64";
 
 /**
- * 復号器
+ * Base64 decoder
  */
 class Base64Decoder implements ByteDecoder {
-  static #decoderCache: WeakMap<ResolvedOptions, Base64Decoder> = new WeakMap();
+  /**
+   * インスタンスのキャッシュ
+   * static getで使用
+   */
+  static #pool: SizedMap<string, Base64Decoder> = new SizedMap(1);
 
   /**
    * 未設定項目を埋めたオプション
@@ -23,29 +27,40 @@ class Base64Decoder implements ByteDecoder {
   #options: ResolvedOptions;
 
   /**
-   * @param options オプション
+   * @param options - The `Base64Options` dictionary.
    */
-  constructor(options?: Options) {
+  constructor(options?: Base64Options) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
   }
 
   /**
-   * 文字列をバイト列にBase64復号し、結果のバイト列を返却
+   * Decodes a Base64 encoded string into an `Uint8Array`.
    * 
-   * @param encoded Base64符号化された文字列
-   * @returns バイト列
+   * @param encoded - The string to decode.
+   * @returns An `Uint8Array` containing the decoded bytes.
    */
   decode(encoded: string): Uint8Array {
     return decode(encoded, this.#options);
   }
 
-  static get(options?: Options): ByteDecoder {
+  /**
+   * Returns a `Base64Decoder` object.
+   * 
+   * @param options - The `Base64Options` dictionary.
+   * @returns An instance of `Base64Decoder`.
+   */
+  static get(options?: Base64Options): Base64Decoder {
     const resolvedOptions = resolveOptions(options);
-    if (Base64Decoder.#decoderCache.has(resolvedOptions) !== true) {
-      Base64Decoder.#decoderCache.set(resolvedOptions, new Base64Decoder(resolvedOptions));
+
+    const poolKey = JSON.stringify(resolvedOptions);
+    let decoder = Base64Decoder.#pool.get(poolKey);
+    if (decoder) {
+      return decoder;
     }
-    return Base64Decoder.#decoderCache.get(resolvedOptions) as Base64Decoder;
+    decoder = new Base64Decoder(resolvedOptions);
+    Base64Decoder.#pool.set(poolKey, decoder);
+    return decoder;
   }
 }
 Object.freeze(Base64Decoder);

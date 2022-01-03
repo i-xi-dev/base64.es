@@ -92,7 +92,7 @@ function isChar(value: unknown): value is char {
 /**
  * 変換テーブル
  */
-type Table = [
+type Base64Table = [
   char, char, char, char, char, char, char, char,
   char, char, char, char, char, char, char, char,
   char, char, char, char, char, char, char, char,
@@ -103,22 +103,33 @@ type Table = [
   char, char, char, char, char, char, char, char,
 ];
 
-function isTable(value: unknown): value is Table {
+function isTable(value: unknown): value is Base64Table {
   return (Array.isArray(value) && (value.length === 64) && value.every((i) => isChar(i)));
 }
 
 /**
- * オプション
+ * The object with the following optional fields.
+ * The defaults are the values that conforms to the RFC 4648 Base64 specification.
  */
-type ResolvedOptions = {
-  /** 変換テーブル */
-  table: Readonly<Table>,
+ type Base64Options = {
+  /**
+   * The 64 characters index table.
+   * The default is `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]`.
+   */
+  table?: Readonly<Array<string>>,
 
-  /** パディングを付加するか否か */
-  padEnd: boolean,
+  /**
+   * Whether to output the padding.
+   * The default is `true`.
+   * However, the decoder ignores this value.
+   */
+  padEnd?: boolean,
 
-  /** パディング文字 */
-  padding: char,
+  /**
+   * The padding character.
+   * The default is `"="`.
+   */
+  padding?: string,
 
   // /**
   //  * 復号時:
@@ -130,6 +141,20 @@ type ResolvedOptions = {
   //  *    無視する
   //  */
   // forgiving: boolean,
+};
+
+/**
+ * 未設定項目の存在しないオプション
+ */
+type ResolvedOptions = {
+  /**  */
+  table: Readonly<Base64Table>,
+
+  /**  */
+  padEnd: boolean,
+
+  /**  */
+  padding: char,
 };
 
 /**
@@ -302,24 +327,6 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
 }
 
 /**
- * オプション
- * 未設定を許可
- */
-type Options = {
-  /** @see {@link ResolvedOptions.table} */
-  table?: Readonly<Array<string>>,
-
-  /** @see {@link ResolvedOptions.padEnd} */
-  padEnd?: boolean,
-
-  /** @see {@link ResolvedOptions.padding} */
-  padding?: string,
-
-  // /** @see {@link ResolvedOptions.forgiving} */
-  // forgiving?: boolean,
-};
-
-/**
  * 62文字目（インデックス0～61）までの変換テーブル
  */
 const TABLE_62: Readonly<Array<char>> = Object.freeze([
@@ -390,12 +397,12 @@ const TABLE_62: Readonly<Array<char>> = Object.freeze([
 /**
  * RFC 4648 Base64 の変換テーブル
  */
-const RFC4648_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "+", "/" ]) as Table;
+const RFC4648_TABLE = Object.freeze([ ...TABLE_62, "+", "/" ]) as Readonly<Base64Table>;
 
 // /**
 // * RFC 4648 Base64url の変換テーブル
 // */
-// const RFC4648URL_TABLE: Readonly<Table> = Object.freeze([ ...TABLE_62, "-", "_" ]) as Table;
+// const RFC4648URL_TABLE = Object.freeze([ ...TABLE_62, "-", "_" ]) as Readonly<Base64Table>;
 
 const RFC4648_PADDING = "=";
 
@@ -406,52 +413,84 @@ const RFC4648_PADDING = "=";
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  */
-function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
-  const tableIsValid = isTable(options.table);
-  const tableIsFrozen = Object.isFrozen(options.table);
-  const padEndIsValid = (typeof options.padEnd === "boolean");
-  const paddingIsValid = isChar(options.padding);
-  // const forgivingIsValid = ((options as ResolvedOptions).forgiving === true);
-  const isFrozen = Object.isFrozen(options);
+function resolveOptions(options: Base64Options | ResolvedOptions = {}): ResolvedOptions {
+  let table: Readonly<Base64Table>;
+  if (isTable(options.table)) {
+    table = Object.freeze([ ...options.table  ]) as Readonly<Base64Table>;
+  }
+  else {
+    table = RFC4648_TABLE;
+  }
 
-  const table: Readonly<Table> = tableIsValid ? options.table as Table : RFC4648_TABLE;
-  const padding: char = paddingIsValid ? options.padding as char : RFC4648_PADDING;
+  let padEnd: boolean;
+  if (typeof options.padEnd === "boolean") {
+    padEnd = options.padEnd;
+  }
+  else {
+    padEnd = true;
+  }
+
+  let padding: char;
+  if (isChar(options.padding)) {
+    padding = options.padding;
+  }
+  else {
+    padding = RFC4648_PADDING;
+  }
 
   // tableとpaddingの重複チェック
   if((new Set([ ...table, padding ])).size !== 65) {
     throw new RangeError("options error: character duplicated");
   }
 
-  // if (tableIsValid && tableIsFrozen && padEndIsValid && paddingIsValid && forgivingIsValid && isFrozen) {
-  if (tableIsValid && tableIsFrozen && padEndIsValid && paddingIsValid && isFrozen) {
-    return options as ResolvedOptions;
-  }
-
   return Object.freeze({
-    table: Object.freeze(table),
-    padEnd: padEndIsValid ? options.padEnd as boolean : true,
+    table,
+    padEnd,
     padding,
     // forgiving: true,
   });
 }
 
+/**
+ * Provides Base64 decoding and Base64 encoding methods.
+ */
+interface Base64 {
+  /**
+   * Decodes a Base64 encoded string into an `Uint8Array`.
+   * 
+   * @param encoded - The string to decode.
+   * @param options - The `Base64Options` dictionary.
+   * @returns An `Uint8Array` containing the decoded bytes.
+   */
+  decode(encoded: string, options?: Base64Options): Uint8Array;
+
+  /**
+   * Encodes the specified bytes into a string.
+   * 
+   * @param toEncode - The bytes to encode.
+   * @param options - The `Base64Options` dictionary.
+   * @returns A string containing the Base64 encoded characters.
+   */
+  encode(toEncode: Uint8Array, options?: Base64Options): string;
+}
+
+/**
+ * Implements `Base64` interface.
+ */
 const Base64 = Object.freeze({
-  decode(encoded: string, options?: Options): Uint8Array {
+  decode(encoded: string, options?: Base64Options): Uint8Array {
     const resolvedOptions = resolveOptions(options);
     return decode(encoded, resolvedOptions);
   },
 
-  encode(toEncode: Uint8Array, options?: Options): string {
+  encode(toEncode: Uint8Array, options?: Base64Options): string {
     const resolvedOptions = resolveOptions(options);
     return encode(toEncode, resolvedOptions);
   },
-
-  resolveOptions,
-});
+}) as Base64;
 
 export {
-  type Table,
-  type Options,
+  type Base64Options,
   type ResolvedOptions,
   decode,
   encode,
