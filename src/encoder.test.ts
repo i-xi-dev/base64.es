@@ -176,13 +176,12 @@ describe("Base64Encoder.get", () => {
   });
 
   it("get(Object)", () => {
-    const encoder1 = Base64Encoder.get({padEnd:false});
+    const encoder1 = Base64Encoder.get({padEnd:true});
     const encoder2 = Base64Encoder.get({padEnd:false});
     assert.notStrictEqual(encoder1, encoder2);
 
-    const op = Base64.resolveOptions({padEnd:false});
-    const encoder21 = Base64Encoder.get(op);
-    const encoder22 = Base64Encoder.get(op);
+    const encoder21 = Base64Encoder.get({padEnd:false});
+    const encoder22 = Base64Encoder.get({padEnd:false});
     assert.strictEqual(encoder21, encoder22);
 
   });
