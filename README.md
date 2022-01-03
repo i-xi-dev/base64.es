@@ -2,8 +2,10 @@
 
 A JavaScript Base64 encoder and decoder, implements [Forgiving base64](https://infra.spec.whatwg.org/#forgiving-base64) defined in WHATWG Infra Standard.
 
-- [`Base64Decoder`, `Base64Encoder`](#base64decoder-and-base64encoder-class)
-- [`Base64DecoderStream`, `Base64EncoderStream`](#base64decoderstream-and-base64encoderstream-class)
+
+## Documentation
+
+[https://i-xi-dev.github.io/base64.es/](https://i-xi-dev.github.io/base64.es/)
 
 
 ## `Base64Decoder` and `Base64Encoder` classes, and `Base64` static class
@@ -65,7 +67,6 @@ Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
 
 ## `Base64DecoderStream` and `Base64EncoderStream` classes
 
-
 ### Requirement
 `Base64DecoderStream` and `Base64EncoderStream` requires [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream).
 
@@ -124,17 +125,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 
 ## Encoding options
 
-| Name | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `table` | string[] | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]` | The 64 characters index table, the default is the table defined in RFC 4648 |
-| `padEnd` | boolean | `true` | Whether to output the padding |
-| `padding` | string | `"="` | The padding character, the default is the padding defined in RFC 4648 |
-
-- The `length` of the `table` must be 64.
-- The `length` of all elements contained in the `table` must be 1.
-- The `table` must not contain duplicate characters.
-- The `length` of the `padding` must be 1.
-- The `padding` must not be a character contained in the `table`.
+See [https://i-xi-dev.github.io/base64.es/modules/index.html#Base64Options](https://i-xi-dev.github.io/base64.es/modules/index.html#Base64Options)
 
 ### Example
 
