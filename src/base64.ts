@@ -115,6 +115,11 @@ function isTable(value: unknown): value is Base64Table {
   /**
    * The 64 characters index table.
    * The default is `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]`.
+   * 
+   * The following restrictions apply:
+   * - The `length` of the `table` must be 64.
+   * - The `length` of all elements contained in the `table` must be 1.
+   * - The `table` must not contain duplicate characters.
    */
   table?: Readonly<Array<string>>,
 
@@ -128,6 +133,10 @@ function isTable(value: unknown): value is Base64Table {
   /**
    * The padding character.
    * The default is `"="`.
+   * 
+   * The following restrictions apply:
+   * - The `length` of the `padding` must be 1.
+   * - The `padding` must not be a character contained in the `table`.
    */
   padding?: string,
 
