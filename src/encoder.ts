@@ -38,7 +38,7 @@ class Base64Encoder implements ByteEncoder {
    * Encodes the specified bytes into a string.
    * 
    * @param toEncode - The bytes to encode.
-   * @returns A string containing the Base64 encoded characters.
+   * @returns A string containing the Base64-encoded characters.
    */
   encode(toEncode: Uint8Array): string {
     return encode(toEncode, this.#options);

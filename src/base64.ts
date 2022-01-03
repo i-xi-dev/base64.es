@@ -456,7 +456,7 @@ function resolveOptions(options: Base64Options | ResolvedOptions = {}): Resolved
  */
 interface Base64 {
   /**
-   * Decodes a Base64 encoded string into an `Uint8Array`.
+   * Decodes a Base64-encoded string into an `Uint8Array`.
    * 
    * @param encoded - The string to decode.
    * @param options - The `Base64Options` dictionary.
@@ -469,7 +469,7 @@ interface Base64 {
    * 
    * @param toEncode - The bytes to encode.
    * @param options - The `Base64Options` dictionary.
-   * @returns A string containing the Base64 encoded characters.
+   * @returns A string containing the Base64-encoded characters.
    */
   encode(toEncode: Uint8Array, options?: Base64Options): string;
 }

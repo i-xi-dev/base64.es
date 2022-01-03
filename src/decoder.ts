@@ -35,7 +35,7 @@ class Base64Decoder implements ByteDecoder {
   }
 
   /**
-   * Decodes a Base64 encoded string into an `Uint8Array`.
+   * Decodes a Base64-encoded string into an `Uint8Array`.
    * 
    * @param encoded - The string to decode.
    * @returns An `Uint8Array` containing the decoded bytes.

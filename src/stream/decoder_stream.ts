@@ -4,14 +4,8 @@ import {
   type ByteDecoderStreamRegulator,
   ByteDecoderStream,
 } from "@i-xi-dev/fundamental";
-
-import {
-  type Options,
-} from "../base64";
-
-import {
-  Base64Decoder,
-} from "../decoder";
+import { type Base64Options } from "../base64";
+import { Base64Decoder } from "../decoder";
 
 class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
   #pending: string;
@@ -47,13 +41,13 @@ class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
 }
 
 /**
- * 復号ストリーム
+ * The `TransformStream` that decodes a stream of Base64-encoded string into `Uint8Array` stream.
  */
 class DecoderStream extends ByteDecoderStream {
   /**
-   * @param options オプション
+   * @param options - The `Base64Options` dictionary.
    */
-  constructor(options?: Options) {
+  constructor(options?: Base64Options) {
     const decoder = new Base64Decoder(options);
     const regulator = new Base64DecoderStreamRegulator();
     super(decoder, regulator);

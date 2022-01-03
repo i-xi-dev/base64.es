@@ -4,14 +4,8 @@ import {
   type ByteEncoderStreamRegulator,
   ByteEncoderStream,
 } from "@i-xi-dev/fundamental";
-
-import {
-  type Options,
-} from "../base64";
-
-import {
-  Base64Encoder,
-} from "../encoder";
+import { type Base64Options } from "../base64";
+import { Base64Encoder } from "../encoder";
 
 class Base64EncoderStreamRegulator implements ByteEncoderStreamRegulator {
   #pending: Uint8Array;
@@ -49,13 +43,13 @@ class Base64EncoderStreamRegulator implements ByteEncoderStreamRegulator {
 }
 
 /**
- * 符号化ストリーム
+ * The `TransformStream` that encodes a stream of `Uint8Array` into Base64-encoded string stream.
  */
 class EncoderStream extends ByteEncoderStream {
   /**
-   * @param options オプション
+   * @param options - The `Base64Options` dictionary.
    */
-  constructor(options?: Options) {
+  constructor(options?: Base64Options) {
     const encoder = new Base64Encoder(options);
     const regulator = new Base64EncoderStreamRegulator();
     super(encoder, regulator);
