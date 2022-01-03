@@ -10,7 +10,18 @@ A JavaScript Base64 encoder and decoder, implements [Forgiving base64](https://i
 
 ## Requirement
 
-`Base64DecoderStream` and `Base64EncoderStream` requires [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream).
+### `Base64Decoder` and `Base64Encoder` classes, and `Base64` static class
+
+- Chrome
+- Edge
+- Firefox
+- Safari
+- Deno
+- Node.js
+
+### `Base64DecoderStream` and `Base64EncoderStream` classes
+
+These require [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream).
 
 - Chrome
 - Edge
