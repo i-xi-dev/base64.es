@@ -176,6 +176,7 @@ type ResolvedOptions = {
  * @param encoded Base64符号化された文字列
  * @param options オプション
  * @returns バイト列
+ * @throws {TypeError} The `encoded` is not Base64-encoded string.
  */
 function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   let work: string = encoded;
@@ -421,6 +422,7 @@ const RFC4648_PADDING = "=";
  * 
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
+ * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
  */
 function resolveOptions(options: Base64Options | ResolvedOptions = {}): ResolvedOptions {
   let table: Readonly<Base64Table>;
@@ -470,6 +472,8 @@ interface Base64 {
    * @param encoded - The string to decode.
    * @param options - The `Base64Options` dictionary.
    * @returns An `Uint8Array` containing the decoded bytes.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+   * @throws {TypeError} The `encoded` is not Base64-encoded string.
    */
   decode(encoded: string, options?: Base64Options): Uint8Array;
 
@@ -479,6 +483,7 @@ interface Base64 {
    * @param toEncode - The bytes to encode.
    * @param options - The `Base64Options` dictionary.
    * @returns A string containing the Base64-encoded characters.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   encode(toEncode: Uint8Array, options?: Base64Options): string;
 }

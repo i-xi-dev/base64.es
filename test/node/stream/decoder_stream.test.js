@@ -201,4 +201,51 @@ describe("Base64DecoderStream.prototype.writable", () => {
 
   });
 
+  it("writable - error", async () => {
+    const td = ["A","w","あ","B","A","P","/","+","/","f","w","="];
+
+    let ti;
+    const s = new ReadableStream({
+      start(controller) {
+        let c = 0;
+        ti = setInterval(() => {
+          if (c >= td.length) {
+            clearInterval(ti);
+            controller.close();
+            return;
+          }
+          controller.enqueue(td[c]);
+          c = c + 1;
+
+        }, 10);
+      },
+    });
+
+    await (() => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 300);
+      });
+    })();
+
+    const decoder = new Base64DecoderStream();
+
+    const result = new Uint8Array(10);
+    let written = 0;
+    const ws = new WritableStream({
+      write(chunk) {
+        result.set(chunk, written);
+        written = written + chunk.byteLength;
+      }
+    });
+    assert.rejects(async () => {
+      await s.pipeThrough(decoder).pipeTo(ws);
+    }, {
+      name: "TypeError",
+      message: "decode error (1)",
+    });
+
+  });
+
 });

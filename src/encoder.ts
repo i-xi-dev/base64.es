@@ -28,6 +28,7 @@ class Base64Encoder implements ByteEncoder {
 
   /**
    * @param options - The `Base64Options` dictionary.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   constructor(options?: Base64Options) {
     this.#options = resolveOptions(options);
@@ -49,6 +50,7 @@ class Base64Encoder implements ByteEncoder {
    * 
    * @param options - The `Base64Options` dictionary.
    * @returns An instance of `Base64Encoder`.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   static get(options?: Base64Options): Base64Encoder {
     const resolvedOptions = resolveOptions(options);

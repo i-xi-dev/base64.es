@@ -221,4 +221,56 @@ describe("Base64DecoderStream.prototype.writable", () => {
 
   });
 
+  it("writable - error", async () => {
+    const td = ["A","w","あ","B","A","P","/","+","/","f","w","="];
+
+    let ti: NodeJS.Timer;
+    const s = new ReadableStream<string>({
+      start(controller: ReadableStreamDefaultController<string>) {
+        let c = 0;
+        ti = setInterval(() => {
+          if (c >= td.length) {
+            clearInterval(ti);
+            controller.close();
+            return;
+          }
+          controller.enqueue(td[c]);
+          c = c + 1;
+
+        }, 10);
+      },
+    });
+
+    await (() => {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 300);
+      });
+    })();
+
+    const decoder = new Base64DecoderStream();
+
+    const result = new Uint8Array(10);
+    let written = 0;
+    const ws = new WritableStream<Uint8Array>({
+      write(chunk: Uint8Array) {
+        result.set(chunk, written);
+        written = written + chunk.byteLength;
+      }
+    });
+    const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
+    const writable: WritableStream<string> = decoder.writable;
+    assert.rejects(async () => {
+      await s.pipeThrough({
+        readable,
+        writable,
+      }).pipeTo(ws);
+    }, {
+      name: "TypeError",
+      message: "decode error (1)",
+    });
+
+  });
+
 });

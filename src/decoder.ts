@@ -28,6 +28,7 @@ class Base64Decoder implements ByteDecoder {
 
   /**
    * @param options - The `Base64Options` dictionary.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   constructor(options?: Base64Options) {
     this.#options = resolveOptions(options);
@@ -39,6 +40,7 @@ class Base64Decoder implements ByteDecoder {
    * 
    * @param encoded - The string to decode.
    * @returns An `Uint8Array` containing the decoded bytes.
+   * @throws {TypeError} The `encoded` is not Base64-encoded string.
    */
   decode(encoded: string): Uint8Array {
     return decode(encoded, this.#options);
@@ -49,6 +51,7 @@ class Base64Decoder implements ByteDecoder {
    * 
    * @param options - The `Base64Options` dictionary.
    * @returns An instance of `Base64Decoder`.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   static get(options?: Base64Options): Base64Decoder {
     const resolvedOptions = resolveOptions(options);
