@@ -124,9 +124,19 @@ function isTable(value: unknown): value is Base64Table {
   table?: Readonly<Array<string>>,
 
   /**
+   * Whether to omit the padding.
+   * The default is `false`.
+   * However, the decoder ignores this value.
+   */
+  noPadding?: boolean,
+
+  /**
    * Whether to output the padding.
    * The default is `true`.
    * However, the decoder ignores this value.
+   * `padEnd` is ignored if `noPadding` is specified.
+   * 
+   * @deprecated
    */
   padEnd?: boolean,
 
@@ -137,6 +147,14 @@ function isTable(value: unknown): value is Base64Table {
    * The following restrictions apply:
    * - The `length` of the `padding` must be 1.
    * - The `padding` must not be a character contained in the `table`.
+   */
+  paddingChar?: string,
+
+  /**
+   * The alias for the `paddingChar`.
+   * `padding` is ignored if `paddingChar` is specified.
+   * 
+   * @deprecated
    */
   padding?: string,
 
@@ -160,10 +178,10 @@ type ResolvedOptions = {
   table: Readonly<Base64Table>,
 
   /**  */
-  padEnd: boolean,
+  noPadding: boolean,
 
   /**  */
-  padding: char,
+  paddingChar: char,
 };
 
 /**
@@ -191,7 +209,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
 
   if ((work.length % 4) === 0) {
     for (let i = 0; i < 2; i++) {
-      if (work.endsWith(options.padding)) {
+      if (work.endsWith(options.paddingChar)) {
         work = work.substring(0, (work.length - 1));
       }
       else {
@@ -209,10 +227,10 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
     throw new TypeError("decode error (1)");
   }
 
-  // const paddingStart = work.indexOf(options.padding);
+  // const paddingStart = work.indexOf(options.paddingChar);
   // let paddingCount: number;
   // let encodedBody: string;
-  // if ((options.padEnd === true) && (options.forgiving !== true)) {
+  // if ((options.noPadding !== true) && (options.forgiving !== true)) {
   //   if ((work.length % 4) !== 0) {
   //     throw new TypeError("decode error (2)");
   //   }
@@ -275,7 +293,7 @@ function isEncoded(work: string, options: ResolvedOptions): boolean {
 
   // let regex: RegExp;
   // if ((options.padEnd === true) && (options.forgiving !== true)) {
-  //   const paddingPattern = `\\u{${ options.padding.charCodeAt(0).toString(16) }}`;
+  //   const paddingPattern = `\\u{${ options.paddingChar.charCodeAt(0).toString(16) }}`;
   //   regex = new RegExp(`^(${ tablePattern }+${ paddingPattern }*|${ tablePattern }*)$`, "u");
   // }
   // else {
@@ -324,12 +342,12 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
         _6bit4e = options.table[_8bit3 & 0b00111111] as string;
       }
       else {
-        _6bit4e = (options.padEnd === true) ? options.padding : "";
+        _6bit4e = (options.noPadding !== true) ? options.paddingChar : "";
       }
     }
     else {
-      _6bit3e = (options.padEnd === true) ? options.padding : "";
-      _6bit4e = (options.padEnd === true) ? options.padding : "";
+      _6bit3e = (options.noPadding !== true) ? options.paddingChar : "";
+      _6bit4e = (options.noPadding !== true) ? options.paddingChar : "";
     }
     encodedChars = encodedChars.concat(_6bit1e + _6bit2e + _6bit3e + _6bit4e);
   }
@@ -422,7 +440,7 @@ const RFC4648_PADDING = "=";
  * 
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
- * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+ * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
  */
 function resolveOptions(options: Base64Options | ResolvedOptions = {}): ResolvedOptions {
   let table: Readonly<Base64Table>;
@@ -433,31 +451,51 @@ function resolveOptions(options: Base64Options | ResolvedOptions = {}): Resolved
     table = RFC4648_TABLE;
   }
 
-  let padEnd: boolean;
-  if (typeof options.padEnd === "boolean") {
-    padEnd = options.padEnd;
+  let noPadding: boolean;
+  if (("padEnd" in options) && (("noPadding" in options) !== true)) {
+    if (typeof options.padEnd === "boolean") {
+      noPadding = !options.padEnd;
+    }
+    else {
+      noPadding = false;
+    }
   }
   else {
-    padEnd = true;
+    if (typeof options.noPadding === "boolean") {
+      noPadding = options.noPadding;
+    }
+    else {
+      noPadding = false;
+    }
   }
 
-  let padding: char;
-  if (isChar(options.padding)) {
-    padding = options.padding;
+  let paddingChar: char;
+  if (("padding" in options) && (("paddingChar" in options) !== true)) {
+    if (isChar(options.padding)) {
+      paddingChar = options.padding;
+    }
+    else {
+      paddingChar = RFC4648_PADDING;
+    }
   }
   else {
-    padding = RFC4648_PADDING;
+    if (isChar(options.paddingChar)) {
+      paddingChar = options.paddingChar;
+    }
+    else {
+      paddingChar = RFC4648_PADDING;
+    }
   }
 
   // tableとpaddingの重複チェック
-  if((new Set([ ...table, padding ])).size !== 65) {
+  if((new Set([ ...table, paddingChar ])).size !== 65) {
     throw new RangeError("options error: character duplicated");
   }
 
   return Object.freeze({
     table,
-    padEnd,
-    padding,
+    noPadding,
+    paddingChar,
     // forgiving: true,
   });
 }
@@ -472,7 +510,7 @@ interface Base64 {
    * @param encoded - The string to decode.
    * @param options - The `Base64Options` dictionary.
    * @returns An `Uint8Array` containing the decoded bytes.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    * @throws {TypeError} The `encoded` is not Base64-encoded string.
    */
   decode(encoded: string, options?: Base64Options): Uint8Array;
@@ -483,7 +521,7 @@ interface Base64 {
    * @param toEncode - The bytes to encode.
    * @param options - The `Base64Options` dictionary.
    * @returns A string containing the Base64-encoded characters.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    */
   encode(toEncode: Uint8Array, options?: Base64Options): string;
 }
