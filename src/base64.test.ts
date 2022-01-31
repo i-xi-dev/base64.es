@@ -105,6 +105,24 @@ describe("Base64.decode", () => {
 
   });
 
+  it("decode(string, {noPadding:true})", () => {
+    const decoded12z = Base64.decode("AwIBAP/+/fw=", {noPadding:true});
+    assert.strictEqual(JSON.stringify([...decoded12z]), "[3,2,1,0,255,254,253,252]");
+
+  });
+
+  it("decode(string, {noPadding:false,padEnd:false})", () => {
+    const decoded12z = Base64.decode("AwIBAP/+/fw=", {noPadding:false,padEnd:false});
+    assert.strictEqual(JSON.stringify([...decoded12z]), "[3,2,1,0,255,254,253,252]");
+
+  });
+
+  it("decode(string, {noPadding:true,padEnd:true})", () => {
+    const decoded12z = Base64.decode("AwIBAP/+/fw=", {noPadding:true,padEnd:true});
+    assert.strictEqual(JSON.stringify([...decoded12z]), "[3,2,1,0,255,254,253,252]");
+
+  });
+
   it("decode(string, {padding:'!'})", () => {
     const decoded11 = Base64.decode("", {padding:'!'});
     assert.strictEqual(JSON.stringify([...decoded11]), "[]");
@@ -161,11 +179,23 @@ describe("Base64.decode", () => {
 
   });
 
+  it("decode(string, {paddingChar:'!'})", () => {
+    const decoded12 = Base64.decode("AwIBAP/+/fw!", {paddingChar:'!'});
+    assert.strictEqual(JSON.stringify([...decoded12]), "[3,2,1,0,255,254,253,252]");
+
+  });
+
+  it("decode(string, {paddingChar:'!',padding:'-'})", () => {
+    const decoded12 = Base64.decode("AwIBAP/+/fw!", {paddingChar:'!',padding:'-'});
+    assert.strictEqual(JSON.stringify([...decoded12]), "[3,2,1,0,255,254,253,252]");
+
+  });
+
   it("decode(string, Rfc4648Base64UrlOptions)", () => {
     const op = {
       table: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"],
-      padEnd: false,
-      padding: "=",
+      noPadding: true,
+      paddingChar: "=",
     };
 
     const decoded11 = Base64.decode("", op);
@@ -174,8 +204,8 @@ describe("Base64.decode", () => {
     assert.throws(() => {
       const opx = {
         table: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"],
-        padEnd: false,
-        padding: "A",
+        noPadding: true,
+        paddingChar: "A",
       };
       Base64.decode("AwIBAP/+/fw=", opx);
     }, {
@@ -292,6 +322,26 @@ describe("Base64.encode", () => {
 
   });
 
+  it("encode(Uint8Array, {noPadding:true})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:true}), "AwIBAP/+/fw");
+
+  });
+
+  it("encode(Uint8Array, {noPadding:true,padEnd:true})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:true,padEnd:true}), "AwIBAP/+/fw");
+
+  });
+
+  it("encode(Uint8Array, {noPadding:false,padEnd:false})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:false,padEnd:false}), "AwIBAP/+/fw=");
+
+  });
+
+  it("encode(Uint8Array, {padEnd:1})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padEnd:1 as unknown as boolean}), "AwIBAP/+/fw=");
+
+  });
+
   it("encode(Uint8Array, {padding:'!'})", () => {
     assert.strictEqual(Base64.encode(Uint8Array.of(), {padding:'!'}), "");
     assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padding:'!'}), "AwIBAP/+/fw!");
@@ -320,11 +370,31 @@ describe("Base64.encode", () => {
 
   });
 
+  it("encode(Uint8Array, {paddingChar:'!'})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!'}), "AwIBAP/+/fw!");
+
+  });
+
+  it("encode(Uint8Array, {padding:'!!'})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padding:'!!'}), "AwIBAP/+/fw=");
+
+  });
+
+  it("encode(Uint8Array, {paddingChar:'!',padding:'-'})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!',padding:'-'}), "AwIBAP/+/fw!");
+
+  });
+
+  it("encode(Uint8Array, {paddingChar:'!!',padding:'-'})", () => {
+    assert.strictEqual(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!!',padding:'-'}), "AwIBAP/+/fw=");
+
+  });
+
   it("encode(Uint8Array, Rfc4648Base64UrlOptions)", () => {
     const op = {
       table: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"],
-      padEnd: false,
-      padding: "=",
+      noPadding: true,
+      paddingChar: "=",
     };
 
     assert.strictEqual(Base64.encode(Uint8Array.of(), op), "");
