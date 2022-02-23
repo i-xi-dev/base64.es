@@ -1,10 +1,12 @@
 import { expect } from '@esm-bundle/chai';
 //import { ReadableStream, WritableStream } from "node:stream/web";
-import { Base64DecoderStream } from "../../../node/stream/index.mjs";
+import { Base64DecoderStream } from "../../../dist/stream/index.js";
 
 if (globalThis.process) {
-  globalThis.ReadableStream = (await import("node:stream/web")).ReadableStream;
-  globalThis.WritableStream = (await import("node:stream/web")).WritableStream;
+  const webStream = await import("node:stream/web");
+  globalThis.ReadableStream = webStream.ReadableStream;
+  globalThis.WritableStream = webStream.WritableStream;
+  globalThis.TransformStream = webStream.TransformStream;
 }
 
 describe("Base64DecoderStream.prototype.writable", () => {

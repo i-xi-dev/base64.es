@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { Base64 } from "../../node/index.mjs";
+import { Base64 } from "../../dist/index.js";
 
 describe("Base64.decode", () => {
   it("decode(string)", () => {
