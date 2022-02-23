@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { Base64Decoder } from "./decoder";
+import { Base64Decoder } from "../../node/index.mjs";
 
 describe("Base64Decoder.prototype.decode", () => {
   it("Base64Decoder()/decode", () => {

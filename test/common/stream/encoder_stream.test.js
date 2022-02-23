@@ -1,6 +1,11 @@
-import assert from "node:assert";
-import { ReadableStream, WritableStream } from "node:stream/web";
+import { expect } from '@esm-bundle/chai';
+//import { ReadableStream, WritableStream } from "node:stream/web";
 import { Base64EncoderStream } from "../../../node/stream/index.mjs";
+
+if (globalThis.process) {
+  globalThis.ReadableStream = (await import("node:stream/web")).ReadableStream;
+  globalThis.WritableStream = (await import("node:stream/web")).WritableStream;
+}
 
 describe("Base64EncoderStream.prototype.writable", () => {
   it("writable", async () => {
@@ -41,11 +46,16 @@ describe("Base64EncoderStream.prototype.writable", () => {
         result = result + chunk;
       }
     });
-    await s.pipeThrough(encoder).pipeTo(ws);
+    const readable = encoder.readable;
+    const writable = encoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 
@@ -92,11 +102,16 @@ describe("Base64EncoderStream.prototype.writable", () => {
         result = result + chunk;
       }
     });
-    await s.pipeThrough(encoder).pipeTo(ws);
+    const readable = encoder.readable;
+    const writable = encoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 
@@ -145,11 +160,16 @@ describe("Base64EncoderStream.prototype.writable", () => {
         result = result + chunk;
       }
     });
-    await s.pipeThrough(encoder).pipeTo(ws);
+    const readable = encoder.readable;
+    const writable = encoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 
@@ -208,11 +228,16 @@ describe("Base64EncoderStream.prototype.writable", () => {
         result = result + chunk;
       }
     });
-    await s.pipeThrough(encoder).pipeTo(ws);
+    const readable = encoder.readable;
+    const writable = encoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/A==";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 

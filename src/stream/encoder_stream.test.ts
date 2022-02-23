@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { expect } from '@esm-bundle/chai';
 import { ReadableStream, WritableStream } from "node:stream/web";
 import { Base64EncoderStream } from "./encoder_stream";
 
@@ -50,7 +50,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 
@@ -106,7 +106,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 
@@ -164,7 +164,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fw=";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 
@@ -232,7 +232,7 @@ describe("Base64EncoderStream.prototype.writable", () => {
 
     const expected = "AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fwDAgEA//79/A==";
 
-    assert.strictEqual(result, expected);
+    expect(result).to.equal(expected);
 
   });
 

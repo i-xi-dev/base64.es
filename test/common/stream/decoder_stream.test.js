@@ -1,6 +1,11 @@
-import assert from "node:assert";
-import { ReadableStream, WritableStream } from "node:stream/web";
+import { expect } from '@esm-bundle/chai';
+//import { ReadableStream, WritableStream } from "node:stream/web";
 import { Base64DecoderStream } from "../../../node/stream/index.mjs";
+
+if (globalThis.process) {
+  globalThis.ReadableStream = (await import("node:stream/web")).ReadableStream;
+  globalThis.WritableStream = (await import("node:stream/web")).WritableStream;
+}
 
 describe("Base64DecoderStream.prototype.writable", () => {
   it("writable", async () => {
@@ -41,12 +46,17 @@ describe("Base64DecoderStream.prototype.writable", () => {
         written = written + chunk.byteLength;
       }
     });
-    await s.pipeThrough(decoder).pipeTo(ws); 
+    const readable = decoder.readable;
+    const writable = decoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws); 
 
     const expected = "0x03,0x02,0x01,0x00,0xFF,"
       + "0xFE,0xFD,0xFC,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -88,7 +98,12 @@ describe("Base64DecoderStream.prototype.writable", () => {
         written = written + chunk.byteLength;
       }
     });
-    await s.pipeThrough(decoder).pipeTo(ws);
+    const readable = decoder.readable;
+    const writable = decoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
       + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
@@ -96,7 +111,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
       + "0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -138,12 +153,17 @@ describe("Base64DecoderStream.prototype.writable", () => {
         written = written + chunk.byteLength;
       }
     });
-    await s.pipeThrough(decoder).pipeTo(ws);
+    const readable = decoder.readable;
+    const writable = decoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "0x03,0x02,0x01,0x00,0xFF,"
       + "0xFE,0xFD,0xFC,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -185,7 +205,12 @@ describe("Base64DecoderStream.prototype.writable", () => {
         written = written + chunk.byteLength;
       }
     });
-    await s.pipeThrough(decoder).pipeTo(ws);
+    const readable = decoder.readable;
+    const writable = decoder.writable;
+    await s.pipeThrough({
+      readable,
+      writable,
+    }).pipeTo(ws);
 
     const expected = "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
       + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
@@ -197,7 +222,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
       + "0x00,0x00,0x00,0x00,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -239,12 +264,19 @@ describe("Base64DecoderStream.prototype.writable", () => {
         written = written + chunk.byteLength;
       }
     });
-    assert.rejects(async () => {
-      await s.pipeThrough(decoder).pipeTo(ws);
-    }, {
-      name: "TypeError",
-      message: "decode error (1)",
-    });
+    const readable = decoder.readable;
+    const writable = decoder.writable;
+    try{
+      await s.pipeThrough({
+        readable,
+        writable,
+      }).pipeTo(ws); //TODO WebKitで警告される
+      throw new Error("x");
+    }catch(e){
+      const err = e;
+      expect(err.name).to.equal("TypeError");
+      expect(err.message).to.equal("decode error (1)");
+    }
 
   });
 

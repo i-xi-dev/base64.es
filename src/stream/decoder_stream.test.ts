@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { expect } from '@esm-bundle/chai';
 import { ReadableStream, WritableStream } from "node:stream/web";
 import { Base64DecoderStream } from "./decoder_stream";
 
@@ -51,7 +51,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
     const expected = "0x03,0x02,0x01,0x00,0xFF,"
       + "0xFE,0xFD,0xFC,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -106,7 +106,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
       + "0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -158,7 +158,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
     const expected = "0x03,0x02,0x01,0x00,0xFF,"
       + "0xFE,0xFD,0xFC,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -217,7 +217,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
       + "0x00,0x00,0x00,0x00,0x00,0x00";
 
-    assert.strictEqual([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
+    expect([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(",")).to.equal(expected);
 
   });
 
@@ -261,15 +261,17 @@ describe("Base64DecoderStream.prototype.writable", () => {
     });
     const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
     const writable: WritableStream<string> = decoder.writable;
-    assert.rejects(async () => {
+    try{
       await s.pipeThrough({
         readable,
         writable,
       }).pipeTo(ws);
-    }, {
-      name: "TypeError",
-      message: "decode error (1)",
-    });
+      throw new Error("x");
+    }catch(e){
+      const err = e as Error;
+      //expect(err.name).to.equal("TypeError");
+      expect(err.message).to.equal("decode error (1)");
+    }
 
   });
 
