@@ -4,7 +4,7 @@ import {
   type uint8,
 } from "@i-xi-dev/fundamental";
 
-const CHARS = [
+const _BASE64_CHARS = [
   "!",
   "+",
   "-",
@@ -80,11 +80,11 @@ const CHARS = [
 /**
  * 有効な文字
  */
-type char = typeof CHARS[number];
+type _base64char = typeof _BASE64_CHARS[number];
 
-function isChar(value: unknown): value is char {
+function _isBase64Char(value: unknown): value is _base64char {
   if ((typeof value === "string") && (value.length === 1)) {
-    return CHARS.includes(value as char);
+    return _BASE64_CHARS.includes(value as _base64char);
   }
   return false;
 }
@@ -92,26 +92,26 @@ function isChar(value: unknown): value is char {
 /**
  * 変換テーブル
  */
-type Base64Table = [
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
-  char, char, char, char, char, char, char, char,
+type _Base64Table = [
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
+  _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char, _base64char,
 ];
 
-function isTable(value: unknown): value is Base64Table {
-  return (Array.isArray(value) && (value.length === 64) && value.every((i) => isChar(i)));
+function _isBase64Table(value: unknown): value is _Base64Table {
+  return (Array.isArray(value) && (value.length === 64) && value.every((i) => _isBase64Char(i)));
 }
 
 /**
  * The object with the following optional fields.
  * The defaults are the values that conforms to the RFC 4648 Base64 specification.
  */
- type Base64Options = {
+type Base64Options = {
   /**
    * The 64 characters index table.
    * The default is `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]`.
@@ -173,15 +173,15 @@ function isTable(value: unknown): value is Base64Table {
 /**
  * 未設定項目の存在しないオプション
  */
-type ResolvedOptions = {
+type _ResolvedOptions = {
   /**  */
-  table: Readonly<Base64Table>,
+  table: Readonly<_Base64Table>,
 
   /**  */
   noPadding: boolean,
 
   /**  */
-  paddingChar: char,
+  paddingChar: _base64char,
 };
 
 /**
@@ -196,7 +196,7 @@ type ResolvedOptions = {
  * @returns バイト列
  * @throws {TypeError} The `encoded` is not Base64-encoded string.
  */
-function decode(encoded: string, options: ResolvedOptions): Uint8Array {
+function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   let work: string = encoded;
   // if (options.forgiving === true) {
   //   // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
@@ -223,7 +223,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   }
   // }
 
-  if (isEncoded(work, options) !== true) {
+  if (_isEncoded(work, options) !== true) {
     throw new TypeError("decode error (1)");
   }
 
@@ -264,8 +264,8 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   if (encodedBody.length >= 4) {
     for (i = 0; i < encodedBody.length; i = i + 4) {
       // 8-bit (1)
-      _6bit1 = options.table.indexOf(encodedBody[i] as char);
-      _6bit2 = options.table.indexOf(encodedBody[i + 1] as char);
+      _6bit1 = options.table.indexOf(encodedBody[i] as _base64char);
+      _6bit2 = options.table.indexOf(encodedBody[i + 1] as _base64char);
       decodedBytes[_8bitI++] = (_6bit1 << 2) | (_6bit2 >> 4);
 
       // 8-bit (2)
@@ -273,7 +273,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
         decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4);
         break;
       }
-      _6bit3 = options.table.indexOf(encodedBody[i + 2] as char);
+      _6bit3 = options.table.indexOf(encodedBody[i + 2] as _base64char);
       decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4) | (_6bit3 >> 2);
 
       // 8-bit (3)
@@ -281,14 +281,14 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
         decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6);
         break;
       }
-      _6bit4 = options.table.indexOf(encodedBody[i + 3] as char);
+      _6bit4 = options.table.indexOf(encodedBody[i + 3] as _base64char);
       decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6) | _6bit4;
     }
   }
   return decodedBytes;
 }
 
-function isEncoded(work: string, options: ResolvedOptions): boolean {
+function _isEncoded(work: string, options: _ResolvedOptions): boolean {
   const tablePattern = "[" + options.table.map((chr) => `\\u{${ chr.charCodeAt(0).toString(16) }}`).join("") + "]";
 
   // let regex: RegExp;
@@ -314,7 +314,7 @@ function isEncoded(work: string, options: ResolvedOptions): boolean {
  * @param options Base64符号化方式オプション
  * @returns Base64符号化された文字列
  */
-function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
+function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
   let _6bit1e: string;
   let _6bit2e: string;
   let _6bit3e: string;
@@ -357,7 +357,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
 /**
  * 62文字目（インデックス0～61）までの変換テーブル
  */
-const TABLE_62: Readonly<Array<char>> = Object.freeze([
+const _TABLE_62: Readonly<Array<_base64char>> = Object.freeze([
   "A",  // 0
   "B",  // 1
   "C",  // 2
@@ -425,14 +425,14 @@ const TABLE_62: Readonly<Array<char>> = Object.freeze([
 /**
  * RFC 4648 Base64 の変換テーブル
  */
-const RFC4648_TABLE = Object.freeze([ ...TABLE_62, "+", "/" ]) as Readonly<Base64Table>;
+const _RFC4648_TABLE = Object.freeze([ ..._TABLE_62, "+", "/" ]) as Readonly<_Base64Table>;
 
 // /**
 // * RFC 4648 Base64url の変換テーブル
 // */
-// const RFC4648URL_TABLE = Object.freeze([ ...TABLE_62, "-", "_" ]) as Readonly<Base64Table>;
+// const RFC4648URL_TABLE = Object.freeze([ ..._TABLE_62, "-", "_" ]) as Readonly<_Base64Table>;
 
-const RFC4648_PADDING = "=";
+const _RFC4648_PADDING = "=";
 
 /**
  * オプションをResolvedOptions型に変換する
@@ -442,13 +442,13 @@ const RFC4648_PADDING = "=";
  * @returns 未設定項目を埋めたオプションの複製
  * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
  */
-function resolveOptions(options: Base64Options | ResolvedOptions = {}): ResolvedOptions {
-  let table: Readonly<Base64Table>;
-  if (isTable(options.table)) {
-    table = Object.freeze([ ...options.table  ]) as Readonly<Base64Table>;
+function _resolveOptions(options: Base64Options | _ResolvedOptions = {}): _ResolvedOptions {
+  let table: Readonly<_Base64Table>;
+  if (_isBase64Table(options.table)) {
+    table = Object.freeze([ ...options.table  ]) as Readonly<_Base64Table>;
   }
   else {
-    table = RFC4648_TABLE;
+    table = _RFC4648_TABLE;
   }
 
   let noPadding: boolean;
@@ -469,21 +469,21 @@ function resolveOptions(options: Base64Options | ResolvedOptions = {}): Resolved
     }
   }
 
-  let paddingChar: char;
+  let paddingChar: _base64char;
   if (("padding" in options) && (("paddingChar" in options) !== true)) {
-    if (isChar(options.padding)) {
+    if (_isBase64Char(options.padding)) {
       paddingChar = options.padding;
     }
     else {
-      paddingChar = RFC4648_PADDING;
+      paddingChar = _RFC4648_PADDING;
     }
   }
   else {
-    if (isChar(options.paddingChar)) {
+    if (_isBase64Char(options.paddingChar)) {
       paddingChar = options.paddingChar;
     }
     else {
-      paddingChar = RFC4648_PADDING;
+      paddingChar = _RFC4648_PADDING;
     }
   }
 
@@ -524,6 +524,10 @@ interface Base64 {
    * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    */
   encode(toEncode: Uint8Array, options?: Base64Options): string;
+
+  // TODO
+  // presets: Map<string, Base64Options>
+  // のようなもの
 }
 
 /**
@@ -531,21 +535,21 @@ interface Base64 {
  */
 const Base64 = Object.freeze({
   decode(encoded: string, options?: Base64Options): Uint8Array {
-    const resolvedOptions = resolveOptions(options);
-    return decode(encoded, resolvedOptions);
+    const resolvedOptions = _resolveOptions(options);
+    return _decode(encoded, resolvedOptions);
   },
 
   encode(toEncode: Uint8Array, options?: Base64Options): string {
-    const resolvedOptions = resolveOptions(options);
-    return encode(toEncode, resolvedOptions);
+    const resolvedOptions = _resolveOptions(options);
+    return _encode(toEncode, resolvedOptions);
   },
 }) as Base64;
 
 export {
   type Base64Options,
-  type ResolvedOptions,
-  decode,
-  encode,
-  resolveOptions,
+  type _ResolvedOptions,
+  _decode,
+  _encode,
+  _resolveOptions,
   Base64,
 };

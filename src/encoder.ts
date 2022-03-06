@@ -6,9 +6,9 @@ import {
 } from "@i-xi-dev/fundamental";
 import {
   type Base64Options,
-  type ResolvedOptions,
-  encode,
-  resolveOptions,
+  type _ResolvedOptions,
+  _encode,
+  _resolveOptions,
 } from "./base64";
 
 /**
@@ -24,14 +24,14 @@ class Base64Encoder implements ByteEncoder {
   /**
    * 未設定項目を埋めたオプション
    */
-  #options: ResolvedOptions;
+  #options: _ResolvedOptions;
 
   /**
    * @param options - The `Base64Options` dictionary.
    * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   constructor(options?: Base64Options) {
-    this.#options = resolveOptions(options);
+    this.#options = _resolveOptions(options);
     Object.freeze(this);
   }
 
@@ -42,7 +42,7 @@ class Base64Encoder implements ByteEncoder {
    * @returns A string containing the Base64-encoded characters.
    */
   encode(toEncode: Uint8Array): string {
-    return encode(toEncode, this.#options);
+    return _encode(toEncode, this.#options);
   }
 
   /**
@@ -53,7 +53,7 @@ class Base64Encoder implements ByteEncoder {
    * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
    */
   static get(options?: Base64Options): Base64Encoder {
-    const resolvedOptions = resolveOptions(options);
+    const resolvedOptions = _resolveOptions(options);
 
     const poolKey = JSON.stringify(resolvedOptions);
     let encoder = Base64Encoder.#pool.get(poolKey);
