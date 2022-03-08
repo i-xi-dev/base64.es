@@ -38,34 +38,34 @@ describe("Base64.decode", () => {
 
   });
 
-  it("decode(string, {padEnd:false})", () => {
-    const decoded11 = Base64.decode("", {padEnd:false});
+  it("decode(string, {noPadding:true})", () => {
+    const decoded11 = Base64.decode("", {noPadding:true});
     expect(JSON.stringify([...decoded11])).to.equal("[]");
 
-    const decoded12z = Base64.decode("AwIBAP/+/fw=", {padEnd:false});
+    const decoded12z = Base64.decode("AwIBAP/+/fw=", {noPadding:true});
     expect(JSON.stringify([...decoded12z])).to.equal("[3,2,1,0,255,254,253,252]");
 
-    const decoded12 = Base64.decode("AwIBAP/+/fw", {padEnd:false});
+    const decoded12 = Base64.decode("AwIBAP/+/fw", {noPadding:true});
     expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
 
     expect(() => {
-      Base64.decode("あ", {padEnd:false});
+      Base64.decode("あ", {noPadding:true});
     }).to.throw(TypeError, "forgiving decode error").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("AwIBAP_-_fw=", {padEnd:false});
+      Base64.decode("AwIBAP_-_fw=", {noPadding:true});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("=AwIBAP/+/fw", {padEnd:false});
+      Base64.decode("=AwIBAP/+/fw", {noPadding:true});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("=", {padEnd:false});
+      Base64.decode("=", {noPadding:true});
     }).to.throw(TypeError, "forgiving decode error").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("AwIBAP/+/fw,", {padEnd:false});
+      Base64.decode("AwIBAP/+/fw,", {noPadding:true});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
   });
@@ -76,62 +76,44 @@ describe("Base64.decode", () => {
 
   });
 
-  it("decode(string, {noPadding:false,padEnd:false})", () => {
-    const decoded12z = Base64.decode("AwIBAP/+/fw=", {noPadding:false,padEnd:false});
-    expect(JSON.stringify([...decoded12z])).to.equal("[3,2,1,0,255,254,253,252]");
-
-  });
-
-  it("decode(string, {noPadding:true,padEnd:true})", () => {
-    const decoded12z = Base64.decode("AwIBAP/+/fw=", {noPadding:true,padEnd:true});
-    expect(JSON.stringify([...decoded12z])).to.equal("[3,2,1,0,255,254,253,252]");
-
-  });
-
-  it("decode(string, {padding:'!'})", () => {
-    const decoded11 = Base64.decode("", {padding:'!'});
+  it("decode(string, {paddingChar:'!'})", () => {
+    const decoded11 = Base64.decode("", {paddingChar:'!'});
     expect(JSON.stringify([...decoded11])).to.equal("[]");
 
-    const decoded12 = Base64.decode("AwIBAP/+/fw!", {padding:'!'});
+    const decoded12 = Base64.decode("AwIBAP/+/fw!", {paddingChar:'!'});
     expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
 
     expect(() => {
-      Base64.decode("AwIBAP/+/fw=", {padding:'!'});
+      Base64.decode("AwIBAP/+/fw=", {paddingChar:'!'});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
-    const decoded12z = Base64.decode("AwIBAP/+/fw", {padding:'!'});
+    const decoded12z = Base64.decode("AwIBAP/+/fw", {paddingChar:'!'});
     expect(JSON.stringify([...decoded12z])).to.equal("[3,2,1,0,255,254,253,252]");
 
     expect(() => {
-      Base64.decode("あ", {padding:'!'});
+      Base64.decode("あ", {paddingChar:'!'});
     }).to.throw(TypeError, "forgiving decode error").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("AwIBAP_-_fw!", {padding:'!'});
+      Base64.decode("AwIBAP_-_fw!", {paddingChar:'!'});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("=AwIBAP/+/fw", {padding:'!'});
+      Base64.decode("=AwIBAP/+/fw", {paddingChar:'!'});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("!", {padding:'!'});
+      Base64.decode("!", {paddingChar:'!'});
     }).to.throw(TypeError, "forgiving decode error").with.property("name", "TypeError");
 
     expect(() => {
-      Base64.decode("AwIBAP/+/fw,", {padding:'!'});
+      Base64.decode("AwIBAP/+/fw,", {paddingChar:'!'});
     }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
   });
 
   it("decode(string, {paddingChar:'!'})", () => {
     const decoded12 = Base64.decode("AwIBAP/+/fw!", {paddingChar:'!'});
-    expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
-
-  });
-
-  it("decode(string, {paddingChar:'!',padding:'-'})", () => {
-    const decoded12 = Base64.decode("AwIBAP/+/fw!", {paddingChar:'!',padding:'-'});
     expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
 
   });
@@ -198,11 +180,11 @@ describe("Base64.encode", () => {
 
   });
 
-  it("encode(Uint8Array, {padEnd:false})", () => {
-    expect(Base64.encode(Uint8Array.of(), {padEnd:false})).to.equal("");
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padEnd:false})).to.equal("AwIBAP/+/fw");
-    expect(Base64.encode(Uint8Array.of(255), {padEnd:false})).to.equal("/w");
-    expect(Base64.encode(Uint8Array.of(251), {padEnd:false})).to.equal("+w");
+  it("encode(Uint8Array, {noPadding:true})", () => {
+    expect(Base64.encode(Uint8Array.of(), {noPadding:true})).to.equal("");
+    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:true})).to.equal("AwIBAP/+/fw");
+    expect(Base64.encode(Uint8Array.of(255), {noPadding:true})).to.equal("/w");
+    expect(Base64.encode(Uint8Array.of(251), {noPadding:true})).to.equal("+w");
 
   });
 
@@ -211,26 +193,16 @@ describe("Base64.encode", () => {
 
   });
 
-  it("encode(Uint8Array, {noPadding:true,padEnd:true})", () => {
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:true,padEnd:true})).to.equal("AwIBAP/+/fw");
+  it("encode(Uint8Array, {noPadding:1})", () => {
+    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:1})).to.equal("AwIBAP/+/fw=");
 
   });
 
-  it("encode(Uint8Array, {noPadding:false,padEnd:false})", () => {
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {noPadding:false,padEnd:false})).to.equal("AwIBAP/+/fw=");
-
-  });
-
-  it("encode(Uint8Array, {padEnd:1})", () => {
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padEnd:1})).to.equal("AwIBAP/+/fw=");
-
-  });
-
-  it("encode(Uint8Array, {padding:'!'})", () => {
-    expect(Base64.encode(Uint8Array.of(), {padding:'!'})).to.equal("");
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padding:'!'})).to.equal("AwIBAP/+/fw!");
-    expect(Base64.encode(Uint8Array.of(255), {padding:'!'})).to.equal("/w!!");
-    expect(Base64.encode(Uint8Array.of(251), {padding:'!'})).to.equal("+w!!");
+  it("encode(Uint8Array, {paddingChar:'!'})", () => {
+    expect(Base64.encode(Uint8Array.of(), {paddingChar:'!'})).to.equal("");
+    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!'})).to.equal("AwIBAP/+/fw!");
+    expect(Base64.encode(Uint8Array.of(255), {paddingChar:'!'})).to.equal("/w!!");
+    expect(Base64.encode(Uint8Array.of(251), {paddingChar:'!'})).to.equal("+w!!");
 
   });
 
@@ -239,18 +211,8 @@ describe("Base64.encode", () => {
 
   });
 
-  it("encode(Uint8Array, {padding:'!!'})", () => {
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {padding:'!!'})).to.equal("AwIBAP/+/fw=");
-
-  });
-
-  it("encode(Uint8Array, {paddingChar:'!',padding:'-'})", () => {
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!',padding:'-'})).to.equal("AwIBAP/+/fw!");
-
-  });
-
-  it("encode(Uint8Array, {paddingChar:'!!',padding:'-'})", () => {
-    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!!',padding:'-'})).to.equal("AwIBAP/+/fw=");
+  it("encode(Uint8Array, {paddingChar:'!!'})", () => {
+    expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), {paddingChar:'!!'})).to.equal("AwIBAP/+/fw=");
 
   });
 
@@ -265,6 +227,44 @@ describe("Base64.encode", () => {
     expect(Base64.encode(Uint8Array.of(3,2,1,0,255,254,253,252), op)).to.equal("AwIBAP_-_fw");
     expect(Base64.encode(Uint8Array.of(255), op)).to.equal("_w");
     expect(Base64.encode(Uint8Array.of(251), op)).to.equal("-w");
+
+  });
+
+});
+
+describe("Base64.Options", () => {
+  it("Options[string]", () => {
+    const op1 = Base64.Options["rfc4648"];
+    const decoded1 = Base64.decode("AwIBAP/+/fw=");
+    expect(JSON.stringify([...decoded1])).to.equal("[3,2,1,0,255,254,253,252]");
+    const decoded1b = Base64.decode("AwIBAP/+/fw=", op1);
+    expect(JSON.stringify([...decoded1b])).to.equal("[3,2,1,0,255,254,253,252]");
+
+    const op2 = Base64.Options["rfc4648url"];
+    const decoded2 = Base64.decode("AwIBAP_-_fw", op2);
+    expect(JSON.stringify([...decoded2])).to.equal("[3,2,1,0,255,254,253,252]");
+
+    expect(() => {
+      Base64.Options = {};
+    }).to.throw(TypeError).with.property("name", "TypeError");
+
+    expect(() => {
+      Base64.Options["x"] = {};
+    }).to.throw(TypeError).with.property("name", "TypeError");
+
+    const opx = Base64.Options["rfc4648"];
+    expect(() => {
+      opx.table = [];
+    }).to.throw(TypeError).with.property("name", "TypeError");
+    expect(() => {
+      opx.table[0] = "1";
+    }).to.throw(TypeError).with.property("name", "TypeError");
+    expect(() => {
+      opx.noPadding = true;
+    }).to.throw(TypeError).with.property("name", "TypeError");
+    expect(() => {
+      opx.paddingChar = "!";
+    }).to.throw(TypeError).with.property("name", "TypeError");
 
   });
 

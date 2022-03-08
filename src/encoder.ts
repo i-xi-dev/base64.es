@@ -13,6 +13,21 @@ import {
 
 /**
  * Base64 encoder
+ * 
+ * @example
+ * ```javascript
+ * const encoder = new Base64Encoder();
+ * encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
+ * // → "AwIBAP/+/fw="
+ * ```
+ * 
+ * @example
+ * ```javascript
+ * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+ * const encoder = new Base64Encoder(rfc4648urlOptions);
+ * encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
+ * // → "AwIBAP_-_fw"
+ * ```
  */
 class Base64Encoder implements ByteEncoder {
   /**

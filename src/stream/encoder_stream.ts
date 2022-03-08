@@ -44,8 +44,16 @@ class Base64EncoderStreamRegulator implements ByteEncoderStreamRegulator {
 
 /**
  * The `TransformStream` that encodes a stream of `Uint8Array` into Base64-encoded string stream.
+ * 
+ * @example
+ * ```javascript
+ * const encoderStream = new Base64EncoderStream();
+ * // readableStream: ReadableStream<Uint8Array>
+ * // writableStream: WritableStream<string>
+ * readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
+ * ```
  */
-class EncoderStream extends ByteEncoderStream {
+class Base64EncoderStream extends ByteEncoderStream {
   /**
    * @param options - The `Base64Options` dictionary.
    */
@@ -56,8 +64,8 @@ class EncoderStream extends ByteEncoderStream {
     Object.freeze(this);
   }
 }
-Object.freeze(EncoderStream);
+Object.freeze(Base64EncoderStream);
 
 export {
-  EncoderStream as Base64EncoderStream,
+  Base64EncoderStream,
 };

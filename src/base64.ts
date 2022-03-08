@@ -131,32 +131,14 @@ type Base64Options = {
   noPadding?: boolean,
 
   /**
-   * Whether to output the padding.
-   * The default is `true`.
-   * However, the decoder ignores this value.
-   * `padEnd` is ignored if `noPadding` is specified.
-   * 
-   * @deprecated
-   */
-  padEnd?: boolean,
-
-  /**
    * The padding character.
    * The default is `"="`.
    * 
    * The following restrictions apply:
-   * - The `length` of the `padding` must be 1.
-   * - The `padding` must not be a character contained in the `table`.
+   * - The `length` of the `paddingChar` must be 1.
+   * - The `paddingChar` must not be a character contained in the `table`.
    */
   paddingChar?: string,
-
-  /**
-   * The alias for the `paddingChar`.
-   * `padding` is ignored if `paddingChar` is specified.
-   * 
-   * @deprecated
-   */
-  padding?: string,
 
   // /**
   //  * 復号時:
@@ -423,16 +405,22 @@ const _TABLE_62: Readonly<Array<_base64char>> = Object.freeze([
 ]);
 
 /**
- * RFC 4648 Base64 の変換テーブル
+ * RFC 4648 Base64 の仕様で復号/符号化するためのオプション
  */
-const _RFC4648_TABLE = Object.freeze([ ..._TABLE_62, "+", "/" ]) as Readonly<_Base64Table>;
+const _RFC4648_OPTIONS: _ResolvedOptions = Object.freeze({
+  table: Object.freeze([ ..._TABLE_62, "+", "/" ]) as Readonly<_Base64Table>,
+  noPadding: false,
+  paddingChar: "=",
+});
 
-// /**
-// * RFC 4648 Base64url の変換テーブル
-// */
-// const RFC4648URL_TABLE = Object.freeze([ ..._TABLE_62, "-", "_" ]) as Readonly<_Base64Table>;
-
-const _RFC4648_PADDING = "=";
+/**
+ * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
+ */
+const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
+  table: Object.freeze([ ..._TABLE_62, "-", "_" ]) as Readonly<_Base64Table>,
+  noPadding: true,
+  paddingChar: "=",
+});
 
 /**
  * オプションをResolvedOptions型に変換する
@@ -448,43 +436,17 @@ function _resolveOptions(options: Base64Options | _ResolvedOptions = {}): _Resol
     table = Object.freeze([ ...options.table  ]) as Readonly<_Base64Table>;
   }
   else {
-    table = _RFC4648_TABLE;
+    table = _RFC4648_OPTIONS.table;
   }
 
-  let noPadding: boolean;
-  if (("padEnd" in options) && (("noPadding" in options) !== true)) {
-    if (typeof options.padEnd === "boolean") {
-      noPadding = !options.padEnd;
-    }
-    else {
-      noPadding = false;
-    }
-  }
-  else {
-    if (typeof options.noPadding === "boolean") {
-      noPadding = options.noPadding;
-    }
-    else {
-      noPadding = false;
-    }
+  let noPadding: boolean = _RFC4648_OPTIONS.noPadding;
+  if (typeof options.noPadding === "boolean") {
+    noPadding = options.noPadding;
   }
 
-  let paddingChar: _base64char;
-  if (("padding" in options) && (("paddingChar" in options) !== true)) {
-    if (_isBase64Char(options.padding)) {
-      paddingChar = options.padding;
-    }
-    else {
-      paddingChar = _RFC4648_PADDING;
-    }
-  }
-  else {
-    if (_isBase64Char(options.paddingChar)) {
-      paddingChar = options.paddingChar;
-    }
-    else {
-      paddingChar = _RFC4648_PADDING;
-    }
+  let paddingChar: _base64char = _RFC4648_OPTIONS.paddingChar;
+  if (_isBase64Char(options.paddingChar)) {
+    paddingChar = options.paddingChar;
   }
 
   // tableとpaddingの重複チェック
@@ -507,6 +469,19 @@ interface Base64 {
   /**
    * Decodes a Base64-encoded string into an `Uint8Array`.
    * 
+   * @example
+   * ```javascript
+   * Base64.decode("AwIBAP/+/fw=");
+   * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
+   * ```
+   * 
+   * @example
+   * ```javascript
+   * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+   * Base64.decode("AwIBAP_-_fw", rfc4648urlOptions);
+   * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
+   * ```
+   * 
    * @param encoded - The string to decode.
    * @param options - The `Base64Options` dictionary.
    * @returns An `Uint8Array` containing the decoded bytes.
@@ -518,6 +493,19 @@ interface Base64 {
   /**
    * Encodes the specified bytes into a string.
    * 
+   * @example
+   * ```javascript
+   * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
+   * // → "AwIBAP/+/fw="
+   * ```
+   * 
+   * @example
+   * ```javascript
+   * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+   * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC), rfc4648urlOptions);
+   * // → "AwIBAP_-_fw"
+   * ```
+   * 
    * @param toEncode - The bytes to encode.
    * @param options - The `Base64Options` dictionary.
    * @returns A string containing the Base64-encoded characters.
@@ -525,9 +513,15 @@ interface Base64 {
    */
   encode(toEncode: Uint8Array, options?: Base64Options): string;
 
-  // TODO
-  // presets: Map<string, Base64Options>
-  // のようなもの
+  /**
+   * The map of the predefined `Base64Options`.
+   * 
+   * | key | value |
+   * | :--- | :--- |
+   * | `"rfc4648"` | `table`: `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]` <br /> `noPadding`: `false` <br /> `paddingChar`: `"="` |
+   * | `"rfc4648url"` | `table`: `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_" ]` <br /> `noPadding`: `true` <br /> `paddingChar`: `"="` |
+   */
+  Options: Readonly<Record<string, Readonly<Base64Options>>>;
 }
 
 /**
@@ -543,6 +537,11 @@ const Base64 = Object.freeze({
     const resolvedOptions = _resolveOptions(options);
     return _encode(toEncode, resolvedOptions);
   },
+
+  Options: Object.freeze({
+    "rfc4648": _RFC4648_OPTIONS,
+    "rfc4648url": _RFC4648URL_OPTIONS,
+  }),
 }) as Base64;
 
 export {

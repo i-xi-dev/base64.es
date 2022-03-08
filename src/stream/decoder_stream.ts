@@ -42,8 +42,16 @@ class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
 
 /**
  * The `TransformStream` that decodes a stream of Base64-encoded string into `Uint8Array` stream.
+ * 
+ * @example
+ * ```javascript
+ * const decoderStream = new Base64DecoderStream();
+ * // readableStream: ReadableStream<string>
+ * // writableStream: WritableStream<Uint8Array>
+ * readableStream.pipeThrough(decoderStream).pipeTo(writableStream);
+ * ```
  */
-class DecoderStream extends ByteDecoderStream {
+class Base64DecoderStream extends ByteDecoderStream {
   /**
    * @param options - The `Base64Options` dictionary.
    */
@@ -54,8 +62,8 @@ class DecoderStream extends ByteDecoderStream {
     Object.freeze(this);
   }
 }
-Object.freeze(DecoderStream);
+Object.freeze(Base64DecoderStream);
 
 export {
-  DecoderStream as Base64DecoderStream,
+  Base64DecoderStream,
 };

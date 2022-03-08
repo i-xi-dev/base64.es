@@ -36,8 +36,8 @@ describe("Base64Decoder.prototype.decode", () => {
 
   });
 
-  it("Base64Decoder({padEnd:false})/decode", () => {
-    const decoder = new Base64Decoder({padEnd:false});
+  it("Base64Decoder({noPadding:true})/decode", () => {
+    const decoder = new Base64Decoder({noPadding:true});
 
     const decoded11 = decoder.decode("");
     expect(JSON.stringify([...decoded11])).to.equal("[]");
@@ -70,8 +70,8 @@ describe("Base64Decoder.prototype.decode", () => {
 
   });
 
-  it("Base64Decoder({padding:'!'})/decode", () => {
-    const decoder = new Base64Decoder({padding:'!'});
+  it("Base64Decoder({paddingChar:'!'})/decode", () => {
+    const decoder = new Base64Decoder({paddingChar:'!'});
 
     const decoded11 = decoder.decode("");
     expect(JSON.stringify([...decoded11])).to.equal("[]");
@@ -111,8 +111,8 @@ describe("Base64Decoder.prototype.decode", () => {
   it("Base64Decoder(Rfc4648Base64UrlOptions)/decode", () => {
     const decoder = new Base64Decoder({
       table: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"],
-      padEnd: false,
-      padding: "=",
+      noPadding: true,
+      paddingChar: "=",
     });
 
     const decoded11 = decoder.decode("");
@@ -168,12 +168,12 @@ describe("Base64Decoder.get", () => {
   });
 
   it("get(Object)", () => {
-    const decoder1 = Base64Decoder.get({padEnd:true});
-    const decoder2 = Base64Decoder.get({padEnd:false});
+    const decoder1 = Base64Decoder.get({noPadding:false});
+    const decoder2 = Base64Decoder.get({noPadding:true});
     expect(decoder1).to.not.equal(decoder2);
 
-    const decoder21 = Base64Decoder.get({padEnd:false});
-    const decoder22 = Base64Decoder.get({padEnd:false});
+    const decoder21 = Base64Decoder.get({noPadding:true});
+    const decoder22 = Base64Decoder.get({noPadding:true});
     expect(decoder21).to.equal(decoder22);
 
   });
