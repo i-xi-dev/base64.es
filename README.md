@@ -100,7 +100,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 
 ### Encoding options
 
-[See the documentation](https://i-xi-dev.github.io/base64.es/modules/index.html#Base64Options)
+[See the documentation](https://i-xi-dev.github.io/base64.es/modules/index.html#Base64Options-1)
 
 #### Example
 
