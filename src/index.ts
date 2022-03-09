@@ -69,8 +69,7 @@ namespace Base64 {
   export type Options = Base64Options;
 
   /**
-   * The predefined `Base64Options`s.
-   * 
+   * The alias for the {@link Base64Options}.
    */
   export const Options = Base64Options;
 

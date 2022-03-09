@@ -246,6 +246,9 @@ const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
   paddingChar: "=",
 });
 
+/**
+ * The predefined options.
+ */
 namespace Base64Options {
   /**
    * The options for [RFC 4648 Base64](https://datatracker.ietf.org/doc/html/rfc4648#section-4).
