@@ -84,10 +84,78 @@ type _base64char = typeof _BASE64_CHARS[number];
 
 function _isBase64Char(value: unknown): value is _base64char {
   if ((typeof value === "string") && (value.length === 1)) {
-    return _BASE64_CHARS.includes(value as _base64char);
+    return (_BASE64_CHARS as Readonly<Array<string>>).includes(value);
   }
   return false;
 }
+
+/**
+ * 62文字目（インデックス0～61）までの変換テーブル
+ */
+const _TABLE_62: Readonly<Array<_base64char>> = Object.freeze([
+  "A",  // 0
+  "B",  // 1
+  "C",  // 2
+  "D",  // 3
+  "E",  // 4
+  "F",  // 5
+  "G",  // 6
+  "H",  // 7
+  "I",  // 8
+  "J",  // 9
+  "K",  // 10
+  "L",  // 11
+  "M",  // 12
+  "N",  // 13
+  "O",  // 14
+  "P",  // 15
+  "Q",  // 16
+  "R",  // 17
+  "S",  // 18
+  "T",  // 19
+  "U",  // 20
+  "V",  // 21
+  "W",  // 22
+  "X",  // 23
+  "Y",  // 24
+  "Z",  // 25
+  "a",  // 26
+  "b",  // 27
+  "c",  // 28
+  "d",  // 29
+  "e",  // 30
+  "f",  // 31
+  "g",  // 32
+  "h",  // 33
+  "i",  // 34
+  "j",  // 35
+  "k",  // 36
+  "l",  // 37
+  "m",  // 38
+  "n",  // 39
+  "o",  // 40
+  "p",  // 41
+  "q",  // 42
+  "r",  // 43
+  "s",  // 44
+  "t",  // 45
+  "u",  // 46
+  "v",  // 47
+  "w",  // 48
+  "x",  // 49
+  "y",  // 50
+  "z",  // 51
+  "0",  // 52
+  "1",  // 53
+  "2",  // 54
+  "3",  // 55
+  "4",  // 56
+  "5",  // 57
+  "6",  // 58
+  "7",  // 59
+  "8",  // 60
+  "9",  // 61
+]);
 
 /**
  * 変換テーブル
@@ -165,6 +233,43 @@ type _ResolvedOptions = {
   /**  */
   paddingChar: _base64char,
 };
+
+const _RFC4648_OPTIONS: _ResolvedOptions = Object.freeze({
+  table: Object.freeze([ ..._TABLE_62, "+", "/" ]) as Readonly<_Base64Table>,
+  noPadding: false,
+  paddingChar: "=",
+});
+
+const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
+  table: Object.freeze([ ..._TABLE_62, "-", "_" ]) as Readonly<_Base64Table>,
+  noPadding: true,
+  paddingChar: "=",
+});
+
+namespace Base64Options {
+  /**
+   * The options for [RFC 4648 Base64](https://datatracker.ietf.org/doc/html/rfc4648#section-4).
+   * 
+   * | field | value |
+   * | :--- | :--- |
+   * | `table` | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]` |
+   * | `noPadding` | `false` |
+   * | `paddingChar` | `"="` |
+   */
+  export const RFC4648: Base64Options = _RFC4648_OPTIONS;
+
+  /**
+   * The options for [RFC 4648 Base64url](https://datatracker.ietf.org/doc/html/rfc4648#section-5).
+   * 
+   * | field | value |
+   * | :--- | :--- |
+   * | `table` | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_" ]` |
+   * | `noPadding` | `true` |
+   * | `paddingChar` | `"="` |
+   */
+  export const RFC4648URL: Base64Options = _RFC4648URL_OPTIONS;
+}
+Object.freeze(Base64Options);
 
 /**
  * 文字列をバイト列にBase64復号し、結果のバイト列を返却
@@ -337,92 +442,6 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
 }
 
 /**
- * 62文字目（インデックス0～61）までの変換テーブル
- */
-const _TABLE_62: Readonly<Array<_base64char>> = Object.freeze([
-  "A",  // 0
-  "B",  // 1
-  "C",  // 2
-  "D",  // 3
-  "E",  // 4
-  "F",  // 5
-  "G",  // 6
-  "H",  // 7
-  "I",  // 8
-  "J",  // 9
-  "K",  // 10
-  "L",  // 11
-  "M",  // 12
-  "N",  // 13
-  "O",  // 14
-  "P",  // 15
-  "Q",  // 16
-  "R",  // 17
-  "S",  // 18
-  "T",  // 19
-  "U",  // 20
-  "V",  // 21
-  "W",  // 22
-  "X",  // 23
-  "Y",  // 24
-  "Z",  // 25
-  "a",  // 26
-  "b",  // 27
-  "c",  // 28
-  "d",  // 29
-  "e",  // 30
-  "f",  // 31
-  "g",  // 32
-  "h",  // 33
-  "i",  // 34
-  "j",  // 35
-  "k",  // 36
-  "l",  // 37
-  "m",  // 38
-  "n",  // 39
-  "o",  // 40
-  "p",  // 41
-  "q",  // 42
-  "r",  // 43
-  "s",  // 44
-  "t",  // 45
-  "u",  // 46
-  "v",  // 47
-  "w",  // 48
-  "x",  // 49
-  "y",  // 50
-  "z",  // 51
-  "0",  // 52
-  "1",  // 53
-  "2",  // 54
-  "3",  // 55
-  "4",  // 56
-  "5",  // 57
-  "6",  // 58
-  "7",  // 59
-  "8",  // 60
-  "9",  // 61
-]);
-
-/**
- * RFC 4648 Base64 の仕様で復号/符号化するためのオプション
- */
-const _RFC4648_OPTIONS: _ResolvedOptions = Object.freeze({
-  table: Object.freeze([ ..._TABLE_62, "+", "/" ]) as Readonly<_Base64Table>,
-  noPadding: false,
-  paddingChar: "=",
-});
-
-/**
- * RFC 4648 Base64url の仕様で復号/符号化するためのオプション
- */
-const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
-  table: Object.freeze([ ..._TABLE_62, "-", "_" ]) as Readonly<_Base64Table>,
-  noPadding: true,
-  paddingChar: "=",
-});
-
-/**
  * オプションをResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
  * 
@@ -431,20 +450,21 @@ const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
  * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
  */
 function _resolveOptions(options: Base64Options | _ResolvedOptions = {}): _ResolvedOptions {
+  const defaultOptions = _RFC4648_OPTIONS;
   let table: Readonly<_Base64Table>;
   if (_isBase64Table(options.table)) {
     table = Object.freeze([ ...options.table  ]) as Readonly<_Base64Table>;
   }
   else {
-    table = _RFC4648_OPTIONS.table;
+    table = defaultOptions.table;
   }
 
-  let noPadding: boolean = _RFC4648_OPTIONS.noPadding;
+  let noPadding: boolean = defaultOptions.noPadding;
   if (typeof options.noPadding === "boolean") {
     noPadding = options.noPadding;
   }
 
-  let paddingChar: _base64char = _RFC4648_OPTIONS.paddingChar;
+  let paddingChar: _base64char = defaultOptions.paddingChar;
   if (_isBase64Char(options.paddingChar)) {
     paddingChar = options.paddingChar;
   }
@@ -462,93 +482,10 @@ function _resolveOptions(options: Base64Options | _ResolvedOptions = {}): _Resol
   });
 }
 
-/**
- * Provides Base64 decoding and Base64 encoding methods.
- */
-interface Base64 {
-  /**
-   * Decodes a Base64-encoded string into an `Uint8Array`.
-   * 
-   * @example
-   * ```javascript
-   * Base64.decode("AwIBAP/+/fw=");
-   * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
-   * ```
-   * 
-   * @example
-   * ```javascript
-   * const rfc4648urlOptions = Base64.Options["rfc4648url"];
-   * Base64.decode("AwIBAP_-_fw", rfc4648urlOptions);
-   * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
-   * ```
-   * 
-   * @param encoded - The string to decode.
-   * @param options - The `Base64Options` dictionary.
-   * @returns An `Uint8Array` containing the decoded bytes.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
-   * @throws {TypeError} The `encoded` is not Base64-encoded string.
-   */
-  decode(encoded: string, options?: Base64Options): Uint8Array;
-
-  /**
-   * Encodes the specified bytes into a string.
-   * 
-   * @example
-   * ```javascript
-   * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
-   * // → "AwIBAP/+/fw="
-   * ```
-   * 
-   * @example
-   * ```javascript
-   * const rfc4648urlOptions = Base64.Options["rfc4648url"];
-   * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC), rfc4648urlOptions);
-   * // → "AwIBAP_-_fw"
-   * ```
-   * 
-   * @param toEncode - The bytes to encode.
-   * @param options - The `Base64Options` dictionary.
-   * @returns A string containing the Base64-encoded characters.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
-   */
-  encode(toEncode: Uint8Array, options?: Base64Options): string;
-
-  /**
-   * The map of the predefined `Base64Options`.
-   * 
-   * | key | value |
-   * | :--- | :--- |
-   * | `"rfc4648"` | `table`: `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]` <br /> `noPadding`: `false` <br /> `paddingChar`: `"="` |
-   * | `"rfc4648url"` | `table`: `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_" ]` <br /> `noPadding`: `true` <br /> `paddingChar`: `"="` |
-   */
-  Options: Readonly<Record<string, Readonly<Base64Options>>>;
-}
-
-/**
- * Implements `Base64` interface.
- */
-const Base64 = Object.freeze({
-  decode(encoded: string, options?: Base64Options): Uint8Array {
-    const resolvedOptions = _resolveOptions(options);
-    return _decode(encoded, resolvedOptions);
-  },
-
-  encode(toEncode: Uint8Array, options?: Base64Options): string {
-    const resolvedOptions = _resolveOptions(options);
-    return _encode(toEncode, resolvedOptions);
-  },
-
-  Options: Object.freeze({
-    "rfc4648": _RFC4648_OPTIONS,
-    "rfc4648url": _RFC4648URL_OPTIONS,
-  }),
-}) as Base64;
-
 export {
-  type Base64Options,
   type _ResolvedOptions,
   _decode,
   _encode,
   _resolveOptions,
-  Base64,
+  Base64Options,
 };

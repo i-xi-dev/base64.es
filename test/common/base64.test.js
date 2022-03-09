@@ -234,13 +234,13 @@ describe("Base64.encode", () => {
 
 describe("Base64.Options", () => {
   it("Options[string]", () => {
-    const op1 = Base64.Options["rfc4648"];
+    const op1 = Base64.Options.RFC4648;
     const decoded1 = Base64.decode("AwIBAP/+/fw=");
     expect(JSON.stringify([...decoded1])).to.equal("[3,2,1,0,255,254,253,252]");
     const decoded1b = Base64.decode("AwIBAP/+/fw=", op1);
     expect(JSON.stringify([...decoded1b])).to.equal("[3,2,1,0,255,254,253,252]");
 
-    const op2 = Base64.Options["rfc4648url"];
+    const op2 = Base64.Options.RFC4648URL;
     const decoded2 = Base64.decode("AwIBAP_-_fw", op2);
     expect(JSON.stringify([...decoded2])).to.equal("[3,2,1,0,255,254,253,252]");
 
@@ -252,7 +252,7 @@ describe("Base64.Options", () => {
       Base64.Options["x"] = {};
     }).to.throw(TypeError).with.property("name", "TypeError");
 
-    const opx = Base64.Options["rfc4648"];
+    const opx = Base64.Options.RFC4648;
     expect(() => {
       opx.table = [];
     }).to.throw(TypeError).with.property("name", "TypeError");

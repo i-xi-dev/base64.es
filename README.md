@@ -107,7 +107,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 The options for [Base 64 Encoding with URL and Filename Safe Alphabet, defined in RFC 4648](https://datatracker.ietf.org/doc/html/rfc4648#section-5)
 ```javascript
 // use the predefined Base64Options
-const rfc4648urlOptions = Base64.Options["rfc4648url"];
+const rfc4648urlOptions = Base64.Options.RFC4648URL;
 
 const decoder = new Base64Decoder(rfc4648urlOptions);
 const encoder = new Base64Encoder(rfc4648urlOptions);

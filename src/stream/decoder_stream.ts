@@ -4,7 +4,7 @@ import {
   type ByteDecoderStreamRegulator,
   ByteDecoderStream,
 } from "@i-xi-dev/fundamental";
-import { type Base64Options } from "../base64";
+import { Base64Options } from "../base64";
 import { Base64Decoder } from "../decoder";
 
 class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {

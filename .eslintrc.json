@@ -36,7 +36,7 @@
     "key-spacing": "error",
     "linebreak-style": "error",
     "no-duplicate-imports": "error",
-    "no-unused-vars": "off",
+    "no-unused-vars": "error",
     "no-var": "error",
     "rest-spread-spacing": "error",
     "semi": "error",
@@ -51,6 +51,7 @@
     "symbol-description": "error",
     "unicode-bom": "error",
     "@typescript-eslint/explicit-function-return-type": ["error"],
+    "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-unused-vars": ["error"]
   }
 }
