@@ -24,7 +24,7 @@ namespace Base64 {
    * 
    * @example
    * ```javascript
-   * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+   * const rfc4648urlOptions = Base64.Options.RFC4648URL;
    * Base64.decode("AwIBAP_-_fw", rfc4648urlOptions);
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
@@ -51,7 +51,7 @@ namespace Base64 {
    * 
    * @example
    * ```javascript
-   * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+   * const rfc4648urlOptions = Base64.Options.RFC4648URL;
    * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC), rfc4648urlOptions);
    * // → "AwIBAP_-_fw"
    * ```

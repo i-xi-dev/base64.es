@@ -23,7 +23,7 @@ import {
  * 
  * @example
  * ```javascript
- * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+ * const rfc4648urlOptions = Base64.Options.RFC4648URL;
  * const encoder = new Base64Encoder(rfc4648urlOptions);
  * encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
  * // → "AwIBAP_-_fw"

@@ -23,7 +23,7 @@ import {
  * 
  * @example
  * ```javascript
- * const rfc4648urlOptions = Base64.Options["rfc4648url"];
+ * const rfc4648urlOptions = Base64.Options.RFC4648URL;
  * const decoder = new Base64Decoder(rfc4648urlOptions);
  * decoder.decode("AwIBAP_-_fw");
  * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
