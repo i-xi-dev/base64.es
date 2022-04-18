@@ -1,13 +1,12 @@
 //
 
 import {
-  type ByteDecoderStreamRegulator,
-  ByteDecoderStream,
+  ByteEncoding,
 } from "@i-xi-dev/fundamental";
 import { Base64Options } from "../base64";
 import { Base64Decoder } from "../decoder";
 
-class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
+class Base64DecoderStreamRegulator implements ByteEncoding.DecoderStreamRegulator {
   #pending: string;
 
   constructor() {
@@ -51,7 +50,7 @@ class Base64DecoderStreamRegulator implements ByteDecoderStreamRegulator {
  * readableStream.pipeThrough(decoderStream).pipeTo(writableStream);
  * ```
  */
-class Base64DecoderStream extends ByteDecoderStream {
+class Base64DecoderStream extends ByteEncoding.DecoderStream {
   /**
    * @param options - The `Base64Options` dictionary.
    */

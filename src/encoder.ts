@@ -1,7 +1,7 @@
 //
 
 import {
-  type ByteEncoder,
+  type ByteEncoding,
   SizedMap,
 } from "@i-xi-dev/fundamental";
 import {
@@ -29,7 +29,7 @@ import {
  * // → "AwIBAP_-_fw"
  * ```
  */
-class Base64Encoder implements ByteEncoder {
+class Base64Encoder implements ByteEncoding.Encoder {
   /**
    * インスタンスのキャッシュ
    * static getで使用

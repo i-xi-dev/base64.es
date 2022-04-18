@@ -1,7 +1,7 @@
 //
 
 import {
-  type ByteDecoder,
+  type ByteEncoding,
   SizedMap,
 } from "@i-xi-dev/fundamental";
 import {
@@ -29,7 +29,7 @@ import {
  * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
  * ```
  */
-class Base64Decoder implements ByteDecoder {
+class Base64Decoder implements ByteEncoding.Decoder {
   /**
    * インスタンスのキャッシュ
    * static getで使用
