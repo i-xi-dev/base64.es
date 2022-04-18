@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/base64",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
   "type": "module",
   "main": "./dist/index.js",
@@ -9,10 +9,6 @@
     ".": {
       "node": "./node/index.mjs",
       "default": "./dist/index.js"
-    },
-    "./stream": {
-      "node": "./node/stream/index.mjs",
-      "default": "./dist/stream/index.js"
     }
   },
   "scripts": {

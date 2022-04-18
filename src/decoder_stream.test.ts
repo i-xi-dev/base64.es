@@ -1,8 +1,8 @@
 import { expect } from '@esm-bundle/chai';
 import { ReadableStream, WritableStream } from "node:stream/web";
-import { Base64DecoderStream } from "./decoder_stream";
+import { Base64 } from "./index";
 
-describe("Base64DecoderStream.prototype.writable", () => {
+describe("Base64.DecoderStream.prototype.writable", () => {
   it("writable", async () => {
     const td = ["AwIBAP/+/fw="];
 
@@ -31,7 +31,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       });
     })();
 
-    const decoder = new Base64DecoderStream();
+    const decoder = new Base64.DecoderStream();
 
     const result = new Uint8Array(10);
     let written = 0;
@@ -83,7 +83,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       });
     })();
 
-    const decoder = new Base64DecoderStream();
+    const decoder = new Base64.DecoderStream();
 
     const result = new Uint8Array(40);
     let written = 0;
@@ -138,7 +138,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       });
     })();
 
-    const decoder = new Base64DecoderStream();
+    const decoder = new Base64.DecoderStream();
 
     const result = new Uint8Array(10);
     let written = 0;
@@ -190,7 +190,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       });
     })();
 
-    const decoder = new Base64DecoderStream();
+    const decoder = new Base64.DecoderStream();
 
     const result = new Uint8Array(70);
     let written = 0;
@@ -249,7 +249,7 @@ describe("Base64DecoderStream.prototype.writable", () => {
       });
     })();
 
-    const decoder = new Base64DecoderStream();
+    const decoder = new Base64.DecoderStream();
 
     const result = new Uint8Array(10);
     let written = 0;

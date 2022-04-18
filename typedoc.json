@@ -1,7 +1,6 @@
 {
   "entryPoints": [
-    "./src/index.ts",
-    "./src/stream/index.ts"
+    "./src/index.ts"
   ],
   "excludeExternals": false,
   "excludePrivate": true,
