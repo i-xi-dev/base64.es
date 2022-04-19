@@ -620,6 +620,7 @@ namespace Base64 {
    * @example
    * ```javascript
    * const decoder = new Base64.Decoder();
+   * 
    * decoder.decode("AwIBAP/+/fw=");
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
@@ -628,6 +629,7 @@ namespace Base64 {
    * ```javascript
    * const rfc4648urlOptions = Base64.Options.RFC4648URL;
    * const decoder = new Base64.Decoder(rfc4648urlOptions);
+   * 
    * decoder.decode("AwIBAP_-_fw");
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
@@ -692,6 +694,7 @@ namespace Base64 {
    * @example
    * ```javascript
    * const encoder = new Base64.Encoder();
+   * 
    * encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
    * // → "AwIBAP/+/fw="
    * ```
@@ -700,6 +703,7 @@ namespace Base64 {
    * ```javascript
    * const rfc4648urlOptions = Base64.Options.RFC4648URL;
    * const encoder = new Base64.Encoder(rfc4648urlOptions);
+   * 
    * encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
    * // → "AwIBAP_-_fw"
    * ```
@@ -765,6 +769,7 @@ namespace Base64 {
    * const decoderStream = new Base64.DecoderStream();
    * // readableStream: ReadableStream<string>
    * // writableStream: WritableStream<Uint8Array>
+   * 
    * readableStream.pipeThrough(decoderStream).pipeTo(writableStream);
    * ```
    */
@@ -789,6 +794,7 @@ namespace Base64 {
    * const encoderStream = new Base64.EncoderStream();
    * // readableStream: ReadableStream<Uint8Array>
    * // writableStream: WritableStream<string>
+   * 
    * readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
    * ```
    */
