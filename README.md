@@ -10,16 +10,16 @@ A JavaScript Base64 encoder and decoder, implements [Forgiving base64](https://i
 
 ## Requirement
 
-### `Base64Decoder` and `Base64Encoder` classes, and `Base64` static class
+### `Base64.Decoder` and `Base64.Encoder` classes, and `Base64` static class
 
 - Chrome
 - Edge
 - Firefox
 - Safari
 - Deno
-- Node.js
+- Node.jsd
 
-### `Base64DecoderStream` and `Base64EncoderStream` classes
+### `Base64.DecoderStream` and `Base64.EncoderStream` classes
 
 These require [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream).
 
@@ -98,7 +98,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 
 ### Encoding options
 
-[See the documentation](https://i-xi-dev.github.io/base64.es/modules/Base64.html#Options)
+[See the documentation](https://i-xi-dev.github.io/base64.es/modules/Base64.html#Options-1)
 
 #### Example
 
