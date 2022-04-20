@@ -491,24 +491,22 @@ namespace Base64 {
   /**
    * Decodes a Base64-encoded string into an `Uint8Array`.
    * 
+   * @param encoded The string to decode.
+   * @param options The `Base64.Options` dictionary.
+   * @returns An `Uint8Array` containing the decoded byte sequence.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
+   * @throws {TypeError} The `encoded` is not Base64-encoded string.
    * @example
    * ```javascript
    * Base64.decode("AwIBAP/+/fw=");
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
-   * 
    * @example
    * ```javascript
    * const rfc4648urlOptions = Base64.Options.RFC4648URL;
    * Base64.decode("AwIBAP_-_fw", rfc4648urlOptions);
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
-   * 
-   * @param encoded The string to decode.
-   * @param options The `Base64.Options` dictionary.
-   * @returns An `Uint8Array` containing the decoded bytes.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
-   * @throws {TypeError} The `encoded` is not Base64-encoded string.
    */
   export function decode(encoded: string, options?: Options): Uint8Array {
     const resolvedOptions = _resolveOptions(options);
@@ -516,25 +514,23 @@ namespace Base64 {
   }
 
   /**
-   * Encodes the specified bytes into a string.
+   * Encodes the specified byte sequence into a string.
    * 
+   * @param toEncode The byte sequence to encode.
+   * @param options The `Base64.Options` dictionary.
+   * @returns A string containing the Base64-encoded characters.
+   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    * @example
    * ```javascript
    * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
    * // → "AwIBAP/+/fw="
    * ```
-   * 
    * @example
    * ```javascript
    * const rfc4648urlOptions = Base64.Options.RFC4648URL;
    * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC), rfc4648urlOptions);
    * // → "AwIBAP_-_fw"
    * ```
-   * 
-   * @param toEncode The bytes to encode.
-   * @param options The `Base64.Options` dictionary.
-   * @returns A string containing the Base64-encoded characters.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    */
   export function encode(toEncode: Uint8Array, options?: Options): string {
     const resolvedOptions = _resolveOptions(options);
@@ -586,9 +582,6 @@ namespace Base64 {
     // forgiving: boolean,
   };
 
-  /**
-   * The predefined options.
-   */
   export namespace Options {
     /**
      * The options for [RFC 4648 Base64](https://datatracker.ietf.org/doc/html/rfc4648#section-4).
@@ -624,7 +617,6 @@ namespace Base64 {
    * decoder.decode("AwIBAP/+/fw=");
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
-   * 
    * @example
    * ```javascript
    * const rfc4648urlOptions = Base64.Options.RFC4648URL;
@@ -659,7 +651,7 @@ namespace Base64 {
      * Decodes a Base64-encoded string into an `Uint8Array`.
      * 
      * @param encoded The string to decode.
-     * @returns An `Uint8Array` containing the decoded bytes.
+     * @returns An `Uint8Array` containing the decoded byte sequence.
      * @throws {TypeError} The `encoded` is not Base64-encoded string.
      */
     decode(encoded: string): Uint8Array {
@@ -698,7 +690,6 @@ namespace Base64 {
    * encoder.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
    * // → "AwIBAP/+/fw="
    * ```
-   * 
    * @example
    * ```javascript
    * const rfc4648urlOptions = Base64.Options.RFC4648URL;
@@ -730,9 +721,9 @@ namespace Base64 {
     }
 
     /**
-     * Encodes the specified bytes into a string.
+     * Encodes the specified byte sequence into a string.
      * 
-     * @param toEncode The bytes to encode.
+     * @param toEncode The byte sequence to encode.
      * @returns A string containing the Base64-encoded characters.
      */
     encode(toEncode: Uint8Array): string {
