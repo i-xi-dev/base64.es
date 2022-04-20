@@ -504,8 +504,8 @@ namespace Base64 {
    * // → Uint8Array[ 0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC ]
    * ```
    * 
-   * @param encoded - The string to decode.
-   * @param options - The `Base64.Options` dictionary.
+   * @param encoded The string to decode.
+   * @param options The `Base64.Options` dictionary.
    * @returns An `Uint8Array` containing the decoded bytes.
    * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    * @throws {TypeError} The `encoded` is not Base64-encoded string.
@@ -531,8 +531,8 @@ namespace Base64 {
    * // → "AwIBAP_-_fw"
    * ```
    * 
-   * @param toEncode - The bytes to encode.
-   * @param options - The `Base64.Options` dictionary.
+   * @param toEncode The bytes to encode.
+   * @param options The `Base64.Options` dictionary.
    * @returns A string containing the Base64-encoded characters.
    * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
    */
@@ -647,7 +647,7 @@ namespace Base64 {
     #options: _ResolvedOptions;
 
     /**
-     * @param options - The `Base64.Options` dictionary.
+     * @param options The `Base64.Options` dictionary.
      * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
      */
     constructor(options?: Options) {
@@ -658,7 +658,7 @@ namespace Base64 {
     /**
      * Decodes a Base64-encoded string into an `Uint8Array`.
      * 
-     * @param encoded - The string to decode.
+     * @param encoded The string to decode.
      * @returns An `Uint8Array` containing the decoded bytes.
      * @throws {TypeError} The `encoded` is not Base64-encoded string.
      */
@@ -669,7 +669,7 @@ namespace Base64 {
     /**
      * Returns a `Base64.Decoder` object.
      * 
-     * @param options - The `Base64.Options` dictionary.
+     * @param options The `Base64.Options` dictionary.
      * @returns An instance of `Base64.Decoder`.
      * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
      */
@@ -721,7 +721,7 @@ namespace Base64 {
     #options: _ResolvedOptions;
 
     /**
-     * @param options - The `Base64.Options` dictionary.
+     * @param options The `Base64.Options` dictionary.
      * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
      */
     constructor(options?: Options) {
@@ -732,7 +732,7 @@ namespace Base64 {
     /**
      * Encodes the specified bytes into a string.
      * 
-     * @param toEncode - The bytes to encode.
+     * @param toEncode The bytes to encode.
      * @returns A string containing the Base64-encoded characters.
      */
     encode(toEncode: Uint8Array): string {
@@ -742,7 +742,7 @@ namespace Base64 {
     /**
      * Returns a `Base64.Encoder` object.
      * 
-     * @param options - The `Base64.Options` dictionary.
+     * @param options The `Base64.Options` dictionary.
      * @returns An instance of `Base64.Encoder`.
      * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
      */
@@ -775,7 +775,7 @@ namespace Base64 {
    */
   export class DecoderStream extends ByteEncoding.DecoderStream {
     /**
-     * @param options - The `Base64.Options` dictionary.
+     * @param options The `Base64.Options` dictionary.
      */
     constructor(options?: Base64.Options) {
       const decoder = new Base64.Decoder(options);
@@ -800,7 +800,7 @@ namespace Base64 {
    */
   export class EncoderStream extends ByteEncoding.EncoderStream {
     /**
-     * @param options - The `Base64.Options` dictionary.
+     * @param options The `Base64.Options` dictionary.
      */
     constructor(options?: Base64.Options) {
       const encoder = new Base64.Encoder(options);
