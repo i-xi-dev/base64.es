@@ -650,6 +650,19 @@ namespace Base64 {
     decode(encoded: string): Uint8Array {
       return _decode(encoded, this.#options);
     }
+
+    /**
+     * Returns a `Base64.Decoder` object.
+     * 
+     * @deprecated
+     * @param options The `Base64.Options` dictionary.
+     * @returns An instance of `Base64.Decoder`.
+     * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+     */
+    static get(options?: Options): Decoder {
+      const resolvedOptions = _resolveOptions(options);
+      return new Decoder(resolvedOptions);
+    }
   }
   Object.freeze(Decoder);
 
@@ -695,6 +708,19 @@ namespace Base64 {
      */
     encode(toEncode: Uint8Array): string {
       return _encode(toEncode, this.#options);
+    }
+
+    /**
+     * Returns a `Base64.Encoder` object.
+     * 
+     * @deprecated
+     * @param options The `Base64.Options` dictionary.
+     * @returns An instance of `Base64.Encoder`.
+     * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+     */
+    static get(options?: Options): Encoder {
+      const resolvedOptions = _resolveOptions(options);
+      return new Encoder(resolvedOptions);
     }
   }
   Object.freeze(Encoder);

@@ -47,3 +47,27 @@ describe("Base64.Encoder.prototype.encode", () => {
   });
 
 });
+
+describe("Base64.Encoder.get", () => {
+  it("get()", () => {
+    const encoder = Base64.Encoder.get();
+
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(Uint8Array.of(3,2,1,0,255,254,253,252))).to.equal("AwIBAP/+/fw=");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("/w==");
+    expect(encoder.encode(Uint8Array.of(251))).to.equal("+w==");
+
+  });
+
+  // it("get(Object)", () => {
+  //   const encoder1 = Base64.Encoder.get({noPadding:false});
+  //   const encoder2 = Base64.Encoder.get({noPadding:true});
+  //   expect(encoder1).to.not.equal(encoder2);
+
+  //   const encoder21 = Base64.Encoder.get({noPadding:true});
+  //   const encoder22 = Base64.Encoder.get({noPadding:true});
+  //   expect(encoder21).to.equal(encoder22);
+
+  // });
+
+});
