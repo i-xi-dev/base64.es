@@ -151,31 +151,3 @@ describe("Base64.Decoder.prototype.decode", () => {
   });
 
 });
-
-describe("Base64.Decoder.get", () => {
-  it("get()", () => {
-    const decoder = Base64.Decoder.get();
-
-    const decoded11 = decoder.decode("");
-    expect(JSON.stringify([...decoded11])).to.equal("[]");
-
-    const decoded12 = decoder.decode("AwIBAP/+/fw=");
-    expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
-
-    const decoded12b = decoder.decode("AwIBAP/+/fw");
-    expect(JSON.stringify([...decoded12b])).to.equal("[3,2,1,0,255,254,253,252]");
-
-  });
-
-  it("get(Object)", () => {
-    const decoder1 = Base64.Decoder.get({noPadding:false});
-    const decoder2 = Base64.Decoder.get({noPadding:true});
-    expect(decoder1).to.not.equal(decoder2);
-
-    const decoder21 = Base64.Decoder.get({noPadding:true});
-    const decoder22 = Base64.Decoder.get({noPadding:true});
-    expect(decoder21).to.equal(decoder22);
-
-  });
-
-});

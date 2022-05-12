@@ -3,7 +3,6 @@
 import {
   type uint8,
   ByteEncoding,
-  SizedMap,
 } from "@i-xi-dev/fundamental";
 
 const _BASE64_CHARS = [
@@ -628,12 +627,6 @@ namespace Base64 {
    */
   export class Decoder implements ByteEncoding.Decoder {
     /**
-     * インスタンスのキャッシュ
-     * static getで使用
-     */
-    static #pool: SizedMap<string, Decoder> = new SizedMap(1);
-
-    /**
      * 未設定項目を埋めたオプション
      */
     #options: _ResolvedOptions;
@@ -656,26 +649,6 @@ namespace Base64 {
      */
     decode(encoded: string): Uint8Array {
       return _decode(encoded, this.#options);
-    }
-
-    /**
-     * Returns a `Base64.Decoder` object.
-     * 
-     * @param options The `Base64.Options` dictionary.
-     * @returns An instance of `Base64.Decoder`.
-     * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
-     */
-    static get(options?: Options): Decoder {
-      const resolvedOptions = _resolveOptions(options);
-
-      const poolKey = JSON.stringify(resolvedOptions);
-      let decoder = Decoder.#pool.get(poolKey);
-      if (decoder) {
-        return decoder;
-      }
-      decoder = new Decoder(resolvedOptions);
-      Decoder.#pool.set(poolKey, decoder);
-      return decoder;
     }
   }
   Object.freeze(Decoder);
@@ -701,12 +674,6 @@ namespace Base64 {
    */
   export class Encoder implements ByteEncoding.Encoder {
     /**
-     * インスタンスのキャッシュ
-     * static getで使用
-     */
-    static #pool: SizedMap<string, Encoder> = new SizedMap(1);
-
-    /**
      * 未設定項目を埋めたオプション
      */
     #options: _ResolvedOptions;
@@ -728,26 +695,6 @@ namespace Base64 {
      */
     encode(toEncode: Uint8Array): string {
       return _encode(toEncode, this.#options);
-    }
-
-    /**
-     * Returns a `Base64.Encoder` object.
-     * 
-     * @param options The `Base64.Options` dictionary.
-     * @returns An instance of `Base64.Encoder`.
-     * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
-     */
-    static get(options?: Options): Encoder {
-      const resolvedOptions = _resolveOptions(options);
-
-      const poolKey = JSON.stringify(resolvedOptions);
-      let encoder = Encoder.#pool.get(poolKey);
-      if (encoder) {
-        return encoder;
-      }
-      encoder = new Encoder(resolvedOptions);
-      Encoder.#pool.set(poolKey, encoder);
-      return encoder;
     }
   }
   Object.freeze(Encoder);
