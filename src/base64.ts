@@ -1,7 +1,6 @@
 //
 
-import { type byte } from "https://raw.githubusercontent.com/i-xi-dev/byte.es/1.0.0/mod.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
-import { BytesEncoding } from "https://raw.githubusercontent.com/i-xi-dev/bytes-encoding.es/1.0.1/mod.ts";
+import { type byte, BytesEncoding } from "./deps.ts";
 
 const _BASE64_CHARS = [
   "!",

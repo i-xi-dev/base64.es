@@ -7,23 +7,18 @@ A JavaScript Base64 encoder and decoder, implements [Forgiving base64](https://i
 
 ### `Base64.Decoder` and `Base64.Encoder` classes, and `Base64` static class
 
-- Chrome
-- Edge
-- Firefox
-- Safari
-- Deno
-- Node.jsd
+| Chrome | Edge | Firefox | Safari | Deno | Node.js |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
 
 ### `Base64.DecoderStream` and `Base64.EncoderStream` classes
 
 These require [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream).
 
-- Chrome
-- Edge
-- Firefox 102+
-- Safari 14.1+
-- Deno
-- Node.js 16.5.0+
+| Chrome | Edge | Firefox | Safari | Deno | Node.js |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ✅<br />102+ | ✅<br />14.1+ | ✅ | ✅<br />16.5+ |
 
 
 ## Installation
@@ -48,7 +43,7 @@ import { Base64 } from "https://cdn.skypack.dev/@i-xi-dev/base64";
 
 ## Usage
 
-### [`Base64.Decoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.3/mod.ts/~/Base64.Decoder) and [`Base64.Encoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.3/mod.ts/~/Base64.Encoder) classes, and [`Base64`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.3/mod.ts/~/Base64) static class
+### [`Base64.Decoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.4/mod.ts/~/Base64.Decoder) and [`Base64.Encoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.4/mod.ts/~/Base64.Encoder) classes, and [`Base64`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.4/mod.ts/~/Base64) static class
 
 ```javascript
 const decoder = new Base64.Decoder();
@@ -74,7 +69,7 @@ Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
 // → "AwIBAP/+/fw="
 ```
 
-### [`Base64.DecoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.3/mod.ts/~/Base64.DecoderStream) and [`Base64.EncoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.3/mod.ts/~/Base64.EncoderStream) classes
+### [`Base64.DecoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.4/mod.ts/~/Base64.DecoderStream) and [`Base64.EncoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.4/mod.ts/~/Base64.EncoderStream) classes
 
 ```javascript
 const decoderStream = new Base64.DecoderStream();
@@ -94,7 +89,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 
 ### Encoding options
 
-[See the documentation](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.3/mod.ts/~/Base64.Options)
+[See the documentation](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/3.0.4/mod.ts/~/Base64.Options)
 
 #### Example
 
