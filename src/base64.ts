@@ -1,6 +1,6 @@
-//
+import { BytesEncoding, type uint6, type uint8 } from "./deps.ts";
 
-import { type byte, BytesEncoding } from "./deps.ts";
+const _forgiving = true;
 
 const _BASE64_CHARS = [
   "!",
@@ -270,64 +270,61 @@ const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
  */
 function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   let work: string = encoded;
-  // if (options.forgiving === true) {
-  //   // work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
-  // deno-lint-ignore no-control-regex
-  work = work.replace(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
-  // }
+  if (_forgiving === true) {
+    // deno-lint-ignore no-control-regex
+    work = work.replaceAll(/[\u{9}\u{A}\u{C}\u{D}\u{20}]/gu, "");
+  }
 
-  // if (options.forgiving === true) {
-  //  // work.lengthの箇所は、仕様では符号位置数だがlengthを使用する
-  //  // length !== 符号位置数の場合の処理結果が正しくなくなるが、そうなったとしてもisEncodedでエラーとなる為問題は無いはず
+  if (_forgiving === true) {
+    // work.lengthの箇所は、仕様では符号位置数だがlengthを使用する
+    // length !== 符号位置数の場合の処理結果が正しくなくなるが、そうなったとしてもisEncodedでエラーとなる為問題は無いはず
 
-  if ((work.length % 4) === 0) {
-    for (let i = 0; i < 2; i++) {
-      if (work.endsWith(options.paddingChar)) {
-        work = work.substring(0, work.length - 1);
-      } else {
-        break;
+    if ((work.length % 4) === 0) {
+      for (let i = 0; i < 2; i++) {
+        if (work.endsWith(options.paddingChar)) {
+          work = work.substring(0, work.length - 1);
+        } else {
+          break;
+        }
       }
     }
-  }
 
-  if ((work.length % 4) === 1) {
-    throw new TypeError("forgiving decode error");
+    if ((work.length % 4) === 1) {
+      throw new TypeError("forgiving decode error");
+    }
   }
-  // }
 
   if (_isEncoded(work, options) !== true) {
     throw new TypeError("decode error (1)");
   }
 
-  // const paddingStart = work.indexOf(options.paddingChar);
-  // let paddingCount: number;
-  // let encodedBody: string;
-  // if ((options.noPadding !== true) && (options.forgiving !== true)) {
-  //   if ((work.length % 4) !== 0) {
-  //     throw new TypeError("decode error (2)");
-  //   }
-  //
-  //   if (paddingStart >= 0) {
-  //     paddingCount = work.length - paddingStart;
-  //     encodedBody = work.substring(0, paddingStart);
-  //   }
-  //   else {
-  //     paddingCount = 0;
-  //     encodedBody = work;
-  //   }
-  // }
-  // else {
-  //   // if (paddingStart >= 0) {
-  //   //  throw new TypeError("decode error (3)"); (1)で例外になる
-  //   // }
-  const paddingCount = (work.length % 4 === 0) ? 0 : 4 - (work.length % 4);
-  const encodedBody = work;
-  // }
+  const paddingStart = work.indexOf(options.paddingChar);
+  let paddingCount: number;
+  let encodedBody: string;
+  if ((options.noPadding !== true) && (_forgiving !== true)) {
+    if ((work.length % 4) !== 0) {
+      throw new TypeError("decode error (2)");
+    }
 
-  let _6bit1: number;
-  let _6bit2: number;
-  let _6bit3: number;
-  let _6bit4: number;
+    if (paddingStart >= 0) {
+      paddingCount = work.length - paddingStart;
+      encodedBody = work.substring(0, paddingStart);
+    } else {
+      paddingCount = 0;
+      encodedBody = work;
+    }
+  } else {
+    // if (paddingStart >= 0) {
+    //  throw new TypeError("decode error (3)"); (1)で例外になる
+    // }
+    paddingCount = (work.length % 4 === 0) ? 0 : 4 - (work.length % 4);
+    encodedBody = work;
+  }
+
+  let _6bit1: uint6;
+  let _6bit2: uint6;
+  let _6bit3: uint6;
+  let _6bit4: uint6;
   let _8bitI = 0;
   const encodedByteCount = ((encodedBody.length + paddingCount) * 3 / 4) -
     paddingCount;
@@ -337,8 +334,10 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   if (encodedBody.length >= 4) {
     for (i = 0; i < encodedBody.length; i = i + 4) {
       // 8-bit (1)
-      _6bit1 = options.table.indexOf(encodedBody[i] as _base64char);
-      _6bit2 = options.table.indexOf(encodedBody[i + 1] as _base64char);
+      _6bit1 = options.table.indexOf(encodedBody[i] as _base64char) as uint6;
+      _6bit2 = options.table.indexOf(
+        encodedBody[i + 1] as _base64char,
+      ) as uint6;
       decodedBytes[_8bitI++] = (_6bit1 << 2) | (_6bit2 >> 4);
 
       // 8-bit (2)
@@ -346,7 +345,9 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
         decodedBytes[_8bitI++] = (_6bit2 & 0b001111) << 4;
         break;
       }
-      _6bit3 = options.table.indexOf(encodedBody[i + 2] as _base64char);
+      _6bit3 = options.table.indexOf(
+        encodedBody[i + 2] as _base64char,
+      ) as uint6;
       decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4) | (_6bit3 >> 2);
 
       // 8-bit (3)
@@ -354,7 +355,9 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
         decodedBytes[_8bitI++] = (_6bit3 & 0b000011) << 6;
         break;
       }
-      _6bit4 = options.table.indexOf(encodedBody[i + 3] as _base64char);
+      _6bit4 = options.table.indexOf(
+        encodedBody[i + 3] as _base64char,
+      ) as uint6;
       decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6) | _6bit4;
     }
   }
@@ -367,14 +370,18 @@ function _isEncoded(work: string, options: _ResolvedOptions): boolean {
       "",
     ) + "]";
 
-  // let regex: RegExp;
-  // if ((options.padEnd === true) && (options.forgiving !== true)) {
-  //   const paddingPattern = `\\u{${ options.paddingChar.charCodeAt(0).toString(16) }}`;
-  //   regex = new RegExp(`^(${ tablePattern }+${ paddingPattern }*|${ tablePattern }*)$`, "u");
-  // }
-  // else {
-  const regex = new RegExp(`^${tablePattern}*$`, "u");
-  // }
+  let regex: RegExp;
+  if ((options.noPadding !== true) && (_forgiving !== true)) {
+    const paddingPattern = `\\u{${
+      options.paddingChar.charCodeAt(0).toString(16)
+    }}`;
+    regex = new RegExp(
+      `^(${tablePattern}+${paddingPattern}*|${tablePattern}*)$`,
+      "u",
+    );
+  } else {
+    regex = new RegExp(`^${tablePattern}*$`, "u");
+  }
 
   return regex.test(work);
 }
@@ -398,8 +405,8 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
   let encodedChars = "";
   for (let i = 0; i < toEncode.byteLength; i = i + 3) {
     const [_n8bit1, _n8bit2, _n8bit3] = toEncode.subarray(i, i + 3);
-    const _8bit1: byte = _n8bit1 as byte;
-    const _8bit2: byte = (_n8bit2 !== undefined) ? (_n8bit2 as byte) : 0;
+    const _8bit1: uint8 = _n8bit1 as uint8;
+    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as uint8) : 0;
 
     // 6-bit (1)
     _6bit1e = options.table[_8bit1 >> 2] as string;
@@ -409,7 +416,7 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
       .table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
 
     if (_n8bit2 !== undefined) {
-      const _8bit3: byte = (_n8bit3 !== undefined) ? (_n8bit3 as byte) : 0;
+      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as uint8) : 0;
 
       // 6-bit (3)
       _6bit3e = options
@@ -468,7 +475,6 @@ function _resolveOptions(
     table,
     noPadding,
     paddingChar,
-    // forgiving: true,
   });
 }
 
@@ -623,16 +629,6 @@ namespace Base64 {
      * - The `paddingChar` must not be a character contained in the `table`.
      */
     paddingChar?: string;
-    // /**
-    //  * 復号時:
-    //  *    復号を寛容に行うか否か
-    //  *    （https://infra.spec.whatwg.org/#forgiving-base64-decode の仕様で復号するか否か）
-    //  *    ※trueの場合、padEndは無視する
-    //  *
-    //  * 符号化時:
-    //  *    無視する
-    //  */
-    // forgiving: boolean,
   };
 
   export namespace Options {

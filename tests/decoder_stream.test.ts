@@ -19,7 +19,6 @@ Deno.test("Base64.DecoderStream.prototype.writable - 1", async () => {
         }
         controller.enqueue(td[c]);
         c = c + 1;
-
       }, 10);
     },
   });
@@ -40,20 +39,24 @@ Deno.test("Base64.DecoderStream.prototype.writable - 1", async () => {
     write(chunk: Uint8Array) {
       result.set(chunk, written);
       written = written + chunk.byteLength;
-    }
+    },
   });
-  const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
+  const readable: ReadableStream<Uint8Array> = decoder
+    .readable as ReadableStream<Uint8Array>;
   const writable: WritableStream<string> = decoder.writable;
   await s.pipeThrough<Uint8Array>({
     readable,
     writable,
-  }).pipeTo(ws); 
+  }).pipeTo(ws);
 
-  const expected = "0x03,0x02,0x01,0x00,0xFF,"
-    + "0xFE,0xFD,0xFC,0x00,0x00";
+  const expected = "0x03,0x02,0x01,0x00,0xFF," +
+    "0xFE,0xFD,0xFC,0x00,0x00";
 
-  assertStrictEquals([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
-
+  assertStrictEquals(
+    [...result].map((e) => "0x" + e.toString(16).toUpperCase().padStart(2, "0"))
+      .join(","),
+    expected,
+  );
 });
 
 Deno.test("Base64.DecoderStream.prototype.writable - 2", async () => {
@@ -71,7 +74,6 @@ Deno.test("Base64.DecoderStream.prototype.writable - 2", async () => {
         }
         controller.enqueue(td[c]);
         c = c + 1;
-
       }, 10);
     },
   });
@@ -92,27 +94,31 @@ Deno.test("Base64.DecoderStream.prototype.writable - 2", async () => {
     write(chunk: Uint8Array) {
       result.set(chunk, written);
       written = written + chunk.byteLength;
-    }
+    },
   });
-  const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
+  const readable: ReadableStream<Uint8Array> = decoder
+    .readable as ReadableStream<Uint8Array>;
   const writable: WritableStream<string> = decoder.writable;
   await s.pipeThrough({
     readable,
     writable,
   }).pipeTo(ws);
 
-  const expected = "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00";
+  const expected = "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00";
 
-  assertStrictEquals([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
-
+  assertStrictEquals(
+    [...result].map((e) => "0x" + e.toString(16).toUpperCase().padStart(2, "0"))
+      .join(","),
+    expected,
+  );
 });
 
 Deno.test("Base64.DecoderStream.prototype.writable - 3", async () => {
-  const td = ["A","w","I","B","A","P","/","+","/","f","w","="];
+  const td = ["A", "w", "I", "B", "A", "P", "/", "+", "/", "f", "w", "="];
 
   let ti: any;
   const s = new ReadableStream<string>({
@@ -126,7 +132,6 @@ Deno.test("Base64.DecoderStream.prototype.writable - 3", async () => {
         }
         controller.enqueue(td[c]);
         c = c + 1;
-
       }, 10);
     },
   });
@@ -147,24 +152,41 @@ Deno.test("Base64.DecoderStream.prototype.writable - 3", async () => {
     write(chunk: Uint8Array) {
       result.set(chunk, written);
       written = written + chunk.byteLength;
-    }
+    },
   });
-  const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
+  const readable: ReadableStream<Uint8Array> = decoder
+    .readable as ReadableStream<Uint8Array>;
   const writable: WritableStream<string> = decoder.writable;
   await s.pipeThrough({
     readable,
     writable,
   }).pipeTo(ws);
 
-  const expected = "0x03,0x02,0x01,0x00,0xFF,"
-    + "0xFE,0xFD,0xFC,0x00,0x00";
+  const expected = "0x03,0x02,0x01,0x00,0xFF," +
+    "0xFE,0xFD,0xFC,0x00,0x00";
 
-  assertStrictEquals([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
-
+  assertStrictEquals(
+    [...result].map((e) => "0x" + e.toString(16).toUpperCase().padStart(2, "0"))
+      .join(","),
+    expected,
+  );
 });
 
 Deno.test("Base64.DecoderStream.prototype.writable - 4", async () => {
-  const td = ["AwIBAP/+/fwDAgEA//79/AMC","AQD//v38AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIB","AP/+/fwDAgEA//79/A=","","","","","","","","","="];
+  const td = [
+    "AwIBAP/+/fwDAgEA//79/AMC",
+    "AQD//v38AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIB",
+    "AP/+/fwDAgEA//79/A=",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "=",
+  ];
 
   let ti: any;
   const s = new ReadableStream<string>({
@@ -178,7 +200,6 @@ Deno.test("Base64.DecoderStream.prototype.writable - 4", async () => {
         }
         controller.enqueue(td[c]);
         c = c + 1;
-
       }, 10);
     },
   });
@@ -199,31 +220,35 @@ Deno.test("Base64.DecoderStream.prototype.writable - 4", async () => {
     write(chunk: Uint8Array) {
       result.set(chunk, written);
       written = written + chunk.byteLength;
-    }
+    },
   });
-  const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
+  const readable: ReadableStream<Uint8Array> = decoder
+    .readable as ReadableStream<Uint8Array>;
   const writable: WritableStream<string> = decoder.writable;
   await s.pipeThrough({
     readable,
     writable,
   }).pipeTo(ws);
 
-  const expected = "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC,"
-    + "0x00,0x00,0x00,0x00,0x00,0x00";
+  const expected = "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x03,0x02,0x01,0x00,0xFF,0xFE,0xFD,0xFC," +
+    "0x00,0x00,0x00,0x00,0x00,0x00";
 
-  assertStrictEquals([...result].map(e => "0x" + e.toString(16).toUpperCase().padStart(2, "0")).join(","), expected);
-
+  assertStrictEquals(
+    [...result].map((e) => "0x" + e.toString(16).toUpperCase().padStart(2, "0"))
+      .join(","),
+    expected,
+  );
 });
 
 Deno.test("Base64.DecoderStream.prototype.writable - error", async () => {
-  const td = ["A","w","あ","B","A","P","/","+","/","f","w","="];
+  const td = ["A", "w", "あ", "B", "A", "P", "/", "+", "/", "f", "w", "="];
 
   let ti: any;
   const s = new ReadableStream<string>({
@@ -237,7 +262,6 @@ Deno.test("Base64.DecoderStream.prototype.writable - error", async () => {
         }
         controller.enqueue(td[c]);
         c = c + 1;
-
       }, 10);
     },
   });
@@ -258,20 +282,20 @@ Deno.test("Base64.DecoderStream.prototype.writable - error", async () => {
     write(chunk: Uint8Array) {
       result.set(chunk, written);
       written = written + chunk.byteLength;
-    }
+    },
   });
-  const readable: ReadableStream<Uint8Array> = decoder.readable as ReadableStream<Uint8Array>;
+  const readable: ReadableStream<Uint8Array> = decoder
+    .readable as ReadableStream<Uint8Array>;
   const writable: WritableStream<string> = decoder.writable;
-  try{
+  try {
     await s.pipeThrough({
       readable,
       writable,
     }).pipeTo(ws);
     throw new Error("x");
-  }catch(e){
+  } catch (e) {
     const err = e as Error;
     //assertStrictEquals(err.name, "TypeError");
     assertStrictEquals(err.message, "decode error (1)");
   }
-
 });

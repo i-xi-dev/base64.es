@@ -12,8 +12,9 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/base64",
-    version: "3.0.4",
-    description: "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
+    version: "3.0.5",
+    description:
+      "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
     license: "MIT",
     author: "i-xi-dev",
     homepage: "https://github.com/i-xi-dev/base64.es#readme",
@@ -29,20 +30,20 @@ await build({
     ],
     repository: {
       type: "git",
-      url: "git+https://github.com/i-xi-dev/base64.es.git"
+      url: "git+https://github.com/i-xi-dev/base64.es.git",
     },
     bugs: {
-      url: "https://github.com/i-xi-dev/base64.es/issues"
+      url: "https://github.com/i-xi-dev/base64.es/issues",
     },
     publishConfig: {
-      access: "public"
+      access: "public",
     },
     files: [
       "esm",
-      "types"
+      "types",
     ],
   },
-  importMap: "./import_map.json"
+  importMap: "./import_map.json",
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
