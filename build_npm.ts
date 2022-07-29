@@ -1,8 +1,11 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.23.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.29.0/mod.ts";
 
 await emptyDir("./npm");
 
 await build({
+  compilerOptions: {
+    lib: ["esnext", "dom"],
+  },
   entryPoints: ["./mod.ts"],
   outDir: "./npm",
   shims: {
@@ -12,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/base64",
-    version: "3.0.5",
+    version: "3.0.6",
     description:
       "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
     license: "MIT",
