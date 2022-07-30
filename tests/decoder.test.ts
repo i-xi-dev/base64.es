@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertThrows } from "std/testing/asserts";
-import { Base64 } from "../src/base64.ts";
+import { Base64 } from "../mod.ts";
 
 Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder()", () => {
   const decoder = new Base64.Decoder();

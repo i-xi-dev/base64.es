@@ -1,5 +1,5 @@
 import { assertStrictEquals } from "std/testing/asserts";
-import { Base64 } from "../src/base64.ts";
+import { Base64 } from "../mod.ts";
 import {
   _ReadableStream as ReadableStream,
 } from "https://raw.githubusercontent.com/i-xi-dev/compat.es/1.0.1/mod.ts";
@@ -7,6 +7,7 @@ import {
 Deno.test("Base64.DecoderStream.prototype.writable - 1", async () => {
   const td = ["AwIBAP/+/fw="];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<string>({
     start(controller: ReadableStreamDefaultController<string>) {
@@ -62,6 +63,7 @@ Deno.test("Base64.DecoderStream.prototype.writable - 1", async () => {
 Deno.test("Base64.DecoderStream.prototype.writable - 2", async () => {
   const td = ["AwIBAP/+/fwDAgEA//79/AMCAQD//v38AwIBAP/+/fw="];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<string>({
     start(controller: ReadableStreamDefaultController<string>) {
@@ -120,6 +122,7 @@ Deno.test("Base64.DecoderStream.prototype.writable - 2", async () => {
 Deno.test("Base64.DecoderStream.prototype.writable - 3", async () => {
   const td = ["A", "w", "I", "B", "A", "P", "/", "+", "/", "f", "w", "="];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<string>({
     start(controller: ReadableStreamDefaultController<string>) {
@@ -188,6 +191,7 @@ Deno.test("Base64.DecoderStream.prototype.writable - 4", async () => {
     "=",
   ];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<string>({
     start(controller: ReadableStreamDefaultController<string>) {
@@ -250,6 +254,7 @@ Deno.test("Base64.DecoderStream.prototype.writable - 4", async () => {
 Deno.test("Base64.DecoderStream.prototype.writable - error", async () => {
   const td = ["A", "w", "あ", "B", "A", "P", "/", "+", "/", "f", "w", "="];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<string>({
     start(controller: ReadableStreamDefaultController<string>) {

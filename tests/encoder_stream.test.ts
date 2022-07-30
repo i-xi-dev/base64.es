@@ -1,5 +1,5 @@
 import { assertStrictEquals } from "std/testing/asserts";
-import { Base64 } from "../src/base64.ts";
+import { Base64 } from "../mod.ts";
 import {
   _ReadableStream as ReadableStream,
 } from "https://raw.githubusercontent.com/i-xi-dev/compat.es/1.0.1/mod.ts";
@@ -9,6 +9,7 @@ Deno.test("Base64.EncoderStream.prototype.writable - 1", async () => {
     Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC),
   ];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<Uint8Array>({
     start(controller: ReadableStreamDefaultController<Uint8Array>) {
@@ -93,6 +94,7 @@ Deno.test("Base64.EncoderStream.prototype.writable - 2", async () => {
     ),
   ];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<Uint8Array>({
     start(controller: ReadableStreamDefaultController<Uint8Array>) {
@@ -151,6 +153,7 @@ Deno.test("Base64.EncoderStream.prototype.writable - 3", async () => {
     Uint8Array.of(0xFC),
   ];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<Uint8Array>({
     start(controller: ReadableStreamDefaultController<Uint8Array>) {
@@ -273,6 +276,7 @@ Deno.test("Base64.EncoderStream.prototype.writable - 4", async () => {
     Uint8Array.of(),
   ];
 
+  // deno-lint-ignore no-explicit-any
   let ti: any;
   const s = new ReadableStream<Uint8Array>({
     start(controller: ReadableStreamDefaultController<Uint8Array>) {
