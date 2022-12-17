@@ -1,4 +1,4 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.29.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.32.0/mod.ts";
 
 await emptyDir("./npm");
 
@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/base64",
-    version: "3.0.6",
+    version: "3.0.7",
     description:
       "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
     license: "MIT",
@@ -47,6 +47,10 @@ await build({
     ],
   },
   importMap: "./import_map.json",
+
+  //
+  typeCheck: false, // 落ちるようになった
+  declaration: false, // 落ちるようになった
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");

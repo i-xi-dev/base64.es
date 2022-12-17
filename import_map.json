@@ -1,5 +1,8 @@
 {
   "imports": {
-    "std/testing/asserts": "https://deno.land/std@0.138.0/testing/asserts.ts"
+    "std/testing/asserts": "https://deno.land/std@0.168.0/testing/asserts.ts",
+    "i-xi-dev/bytes-encoding.es": "https://raw.githubusercontent.com/i-xi-dev/bytes-encoding.es/1.0.7/mod.ts",
+    "i-xi-dev/compat.es": "https://raw.githubusercontent.com/i-xi-dev/compat.es/1.1.4/mod.ts",
+    "i-xi-dev/int.es": "https://raw.githubusercontent.com/i-xi-dev/int.es/1.1.2/mod.ts"
   }
 }

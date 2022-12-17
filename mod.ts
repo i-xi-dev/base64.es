@@ -1,8 +1,8 @@
 import {
   type uint6,
   type uint8,
-} from "https://raw.githubusercontent.com/i-xi-dev/int.es/1.1.1/mod.ts";
-import { BytesEncoding } from "https://raw.githubusercontent.com/i-xi-dev/bytes-encoding.es/1.0.5/mod.ts";
+} from "i-xi-dev/int.es";
+import { BytesEncoding } from "i-xi-dev/bytes-encoding.es";
 
 const _forgiving = true;
 
