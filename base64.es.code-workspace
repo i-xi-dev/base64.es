@@ -8,6 +8,7 @@
     "deno.enable": true,
     "deno.lint": true,
     "deno.unstable": false,
+    "editor.tabSize": 2,
     "files.encoding": "utf8",
     "files.eol": "\n"
   }
