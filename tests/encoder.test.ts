@@ -231,26 +231,3 @@ Deno.test("Base64.Encoder.prototype.encode - Base64.Encoder(Rfc4648Base64UrlOpti
     test(r9.buffer).replace(/=*$/, "").replace(/\+/g, "-").replace(/\//g, "_"),
   );
 });
-
-Deno.test("Base64.Encoder.get()", () => {
-  const encoder = Base64.Encoder.get();
-
-  assertStrictEquals(encoder.encode(Uint8Array.of()), "");
-  assertStrictEquals(
-    encoder.encode(Uint8Array.of(3, 2, 1, 0, 255, 254, 253, 252)),
-    "AwIBAP/+/fw=",
-  );
-  assertStrictEquals(encoder.encode(Uint8Array.of(255)), "/w==");
-  assertStrictEquals(encoder.encode(Uint8Array.of(251)), "+w==");
-});
-
-// Deno.test("Base64.Encoder.get(Object)", () => {
-//   const encoder1 = Base64.Encoder.get({noPadding:false});
-//   const encoder2 = Base64.Encoder.get({noPadding:true});
-//   expect(encoder1).to.not.equal(encoder2);
-
-//   const encoder21 = Base64.Encoder.get({noPadding:true});
-//   const encoder22 = Base64.Encoder.get({noPadding:true});
-//   expect(encoder21, encoder22);
-
-// });

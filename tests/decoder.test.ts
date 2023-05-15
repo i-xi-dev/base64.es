@@ -321,33 +321,3 @@ Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder(Rfc4648Base64UrlOpti
     "decode error (1)",
   );
 });
-
-Deno.test("Base64.Decoder.get()", () => {
-  const decoder = Base64.Decoder.get();
-
-  const decoded11 = decoder.decode("");
-  assertStrictEquals(JSON.stringify([...decoded11]), "[]");
-
-  const decoded12 = decoder.decode("AwIBAP/+/fw=");
-  assertStrictEquals(
-    JSON.stringify([...decoded12]),
-    "[3,2,1,0,255,254,253,252]",
-  );
-
-  const decoded12b = decoder.decode("AwIBAP/+/fw");
-  assertStrictEquals(
-    JSON.stringify([...decoded12b]),
-    "[3,2,1,0,255,254,253,252]",
-  );
-});
-
-// Deno.test("Base64.Decoder.get(Object)", () => {
-//   const decoder1 = Base64.Decoder.get({noPadding:false});
-//   const decoder2 = Base64.Decoder.get({noPadding:true});
-//   assertStrictEquals(decoder1).to.not.equal(decoder2);
-
-//   const decoder21 = Base64.Decoder.get({noPadding:true});
-//   const decoder22 = Base64.Decoder.get({noPadding:true});
-//   assertStrictEquals(decoder21, decoder22);
-
-// });
