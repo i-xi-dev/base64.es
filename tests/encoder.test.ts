@@ -1,6 +1,5 @@
-import { assertStrictEquals } from "std/testing/asserts";
+import { assertStrictEquals, crypto } from "./deps.ts";
 import { Base64 } from "../mod.ts";
-import { _crypto as crypto } from "i-xi-dev/compat.es";
 
 function test(arrayBuffer: ArrayBuffer): string {
   const bytes = new Uint8Array(arrayBuffer);

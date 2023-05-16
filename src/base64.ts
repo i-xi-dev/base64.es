@@ -1,5 +1,8 @@
-import { type uint6, type uint8 } from "i-xi-dev/int.es";
-import { BytesEncoding } from "i-xi-dev/bytes-encoding.es";
+import {
+  type uint6,
+  type uint8,
+  BytesEncoding,
+} from "../deps.ts";
 
 const _forgiving = true;
 

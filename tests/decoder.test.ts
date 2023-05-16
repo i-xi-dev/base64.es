@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "std/testing/asserts";
+import { assertStrictEquals, assertThrows } from "./deps.ts";
 import { Base64 } from "../mod.ts";
 
 Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder()", () => {

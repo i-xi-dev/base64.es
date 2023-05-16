@@ -20,10 +20,7 @@
     // "noImplicitOverride": true, → trueにすると、dntでエラーになる
     // "noPropertyAccessFromIndexSignature": true → trueにすると、dntでエラーになる
   },
-  "importMap": "import_map.json",
   "tasks": {
-    "doc": "deno doc --import-map=import_map.json mod.ts",
-    "docjson": "deno doc --import-map=import_map.json --json mod.ts",
     "test": "deno test tests/",
     "build:npm": "deno run -A build_npm.ts"
   }

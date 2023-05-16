@@ -1,8 +1,5 @@
-import { assertStrictEquals } from "std/testing/asserts";
+import { assertStrictEquals, ReadableStream } from "./deps.ts";
 import { Base64 } from "../mod.ts";
-import {
-  _ReadableStream as ReadableStream,
-} from "i-xi-dev/compat.es";
 
 Deno.test("Base64.EncoderStream.prototype.writable - 1", async () => {
   const td = [
