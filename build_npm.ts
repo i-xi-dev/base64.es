@@ -46,10 +46,8 @@ await build({
       "types",
     ],
   },
-
-  //
-  typeCheck: false, // 落ちるようになった
-  declaration: false, // 落ちるようになった
+  typeCheck: false,//TODO
+  declaration: true,
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
