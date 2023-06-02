@@ -1,4 +1,4 @@
-export { assertStrictEquals, assertThrows } from "https://deno.land/std@0.187.0/testing/asserts.ts";
+export { assertStrictEquals, assertThrows } from "https://deno.land/std@0.190.0/testing/asserts.ts";
 export {
   _crypto as crypto,
   _ReadableStream as ReadableStream,
