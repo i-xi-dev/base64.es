@@ -1,8 +1,4 @@
-import {
-  type uint6,
-  type uint8,
-  BytesEncoding,
-} from "../deps.ts";
+import { BytesEncoding, type uint6, type uint8 } from "../deps.ts";
 
 const _forgiving = true;
 
