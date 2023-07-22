@@ -26,7 +26,7 @@ These require [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/A
 ### npm
 
 ```console
-$ npm i @i-xi-dev/base64@4.0.2
+$ npm i @i-xi-dev/base64@4.0.3
 ```
 
 ```javascript
@@ -37,13 +37,13 @@ import { Base64 } from "@i-xi-dev/base64";
 
 Example for Skypack
 ```javascript
-import { Base64 } from "https://cdn.skypack.dev/@i-xi-dev/base64@4.0.2";
+import { Base64 } from "https://cdn.skypack.dev/@i-xi-dev/base64@4.0.3";
 ```
 
 
 ## Usage
 
-### [`Base64.Decoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.2/mod.ts/~/Base64.Decoder) and [`Base64.Encoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.2/mod.ts/~/Base64.Encoder) classes, and [`Base64`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.2/mod.ts/~/Base64) static class
+### [`Base64.Decoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.3/mod.ts/~/Base64.Decoder) and [`Base64.Encoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.3/mod.ts/~/Base64.Encoder) classes, and [`Base64`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.3/mod.ts/~/Base64) static class
 
 ```javascript
 const decoder = new Base64.Decoder();
@@ -69,7 +69,7 @@ Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
 // → "AwIBAP/+/fw="
 ```
 
-### [`Base64.DecoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.2/mod.ts/~/Base64.DecoderStream) and [`Base64.EncoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.2/mod.ts/~/Base64.EncoderStream) classes
+### [`Base64.DecoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.3/mod.ts/~/Base64.DecoderStream) and [`Base64.EncoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.3/mod.ts/~/Base64.EncoderStream) classes
 
 ```javascript
 const decoderStream = new Base64.DecoderStream();
@@ -89,7 +89,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 
 ### Encoding options
 
-[See the documentation](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.2/mod.ts/~/Base64.Options)
+[See the documentation](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.0.3/mod.ts/~/Base64.Options)
 
 #### Example
 
