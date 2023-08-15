@@ -1,4 +1,4 @@
-import { BytesEncoding, type uint6, type uint8 } from "../deps.ts";
+import { BytesEncoding, Uint6, Uint8 } from "../deps.ts";
 
 const _forgiving = true;
 
@@ -321,10 +321,10 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
     encodedBody = work;
   }
 
-  let _6bit1: uint6;
-  let _6bit2: uint6;
-  let _6bit3: uint6;
-  let _6bit4: uint6;
+  let _6bit1: Uint6;
+  let _6bit2: Uint6;
+  let _6bit3: Uint6;
+  let _6bit4: Uint6;
   let _8bitI = 0;
   const encodedByteCount = ((encodedBody.length + paddingCount) * 3 / 4) -
     paddingCount;
@@ -334,10 +334,10 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   if (encodedBody.length >= 4) {
     for (i = 0; i < encodedBody.length; i = i + 4) {
       // 8-bit (1)
-      _6bit1 = options.table.indexOf(encodedBody[i] as _base64char) as uint6;
+      _6bit1 = options.table.indexOf(encodedBody[i] as _base64char) as Uint6;
       _6bit2 = options.table.indexOf(
         encodedBody[i + 1] as _base64char,
-      ) as uint6;
+      ) as Uint6;
       decodedBytes[_8bitI++] = (_6bit1 << 2) | (_6bit2 >> 4);
 
       // 8-bit (2)
@@ -347,7 +347,7 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
       }
       _6bit3 = options.table.indexOf(
         encodedBody[i + 2] as _base64char,
-      ) as uint6;
+      ) as Uint6;
       decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4) | (_6bit3 >> 2);
 
       // 8-bit (3)
@@ -357,7 +357,7 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
       }
       _6bit4 = options.table.indexOf(
         encodedBody[i + 3] as _base64char,
-      ) as uint6;
+      ) as Uint6;
       decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6) | _6bit4;
     }
   }
@@ -405,8 +405,8 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
   let encodedChars = "";
   for (let i = 0; i < toEncode.byteLength; i = i + 3) {
     const [_n8bit1, _n8bit2, _n8bit3] = toEncode.subarray(i, i + 3);
-    const _8bit1: uint8 = _n8bit1 as uint8;
-    const _8bit2: uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as uint8) : 0;
+    const _8bit1: Uint8 = _n8bit1 as Uint8;
+    const _8bit2: Uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as Uint8) : 0;
 
     // 6-bit (1)
     _6bit1e = options.table[_8bit1 >> 2] as string;
@@ -416,7 +416,7 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
       .table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
 
     if (_n8bit2 !== undefined) {
-      const _8bit3: uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as uint8) : 0;
+      const _8bit3: Uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as Uint8) : 0;
 
       // 6-bit (3)
       _6bit3e = options

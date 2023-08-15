@@ -5,4 +5,4 @@ export {
 export {
   _crypto as crypto,
   _ReadableStream as ReadableStream,
-} from "https://raw.githubusercontent.com/i-xi-dev/compat.es/1.2.1/mod.ts";
+} from "https://raw.githubusercontent.com/i-xi-dev/compat.es/1.2.2/mod.ts";
