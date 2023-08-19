@@ -9,9 +9,7 @@
     }
   },
   "fmt": {
-    "files": {
-      "exclude": ["npm/", "README.md"]
-    }
+    "exclude": ["npm/", "README.md"]
   },
   "compilerOptions": {
   },
