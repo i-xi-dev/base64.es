@@ -235,7 +235,7 @@ function _isBase64Table(value: unknown): value is _Base64Table {
  */
 type _ResolvedOptions = {
   /**  */
-  table: Readonly<_Base64Table>;
+  rawTable: Readonly<_Base64Table>;
 
   /**  */
   noPadding: boolean;
@@ -245,13 +245,13 @@ type _ResolvedOptions = {
 };
 
 const _RFC4648_OPTIONS: _ResolvedOptions = Object.freeze({
-  table: Object.freeze([..._TABLE_62, "+", "/"]) as Readonly<_Base64Table>,
+  rawTable: Object.freeze([..._TABLE_62, "+", "/"]) as Readonly<_Base64Table>,
   noPadding: false,
   paddingChar: "=",
 });
 
 const _RFC4648URL_OPTIONS: _ResolvedOptions = Object.freeze({
-  table: Object.freeze([..._TABLE_62, "-", "_"]) as Readonly<_Base64Table>,
+  rawTable: Object.freeze([..._TABLE_62, "-", "_"]) as Readonly<_Base64Table>,
   noPadding: true,
   paddingChar: "=",
 });
@@ -334,8 +334,8 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   if (encodedBody.length >= 4) {
     for (i = 0; i < encodedBody.length; i = i + 4) {
       // 8-bit (1)
-      _6bit1 = options.table.indexOf(encodedBody[i] as _base64char) as Uint6;
-      _6bit2 = options.table.indexOf(
+      _6bit1 = options.rawTable.indexOf(encodedBody[i] as _base64char) as Uint6;
+      _6bit2 = options.rawTable.indexOf(
         encodedBody[i + 1] as _base64char,
       ) as Uint6;
       decodedBytes[_8bitI++] = (_6bit1 << 2) | (_6bit2 >> 4);
@@ -345,7 +345,7 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
         decodedBytes[_8bitI++] = (_6bit2 & 0b001111) << 4;
         break;
       }
-      _6bit3 = options.table.indexOf(
+      _6bit3 = options.rawTable.indexOf(
         encodedBody[i + 2] as _base64char,
       ) as Uint6;
       decodedBytes[_8bitI++] = ((_6bit2 & 0b001111) << 4) | (_6bit3 >> 2);
@@ -355,7 +355,7 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
         decodedBytes[_8bitI++] = (_6bit3 & 0b000011) << 6;
         break;
       }
-      _6bit4 = options.table.indexOf(
+      _6bit4 = options.rawTable.indexOf(
         encodedBody[i + 3] as _base64char,
       ) as Uint6;
       decodedBytes[_8bitI++] = ((_6bit3 & 0b000011) << 6) | _6bit4;
@@ -366,9 +366,11 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
 
 function _isEncoded(work: string, options: _ResolvedOptions): boolean {
   const tablePattern = "[" +
-    options.table.map((chr) => `\\u{${chr.charCodeAt(0).toString(16)}}`).join(
-      "",
-    ) + "]";
+    options.rawTable.map((chr) => `\\u{${chr.charCodeAt(0).toString(16)}}`)
+      .join(
+        "",
+      ) +
+    "]";
 
   let regex: RegExp;
   if ((options.noPadding !== true) && (_forgiving !== true)) {
@@ -409,22 +411,22 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
     const _8bit2: Uint8 = (_n8bit2 !== undefined) ? (_n8bit2 as Uint8) : 0;
 
     // 6-bit (1)
-    _6bit1e = options.table[_8bit1 >> 2] as string;
+    _6bit1e = options.rawTable[_8bit1 >> 2] as string;
 
     // 6-bit (2)
     _6bit2e = options
-      .table[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
+      .rawTable[((_8bit1 & 0b00000011) << 4) | (_8bit2 >> 4)] as string;
 
     if (_n8bit2 !== undefined) {
       const _8bit3: Uint8 = (_n8bit3 !== undefined) ? (_n8bit3 as Uint8) : 0;
 
       // 6-bit (3)
       _6bit3e = options
-        .table[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;
+        .rawTable[((_8bit2 & 0b00001111) << 2) | (_8bit3 >> 6)] as string;
 
       if (_n8bit3 !== undefined) {
         // 6-bit (4)
-        _6bit4e = options.table[_8bit3 & 0b00111111] as string;
+        _6bit4e = options.rawTable[_8bit3 & 0b00111111] as string;
       } else {
         _6bit4e = (options.noPadding !== true) ? options.paddingChar : "";
       }
@@ -443,17 +445,30 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
  *
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
- * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
+ * @throws {RangeError} The `options.rawTable` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.rawTable`.
  */
 function _resolveOptions(
   options: Base64.Options | _ResolvedOptions = {},
 ): _ResolvedOptions {
   const defaultOptions = _RFC4648_OPTIONS;
-  let table: Readonly<_Base64Table>;
-  if (_isBase64Table(options.table)) {
-    table = Object.freeze([...options.table]) as Readonly<_Base64Table>;
+
+  let rawTable: Readonly<_Base64Table>;
+
+  if (
+    ("tableLastChars" in options) && Array.isArray(options.tableLastChars) &&
+    options.tableLastChars.every((c) => _isBase64Char(c))
+  ) {
+    rawTable = Object.freeze([
+      ...defaultOptions.rawTable.slice(0, 62),
+      options.tableLastChars[0],
+      options.tableLastChars[1],
+    ]) as Readonly<_Base64Table>;
+  } else if (("rawTable" in options) && _isBase64Table(options.rawTable)) {
+    rawTable = Object.freeze([...options.rawTable]) as Readonly<_Base64Table>;
+  } else if (("table" in options) && _isBase64Table(options.table)) {
+    rawTable = Object.freeze([...options.table]) as Readonly<_Base64Table>;
   } else {
-    table = defaultOptions.table;
+    rawTable = defaultOptions.rawTable;
   }
 
   let noPadding: boolean = defaultOptions.noPadding;
@@ -467,12 +482,12 @@ function _resolveOptions(
   }
 
   // tableとpaddingの重複チェック
-  if ((new Set([...table, paddingChar])).size !== 65) {
+  if ((new Set([...rawTable, paddingChar])).size !== 65) {
     throw new RangeError("options error: character duplicated");
   }
 
   return Object.freeze({
-    table,
+    rawTable,
     noPadding,
     paddingChar,
   });
@@ -554,7 +569,7 @@ namespace Base64 {
    * @param encoded The string to decode.
    * @param options The `Base64.Options` dictionary.
    * @returns An `Uint8Array` containing the decoded byte sequence.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
+   * @throws {RangeError} The `options.rawTable` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.rawTable`.
    * @throws {TypeError} The `encoded` is not Base64-encoded string.
    * @example
    * ```javascript
@@ -579,7 +594,7 @@ namespace Base64 {
    * @param toEncode The byte sequence to encode.
    * @param options The `Base64.Options` dictionary.
    * @returns A string containing the Base64-encoded characters.
-   * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.table`.
+   * @throws {RangeError} The `options.rawTable` contains duplicate characters, or the `options.paddingChar` character is contained in the `options.rawTable`.
    * @example
    * ```javascript
    * Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
@@ -607,11 +622,27 @@ namespace Base64 {
      * The default is `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]`.
      *
      * The following restrictions apply:
-     * - The `length` of the `table` must be 64.
-     * - The `length` of all elements contained in the `table` must be 1.
-     * - The `table` must not contain duplicate characters.
+     * - The `length` of the `rawTable` must be 64.
+     * - The `length` of all elements contained in the `rawTable` must be 1.
+     * - The `rawTable` must not contain duplicate characters.
+     */
+    rawTable?: Readonly<Array<string>>;
+
+    /**
+     * @deprecated
+     *
+     * Alias for the `rawTable`.
      */
     table?: Readonly<Array<string>>;
+
+    /**
+     * The last two characters of the 64 characters index table.
+     * The default is `[ "+", "/" ]`.
+     * 
+     * `tableLastChars` and `rawTable` are mutually exclusive, with `tableLastChars` taking precedence over `rawTable`.
+     * If `tableLastChars` is specified, the first to 62nd characters of the 64 characters index table are `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]`.
+     */
+    tableLastChars?: [string, string];
 
     /**
      * Whether to omit the padding.
@@ -626,7 +657,7 @@ namespace Base64 {
      *
      * The following restrictions apply:
      * - The `length` of the `paddingChar` must be 1.
-     * - The `paddingChar` must not be a character contained in the `table`.
+     * - The `paddingChar` must not be a character contained in the `rawTable`.
      */
     paddingChar?: string;
   };
@@ -637,7 +668,7 @@ namespace Base64 {
      *
      * | field | value |
      * | :--- | :--- |
-     * | `table` | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]` |
+     * | `rawTable` | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]` |
      * | `noPadding` | `false` |
      * | `paddingChar` | `"="` |
      */
@@ -648,7 +679,7 @@ namespace Base64 {
      *
      * | field | value |
      * | :--- | :--- |
-     * | `table` | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_" ]` |
+     * | `rawTable` | `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_" ]` |
      * | `noPadding` | `true` |
      * | `paddingChar` | `"="` |
      */
@@ -683,7 +714,7 @@ namespace Base64 {
 
     /**
      * @param options The `Base64.Options` dictionary.
-     * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+     * @throws {RangeError} The `options.rawTable` contains duplicate characters, or the `options.padding` character is contained in the `options.rawTable`.
      */
     constructor(options?: Options) {
       this.#options = _resolveOptions(options);
@@ -730,7 +761,7 @@ namespace Base64 {
 
     /**
      * @param options The `Base64.Options` dictionary.
-     * @throws {RangeError} The `options.table` contains duplicate characters, or the `options.padding` character is contained in the `options.table`.
+     * @throws {RangeError} The `options.rawTable` contains duplicate characters, or the `options.padding` character is contained in the `options.rawTable`.
      */
     constructor(options?: Options) {
       this.#options = _resolveOptions(options);
