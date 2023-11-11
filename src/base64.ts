@@ -616,6 +616,31 @@ namespace Base64 {
   /**
    * The object with the following optional fields.
    * The defaults are the values that conforms to the RFC 4648 Base64 specification.
+   * 
+   * - `rawTable`:
+   *   - The 64 characters index table.
+   *     The default is `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/" ]`.
+   *   - The following restrictions apply:
+   *     - The `length` of the `rawTable` must be 64.
+   *     - The `length` of all elements contained in the `rawTable` must be 1.
+   *     - The `rawTable` must not contain duplicate characters.
+   * - `table`:
+   *   - [deprecated] Alias for the `rawTable`.
+   * - `tableLastChars`:
+   *   - The last two characters of the 64 characters index table.
+   *     The default is `[ "+", "/" ]`.
+   *   - `tableLastChars` and `rawTable` are mutually exclusive, with `tableLastChars` taking precedence over `rawTable`.
+   *     If `tableLastChars` is specified, the first to 62nd characters of the 64 characters index table are `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]`.
+   * - `noPadding`: 
+   *   - Whether to omit the padding.
+   *     The default is `false`.
+   *     However, the decoder ignores this value.
+   * - `paddingChar`:
+   *   - The padding character.
+   *     The default is `"="`.
+   *   - The following restrictions apply:
+   *     - The `length` of the `paddingChar` must be 1.
+   *     - The `paddingChar` must not be a character contained in the `rawTable`.
    */
   export type Options = {
     /**
