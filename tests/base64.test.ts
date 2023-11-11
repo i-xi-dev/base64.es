@@ -206,9 +206,124 @@ Deno.test("Base64.decode(string, {paddingChar:'!'})", () => {
   );
 });
 
+Deno.test("Base64.decode(string, {tableLastChars:[string. string]})", () => {
+  const decoded12 = Base64.decode("AwIBAP_-_fw=", {
+    tableLastChars: ["-", "_"],
+  });
+  assertStrictEquals(
+    JSON.stringify([...decoded12]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  //
+  const decoded13 = Base64.decode("AwIBAP/+/fw=", { tableLastChars: ["", ""] });
+  assertStrictEquals(
+    JSON.stringify([...decoded13]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded14 = Base64.decode("AwIBAP/+/fw=", {
+    tableLastChars: ["-"] as unknown as [string, string],
+  });
+  assertStrictEquals(
+    JSON.stringify([...decoded14]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded15 = Base64.decode("AwIBAP/+/fw=", {
+    tableLastChars: [] as unknown as [string, string],
+  });
+  assertStrictEquals(
+    JSON.stringify([...decoded15]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded16 = Base64.decode("AwIBAP/+/fw=", {
+    tableLastChars: ["-", "_", "+"] as unknown as [string, string],
+  });
+  assertStrictEquals(
+    JSON.stringify([...decoded16]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded17 = Base64.decode("AwIBAP_-_fw=", {
+    tableLastChars: ["-", "_"],
+    rawTable: [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "+",
+      "/",
+    ],
+  });
+  assertStrictEquals(
+    JSON.stringify([...decoded17]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+});
+
 Deno.test("Base64.decode(string, Rfc4648Base64UrlOptions)", () => {
   const op = {
-    table: [
+    rawTable: [
       "A",
       "B",
       "C",
@@ -284,7 +399,7 @@ Deno.test("Base64.decode(string, Rfc4648Base64UrlOptions)", () => {
   assertThrows(
     () => {
       const opx = {
-        table: [
+        rawTable: [
           "A",
           "B",
           "C",
@@ -382,6 +497,296 @@ Deno.test("Base64.decode(string, Rfc4648Base64UrlOptions)", () => {
     TypeError,
     "forgiving decode error",
   );
+
+  const decoded12 = Base64.decode("AwIBAP_-_fw=", op);
+  assertStrictEquals(
+    JSON.stringify([...decoded12]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded12b = Base64.decode("AwIBAP_-_fw", op);
+  assertStrictEquals(
+    JSON.stringify([...decoded12b]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  assertThrows(
+    () => {
+      Base64.decode("=AwIBAP_-_fw", op);
+    },
+    TypeError,
+    "decode error (1)",
+  );
+
+  assertThrows(
+    () => {
+      Base64.decode("=", op);
+    },
+    TypeError,
+    "forgiving decode error",
+  );
+
+  assertThrows(
+    () => {
+      Base64.decode("AwIBAP_-_fw,", op);
+    },
+    TypeError,
+    "decode error (1)",
+  );
+});
+
+Deno.test("Base64.decode(string, Rfc4648Base64UrlOptions) - deprecated-1", () => {
+  const op = {
+    table: [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "-",
+      "_",
+    ],
+    noPadding: true,
+    paddingChar: "=",
+  };
+
+  const decoded11 = Base64.decode("", op);
+  assertStrictEquals(JSON.stringify([...decoded11]), "[]");
+
+  const decoded12 = Base64.decode("AwIBAP_-_fw=", op);
+  assertStrictEquals(
+    JSON.stringify([...decoded12]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded12b = Base64.decode("AwIBAP_-_fw", op);
+  assertStrictEquals(
+    JSON.stringify([...decoded12b]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  assertThrows(
+    () => {
+      Base64.decode("=AwIBAP_-_fw", op);
+    },
+    TypeError,
+    "decode error (1)",
+  );
+
+  assertThrows(
+    () => {
+      Base64.decode("=", op);
+    },
+    TypeError,
+    "forgiving decode error",
+  );
+
+  assertThrows(
+    () => {
+      Base64.decode("AwIBAP_-_fw,", op);
+    },
+    TypeError,
+    "decode error (1)",
+  );
+});
+
+Deno.test("Base64.decode(string, Rfc4648Base64UrlOptions) - deprecated-2", () => {
+  const op = {
+    rawTable: [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "-",
+      "_",
+    ],
+    table: [
+      "B",
+      "A",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "-",
+      "_",
+    ],
+    noPadding: true,
+    paddingChar: "=",
+  };
+
+  const decoded11 = Base64.decode("", op);
+  assertStrictEquals(JSON.stringify([...decoded11]), "[]");
 
   const decoded12 = Base64.decode("AwIBAP_-_fw=", op);
   assertStrictEquals(

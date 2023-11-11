@@ -456,6 +456,7 @@ function _resolveOptions(
 
   if (
     ("tableLastChars" in options) && Array.isArray(options.tableLastChars) &&
+    (options.tableLastChars.length === 2) &&
     options.tableLastChars.every((c) => _isBase64Char(c))
   ) {
     rawTable = Object.freeze([
@@ -638,11 +639,11 @@ namespace Base64 {
     /**
      * The last two characters of the 64 characters index table.
      * The default is `[ "+", "/" ]`.
-     * 
+     *
      * `tableLastChars` and `rawTable` are mutually exclusive, with `tableLastChars` taking precedence over `rawTable`.
      * If `tableLastChars` is specified, the first to 62nd characters of the 64 characters index table are `[ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]`.
      */
-    tableLastChars?: [string, string];
+    tableLastChars?: Readonly<[string, string]>;
 
     /**
      * Whether to omit the padding.

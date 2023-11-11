@@ -188,7 +188,7 @@ Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder({paddingChar:'!'})",
 
 Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder(Rfc4648Base64UrlOptions)", () => {
   const decoder = new Base64.Decoder({
-    table: [
+    rawTable: [
       "A",
       "B",
       "C",
@@ -319,5 +319,93 @@ Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder(Rfc4648Base64UrlOpti
     },
     TypeError,
     "decode error (1)",
+  );
+});
+
+Deno.test("Base64.Decoder.prototype.decode - Base64.Decoder(Rfc4648Base64UrlOptions) - deprecated-1", () => {
+  const decoder = new Base64.Decoder({
+    table: [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "-",
+      "_",
+    ],
+    noPadding: true,
+    paddingChar: "=",
+  });
+
+  const decoded11 = decoder.decode("");
+  assertStrictEquals(JSON.stringify([...decoded11]), "[]");
+
+  const decoded12 = decoder.decode("AwIBAP_-_fw=");
+  assertStrictEquals(
+    JSON.stringify([...decoded12]),
+    "[3,2,1,0,255,254,253,252]",
+  );
+
+  const decoded12b = decoder.decode("AwIBAP_-_fw");
+  assertStrictEquals(
+    JSON.stringify([...decoded12b]),
+    "[3,2,1,0,255,254,253,252]",
   );
 });
