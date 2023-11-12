@@ -21,9 +21,12 @@ dd {
 output {
   background-color: #eee;
   display: block;
+  /*max-height: calc(100vh - 15em);*/
   min-height: 5em;
+  /*overflow-y: scroll;*/
   overflow-wrap: anywhere;
   user-select: contain;
+  white-space: pre-wrap;
 }
 
 input[type="checkbox"] {
