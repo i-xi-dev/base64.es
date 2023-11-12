@@ -37,12 +37,12 @@ import { Base64 } from "@i-xi-dev/base64";
 
 Example for UNPKG
 ```javascript
-import { Base64 } from "https://www.unpkg.com/@i-xi-dev/base64@4.1.3/esm/mod.js";
+import { Base64 } from "https://www.unpkg.com/@i-xi-dev/base64@4.1.4/esm/mod.js";
 ```
 
 ## Usage
 
-### [`Base64.Decoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.3/mod.ts/~/Base64.Decoder) and [`Base64.Encoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.3/mod.ts/~/Base64.Encoder) classes, and [`Base64`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.3/mod.ts/~/Base64) static class
+### [`Base64.Decoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.4/mod.ts/~/Base64.Decoder) and [`Base64.Encoder`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.4/mod.ts/~/Base64.Encoder) classes, and [`Base64`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.4/mod.ts/~/Base64) static class
 
 ```javascript
 const decoder = new Base64.Decoder();
@@ -68,7 +68,7 @@ Base64.encode(Uint8Array.of(0x03, 0x02, 0x01, 0x00, 0xFF, 0xFE, 0xFD, 0xFC));
 // → "AwIBAP/+/fw="
 ```
 
-### [`Base64.DecoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.3/mod.ts/~/Base64.DecoderStream) and [`Base64.EncoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.3/mod.ts/~/Base64.EncoderStream) classes
+### [`Base64.DecoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.4/mod.ts/~/Base64.DecoderStream) and [`Base64.EncoderStream`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.4/mod.ts/~/Base64.EncoderStream) classes
 
 ```javascript
 const decoderStream = new Base64.DecoderStream();
@@ -88,7 +88,7 @@ readableStream.pipeThrough(encoderStream).pipeTo(writableStream);
 
 ### Encoding options
 
-[See the documentation](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.3/mod.ts/~/Base64.Options)
+[See the documentation](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/base64.es/4.1.4/mod.ts/~/Base64.Options)
 
 #### Example
 
@@ -122,3 +122,9 @@ const encoderStream = new Base64.EncoderStream(rfc4648urlOptions);
 const decoded = Base64.decode(str, rfc4648urlOptions);
 const encoded = Base64.encode(uint8Array, rfc4648urlOptions);
 ```
+
+## Examples
+
+- [Base64 encode from string](https://i-xi-dev.github.io/base64.es/example/base64_from_string.html)
+- [Base64 encode from file](https://i-xi-dev.github.io/base64.es/example/base64_from_file.html)
+- [Base64 decode from string](https://i-xi-dev.github.io/base64.es/example/string_from_base64.html)
