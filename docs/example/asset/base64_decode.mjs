@@ -1,5 +1,5 @@
-import { Base64 } from "https://www.unpkg.com/@i-xi-dev/base64@4.1.3/esm/mod.js";
-// https://cdn.skypack.dev/@i-xi-dev/base64@4.1.3
+import { Base64 } from "https://www.unpkg.com/@i-xi-dev/base64@4.1.4/esm/mod.js";
+// https://cdn.skypack.dev/@i-xi-dev/base64@4.1.4
 
 import { bytesToString, decodeUtf8 } from "./lib.mjs";
 
