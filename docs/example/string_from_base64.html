@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Base64 Decode (to UTF-8 text)</title>
+    <link href="./asset/base.css?4.1.4" rel="stylesheet" />
+    <script src="./asset/base64_decode.mjs?4.1.4" type="module"></script>
+  </head>
+
+  <body>
+    <section>
+      <h1>Input</h1>
+
+      <dl>
+        <div>
+          <dt>[1] Base64 encoded</dt>
+          <dd>
+            <input id="i1" type="text" />
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <div>
+      <details>
+        <summary>Options</summary>
+
+        <div>
+          <fieldset>
+            <legend>Base64</legend>
+    
+            <dl>
+              <div>
+                <dt>use padding "="</dt>
+                <dd>
+                  <input checked id="ip11" type="checkbox" />
+                </dd>
+              </div>
+      
+              <div>
+                <dt>62nd and 63rd encoding characters</dt>
+                <dd>
+                  <select id="ip12">
+                    <option label='[62]: "+", [63]: "/"' selected value="+/"></option>
+                    <option label='[62]: "-", [63]: "_"' value="-_"></option>
+                    <option label='[62]: ".", [63]: "-"' value=".-"></option>
+                    <option label='[62]: "_", [63]: ":"' value="_:"></option>
+                  </select>
+                </dd>
+              </div>
+            </dl>
+          </fieldset>
+        </div>
+      </details>
+
+      <button id="a1">Base64 Decode</button>
+    </div>
+
+    <section>
+      <h1>Output</h1>
+      <dl>
+        <div>
+          <dt>[2] Base64 decoded from [1]</dt>
+          <dd>
+            <output id="o1"></output>
+          </dd>
+        </div>
+
+        <div>
+          <dt>[3] UTF-8 decoded from [2]</dt>
+          <dd>
+            <output id="o2"></output>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="progress">
+      <progress></progress>
+    </div>
+  </body>
+</html>

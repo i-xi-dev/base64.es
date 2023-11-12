@@ -26,7 +26,7 @@ These require [`TransformStream`](https://developer.mozilla.org/en-US/docs/Web/A
 ### npm
 
 ```console
-$ npm i @i-xi-dev/base64@4.1.3
+$ npm i @i-xi-dev/base64@4.1.4
 ```
 
 ```javascript
@@ -35,11 +35,10 @@ import { Base64 } from "@i-xi-dev/base64";
 
 ### CDN
 
-Example for Skypack
+Example for UNPKG
 ```javascript
-import { Base64 } from "https://cdn.skypack.dev/@i-xi-dev/base64@4.1.3";
+import { Base64 } from "https://www.unpkg.com/@i-xi-dev/base64@4.1.3/esm/mod.js";
 ```
-
 
 ## Usage
 
