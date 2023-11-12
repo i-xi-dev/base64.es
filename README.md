@@ -127,4 +127,4 @@ const encoded = Base64.encode(uint8Array, rfc4648urlOptions);
 
 - [Base64 encode from string](https://i-xi-dev.github.io/base64.es/example/base64_from_string.html)
 - [Base64 encode from file](https://i-xi-dev.github.io/base64.es/example/base64_from_file.html)
-- [Base64 decode from string](https://i-xi-dev.github.io/base64.es/example/string_from_base64.html)
+- [Base64 decode to string](https://i-xi-dev.github.io/base64.es/example/string_from_base64.html)
