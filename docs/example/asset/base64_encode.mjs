@@ -24,8 +24,7 @@ a1.addEventListener("click", async () => {
     if (file) {
       bytes = new Uint8Array(await file.arrayBuffer());
     }
-  }
-  else {
+  } else {
     bytes = encodeUtf8(i1.value);
   }
 

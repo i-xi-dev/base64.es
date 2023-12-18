@@ -1,10 +1,9 @@
-
 const utf8Decoder = new TextDecoder();
 
 const utf8Encoder = new TextEncoder();
 
 /**
- * @param {Uint8Array} input 
+ * @param {Uint8Array} input
  * @returns {string}
  */
 export function decodeUtf8(input) {
@@ -12,7 +11,7 @@ export function decodeUtf8(input) {
 }
 
 /**
- * @param {string} input 
+ * @param {string} input
  * @returns {Uint8Array}
  */
 export function encodeUtf8(input) {
@@ -20,9 +19,11 @@ export function encodeUtf8(input) {
 }
 
 /**
- * @param {Uint8Array} bytes 
+ * @param {Uint8Array} bytes
  * @returns {string}
  */
 export function bytesToString(bytes) {
-  return [...bytes].map((byte) => byte.toString(16).toUpperCase().padStart(2, "0")).join(" ");
+  return [...bytes].map((byte) =>
+    byte.toString(16).toUpperCase().padStart(2, "0")
+  ).join(" ");
 }
