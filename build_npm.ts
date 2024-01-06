@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/base64",
-    version: "4.1.6",
+    version: "4.1.7",
     description:
       "A JavaScript Base64 encoder and decoder, implements Forgiving base64 defined in WHATWG Infra Standard.",
     license: "MIT",
