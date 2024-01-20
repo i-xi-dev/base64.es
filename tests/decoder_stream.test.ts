@@ -285,6 +285,12 @@ Deno.test("Base64.DecoderStream.prototype.writable - error", async () => {
       result.set(chunk, written);
       written = written + chunk.byteLength;
     },
+    abort(reason) {
+      console.log("UnderlyingSink.abort");
+      //console.log(reason);
+      assertStrictEquals(reason.name, "TypeError");
+      assertStrictEquals(reason.message, "decode error (1)");
+    },
   });
   const readable: ReadableStream<Uint8Array> = decoder
     .readable as ReadableStream<Uint8Array>;
@@ -296,8 +302,9 @@ Deno.test("Base64.DecoderStream.prototype.writable - error", async () => {
     }).pipeTo(ws);
     throw new Error("x");
   } catch (e) {
-    const err = e as Error;
-    //assertStrictEquals(err.name, "TypeError");
-    assertStrictEquals(err.message, "decode error (1)");
+    console.log("try-catch");
+    //console.log(e);
+    assertStrictEquals(e.name, "TypeError");
+    assertStrictEquals(e.message, "decode error (1)");
   }
 });
